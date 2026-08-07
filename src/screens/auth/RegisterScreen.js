@@ -4,6 +4,10 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Keyboa
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, clearError } from '../../store/slices/authSlice';
+import BrandBadge from '../../components/ui/BrandBadge';
+import { Ionicons } from '@expo/vector-icons';
+import SvgIcon from '../../components/ui/SvgIcon';
+import { COLORS } from '../../constants/Colors';
 
 export default function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -28,10 +32,12 @@ export default function RegisterScreen({ navigation }) {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>← Back</Text>
+            <SvgIcon name="arrowLeft" size={24} color={COLORS.gold} />
+            <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
+          <BrandBadge style={{ position: 'absolute', right: 16, top: 12 }} size={100} textColor="#FFD700" />
           <View style={styles.header}>
-            <Text style={styles.title}>Create{'\n'}Account</Text>
+            <Text style={styles.title}>Create Account</Text>
             <Text style={styles.subtitle}>Join millions of riders today</Text>
           </View>
           <View style={styles.form}>
@@ -57,7 +63,7 @@ export default function RegisterScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scroll: { flexGrow: 1, padding: 24, paddingTop: 60 },
-  backBtn: { marginBottom: 32 },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 50 },
   backText: { color: '#888', fontSize: 16 },
   header: { marginBottom: 32 },
   title: { fontSize: 36, fontWeight: '800', color: '#FFF', lineHeight: 44 },

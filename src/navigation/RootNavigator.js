@@ -50,6 +50,7 @@ export default function RootNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* <Stack.Screen name="Main" component={MainNavigator} /> */}
       {isAuthenticated ? (
         <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
@@ -60,5 +61,5 @@ export default function RootNavigator() {
 }
 
 const styles = StyleSheet.create({
-  loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0A0A0A' },
+  loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#9c3333' },
 });

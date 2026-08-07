@@ -5,6 +5,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, clearError } from '../../store/slices/authSlice';
 
+import {
+  useFonts,
+  InstrumentSerif_400Regular,
+  InstrumentSerif_400Regular_Italic,
+} from "@expo-google-fonts/instrument-serif";
+import { COLORS } from '../../constants/Colors';
+import BrandBadge from '../../components/ui/BrandBadge';
+
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((s) => s.auth);
@@ -24,9 +32,11 @@ export default function LoginScreen({ navigation }) {
     <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+          <BrandBadge style={{ position: 'absolute', right: 16, top: 12 }} size={100} textColor="#FFD700" />
+
           <View style={styles.header}>
             <View style={styles.badge}><Text style={styles.badgeText}>PASSENGER</Text></View>
-            <Text style={styles.title}>Welcome{'\n'}Back 👋</Text>
+            <Text style={styles.title}>Welcome Back 👋</Text>
             <Text style={styles.subtitle}>Sign in to your account</Text>
           </View>
           <View style={styles.form}>
@@ -34,12 +44,12 @@ export default function LoginScreen({ navigation }) {
               <Text style={styles.label}>Phone Number</Text>
               <View style={styles.inputWrap}>
                 <Text style={styles.prefix}>+1</Text>
-                <TextInput style={styles.input} placeholder="(555) 000-0000" placeholderTextColor="#444" keyboardType="phone-pad" value={phone} onChangeText={setPhone} selectionColor="#00D95F" />
+                <TextInput style={styles.input} placeholder="(555) 000-0000" placeholderTextColor="#888" keyboardType="phone-pad" value={phone} onChangeText={setPhone} selectionColor="#00D95F" />
               </View>
             </View>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Password</Text>
-              <TextInput style={[styles.inputWrap, styles.inputDirect]} placeholder="Enter password" placeholderTextColor="#444" secureTextEntry value={password} onChangeText={setPassword} selectionColor="#00D95F" />
+              <TextInput style={[styles.inputWrap, styles.inputDirect]} placeholder="Enter password" placeholderTextColor="#888" secureTextEntry value={password} onChangeText={setPassword} selectionColor="#00D95F" />
             </View>
             <TouchableOpacity style={[styles.loginBtn, loading && styles.loginBtnDisabled]} onPress={handleLogin} disabled={loading}>
               <LinearGradient colors={['#00D95F', '#00B84F']} style={styles.loginGrad}>
@@ -65,13 +75,13 @@ const styles = StyleSheet.create({
   header: { marginBottom: 40 },
   badge: { backgroundColor: '#00D95F20', borderRadius: 4, paddingHorizontal: 10, paddingVertical: 4, alignSelf: 'flex-start', marginBottom: 16, borderWidth: 1, borderColor: '#00D95F40' },
   badgeText: { color: '#00D95F', fontSize: 10, fontWeight: '700', letterSpacing: 1.5 },
-  title: { fontSize: 40, fontWeight: '800', color: '#FFF', lineHeight: 48 },
-  subtitle: { color: '#666', fontSize: 16, marginTop: 8 },
+  title: { flexDirection: 'row', fontSize: 30, fontWeight: '800', color: '#FFF', lineHeight: 48 },
+  subtitle: { color: COLORS.subText, fontSize: 16, marginTop: 8 },
   form: { gap: 16 },
   inputGroup: { gap: 8 },
-  label: { color: '#888', fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
+  label: { color: COLORS.subText, fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
   inputWrap: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#161616', borderRadius: 12, borderWidth: 1, borderColor: '#2A2A2A', paddingHorizontal: 16, height: 56 },
-  prefix: { color: '#888', fontSize: 16, marginRight: 8 },
+  prefix: { color: COLORS.subText, fontSize: 16, marginRight: 8 },
   input: { flex: 1, color: '#FFF', fontSize: 16 },
   inputDirect: { color: '#FFF', fontSize: 16 },
   loginBtn: { borderRadius: 12, overflow: 'hidden', marginTop: 8 },

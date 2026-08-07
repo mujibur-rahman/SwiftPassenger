@@ -25,12 +25,23 @@ function TabNavigator() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#111', borderTopColor: '#222',
-          borderTopWidth: 1, height: 60, paddingBottom: 8, paddingTop: 8,
+          backgroundColor: '#CBA35C', borderColor: '#CBA35C',
+          borderWidth: 1, height: 60, paddingBottom: 6, paddingTop: 6, borderRadius: 30,
+          position: 'absolute', paddingHorizontal: 6, marginHorizontal: 10, bottom: 6,
+          // Shadow (iOS)
+          shadowColor: '#ddd',          // ← change this for the shadow color
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          // Shadow (Android)
+          elevation: 8,
         },
-        tabBarActiveTintColor:   '#00D95F',
-        tabBarInactiveTintColor: '#555',
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '500' },
+        // tabBarActiveTintColor:   '#00D95F',
+        tabBarItemStyle: {borderRadius: 23, paddingVertical: 4},
+        tabBarActiveTintColor:   '#fff',
+        tabBarInactiveTintColor: '#000',
+        tabBarLabelStyle: { fontSize: 11, fontWeight: '700', lineHeight: 12},  
+        // tabBarActiveBackgroundColor: "rgba(35, 42, 49, .7)",
         tabBarIcon: ({ color, focused }) => {
           const icons = {
             Home:     focused ? 'home'           : 'home-outline',
