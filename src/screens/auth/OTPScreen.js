@@ -1,46 +1,58 @@
 // src/screens/auth/OTPScreen.js
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import {
+  View, Text, TextInput, TouchableOpacity, StyleSheet,
+  ActivityIndicator, Alert,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import api from '../../services/api';
-import { useDispatch } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loadUser } from '../../store/slices/authSlice';
+import { useSendOtpMutation, useVerifyOtpMutation } from '../../store/auth/authApi';
+// import { useSendOtpMutation, useVerifyOtpMutation } from '../../store/api';
 
 export default function OTPScreen({ navigation }) {
-  const dispatch = useDispatch();
+  const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
+  const [verifyOtp, { isLoading: verifying }] = useVerifyOtpMutation();
+
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [step, setStep] = useState('phone');
-  const [loading, setLoading] = useState(false);
   const refs = useRef([]);
 
-  const sendOTP = async () => {
-    if (!phone) { Alert.alert('Error', 'Enter phone number'); return; }
-    setLoading(true);
-    try { await api.post('/auth/otp/send', { phone }); setStep('otp'); }
-    catch (e) { Alert.alert('Error', e.response?.data?.message || 'Failed to send OTP'); }
-    finally { setLoading(false); }
+  const handleSendOTP = async () => {
+    if (!phone) {
+      Alert.alert('Error', 'Enter phone number');
+      return;
+    }
+    try {
+      await sendOtp({ phone }).unwrap();
+      setStep('otp');
+    } catch (e) {
+      Alert.alert('Error', e?.data?.message || 'Failed to send OTP');
+    }
   };
 
-  const verifyOTP = async () => {
+  const handleVerifyOTP = async () => {
     const code = otp.join('');
-    if (code.length < 6) { Alert.alert('Error', 'Enter complete OTP'); return; }
-    setLoading(true);
+    if (code.length < 6) {
+      Alert.alert('Error', 'Enter complete OTP');
+      return;
+    }
     try {
-      const res = await api.post('/auth/otp/verify', { phone, otp: code });
-      await AsyncStorage.setItem('token', res.data.token);
-      await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
-      dispatch(loadUser());
-    } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Invalid OTP'); }
-    finally { setLoading(false); }
+      await verifyOtp({ phone, otp: code }).unwrap();
+      // authSlice matcher will set isAuthenticated → RootNavigator switches
+    } catch (e) {
+      Alert.alert('Error', e?.data?.message || 'Invalid OTP');
+    }
   };
 
   const handleOTPChange = (val, idx) => {
-    const newOtp = [...otp]; newOtp[idx] = val; setOtp(newOtp);
+    const newOtp = [...otp];
+    newOtp[idx] = val;
+    setOtp(newOtp);
     if (val && idx < 5) refs.current[idx + 1]?.focus();
     if (!val && idx > 0) refs.current[idx - 1]?.focus();
   };
+
+  const loading = sending || verifying;
 
   return (
     <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
@@ -63,11 +75,26 @@ export default function OTPScreen({ navigation }) {
         </View>
       )}
 
-      <TouchableOpacity style={styles.btn} onPress={step === 'phone' ? sendOTP : verifyOTP} disabled={loading}>
+      {/* <TouchableOpacity style={styles.btn} onPress={step === 'phone' ? sendOTP : verifyOTP} disabled={loading}>
         <LinearGradient colors={['#00D95F', '#00B84F']} style={styles.btnGrad}>
           {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.btnText}>{step === 'phone' ? 'Send OTP' : 'Verify'}</Text>}
         </LinearGradient>
+      </TouchableOpacity> */}
+
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={step === 'phone' ? handleSendOTP : handleVerifyOTP}
+        disabled={loading}
+      >
+        <LinearGradient colors={['#00D95F', '#00B84F']} style={styles.btnGrad}>
+          {loading ? (
+            <ActivityIndicator color="#000" />
+          ) : (
+            <Text style={styles.btnText}>{step === 'phone' ? 'Send OTP' : 'Verify'}</Text>
+          )}
+        </LinearGradient>
       </TouchableOpacity>
+      
     </LinearGradient>
   );
 }

@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentLocation, setPickup } from '../../store/slices/locationSlice';
+// import { setCurrentLocation, setPickup } from '../../store/slices/locationSlice';
 import ServiceCard from '../../components/ServiceCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ProfileHeader from '../../components/ProfileHeader';
@@ -36,7 +36,7 @@ const JOBS = [
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const { user }            = useSelector((s) => s.auth);
-  const { currentLocation } = useSelector((s) => s.location);
+  // const { currentLocation } = useSelector((s) => s.location);
   const mapRef   = useRef(null);
   const slideAnim = useRef(new Animated.Value(100)).current;
   const [mapError, setMapError] = useState(false);
@@ -52,7 +52,7 @@ export default function HomeScreen({ navigation }) {
       if (status !== 'granted') return;
       const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       const coords = { latitude: loc.coords.latitude, longitude: loc.coords.longitude };
-      dispatch(setCurrentLocation(coords));
+      // dispatch(setCurrentLocation(coords));
       dispatch(setPickup({ coords, address: 'Current Location' }));
       mapRef.current?.animateToRegion({ ...coords, latitudeDelta: 0.01, longitudeDelta: 0.01 }, 1000);
     } catch (e) {

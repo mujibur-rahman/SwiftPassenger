@@ -4,8 +4,9 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../../store/slices/authSlice';
+// import { logoutUser } from '../../store/slices/authSlice';
 import { useSocket } from '../../services/SocketContext';
+import { logout } from '../../utils/helper';
 
 const MenuItem = ({ icon, label, value, onPress, danger }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
@@ -29,7 +30,7 @@ export default function ProfileScreen({ navigation }) {
   const handleLogout = () =>
     Alert.alert('Sign Out', 'Are you sure?', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: () => { disconnect(); dispatch(logoutUser()); } },
+      { text: 'Sign Out', style: 'destructive', onPress: () => { disconnect(); dispatch(logout()); } },
     ]);
 
   return (

@@ -11,8 +11,14 @@ export const COLORS = {
   border: '#2A2A2A',
   text: "#FFFFFF",
   subText: "#8696A0",
+  placeholder: "#888",
   badge: "#1a1a1a",
   
   gold: '#CBA35C',   
-  green: '#4ADE80'
+  green: '#4ADE80',
+
+  white: "#FFFFFF",
+  black: "#000000",
+
+  transparent: "transparent",
 };

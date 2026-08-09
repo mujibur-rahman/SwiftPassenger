@@ -1,6 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { COLORS } from "../../constants/Colors";
+import {
+  useFonts,
+  InstrumentSerif_400Regular,
+  InstrumentSerif_400Regular_Italic,
+} from "@expo-google-fonts/instrument-serif";
 
 const BrandBadge = ({
   text = "ZyroApp",
@@ -13,6 +18,11 @@ const BrandBadge = ({
   style,
   textStyle,
 }) => {
+  const [fontsLoaded] = useFonts({
+    InstrumentSerif: InstrumentSerif_400Regular_Italic,
+  });
+  if (!fontsLoaded) return null;
+
   return (
     <View
       style={[

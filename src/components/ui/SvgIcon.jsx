@@ -29,11 +29,47 @@ const icons = {
   chevronRight: "M9 18l6-6-6-6",
   chevronUp: "M18 15l-6-6-6 6",
   chevronDown: "M6 9l6 6 6-6",
+
+  eye: "M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6",
+
+  eyeOff:
+    "M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a17.2 17.2 0 0 1-4.2 4.9M6.2 6.2C3.8 7.7 2 12 2 12s3.5 7 10 7c1.4 0 2.7-.3 3.9-.9",
+
+  mail: "M3 6h18v12H3zM3 7l9 7 9-7",
+
+  phone:
+    "M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.5 3a2 2 0 0 1-.6 1.8l-1.3 1.3a16 16 0 0 0 6.6 6.6l1.3-1.3a2 2 0 0 1 1.8-.6l3 .5A2 2 0 0 1 22 16.9z",
+
+  user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21a8 8 0 0 1 16 0",
+
+  users:
+    "M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M16 3.1a4 4 0 0 1 0 7.8M22 21v-2a4 4 0 0 0-3-3.9M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8",
+
+  lock: "M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z",
+
+  unlock: "M17 11V8a5 5 0 0 0-9.8-1M5 11h14v10H5z",
+
+  bell: "M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7M10.7 21a2 2 0 0 0 2.6 0",
 };
 
-export default function SvgIcon({ name, size = 24, color = "#000" }) {
+export default function SvgIcon({
+  name,
+  size = 24,
+  color = "#000",
+  className,
+  style,
+  onPress
+}) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      style={style}
+      onPress={onPress}
+    >
       <Path
         d={icons[name]}
         stroke={color}

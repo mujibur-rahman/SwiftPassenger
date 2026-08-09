@@ -1,46 +1,62 @@
-// passenger-app/src/navigation/RootNavigator.js
-import React, { useEffect } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+// src/navigation/RootNavigator.js
+import React, { useEffect, useState } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { useDispatch, useSelector } from "react-redux";
+import { ActivityIndicator, View, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import AuthNavigator from './AuthNavigator';
-import MainNavigator from './MainNavigator';
-import { loadUser } from '../store/slices/authSlice';
-import { useSocket } from '../services/SocketContext';
+import AuthNavigator from "./AuthNavigator";
+import MainNavigator from "./MainNavigator";
+import { userLoggedIn, userLoggedOut } from "../store/auth/authSlice";
+import { useSocket } from "../services/SocketContext";
 
 const Stack = createStackNavigator();
 
 export default function RootNavigator() {
   const dispatch = useDispatch();
-  const { isAuthenticated, loading } = useSelector((s) => s.auth);
+  const { accessToken } = useSelector((state) => state.auth);
   const { connect } = useSocket();
 
-  useEffect(() => {
-    dispatch(loadUser());
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load session from AsyncStorage when app starts
   useEffect(() => {
-    if (isAuthenticated) connect();
-  }, [isAuthenticated]);
+    const loadSession = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const userString = await AsyncStorage.getItem("user");
 
-  useEffect(() => {
-    checkActiveRide();
-  }, []);
-
-  const checkActiveRide = async () => {
-    try {
-      const res = await api.get('/rides/active');
-      if (res.data?.ride) {
-        dispatch(setCurrentRide(res.data.ride));
-        dispatch(updateRideStatus(res.data.ride.status));
-        if (res.data.driver) dispatch(setDriver(res.data.driver));
-          navigation.navigate('ActiveRide');
+        if (token && userString) {
+          const user = JSON.parse(userString);
+          dispatch(
+            userLoggedIn({
+              accessToken: token,
+              user,
+            }),
+          );
+        } else {
+          dispatch(userLoggedOut());
+        }
+      } catch (error) {
+        console.log("Failed to load session:", error);
+        dispatch(userLoggedOut());
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {}
-  };
+    };
 
-  if (loading) {
+    loadSession();
+  }, [dispatch]);
+
+  // Connect socket when user is authenticated
+  useEffect(() => {
+    if (accessToken) {
+      connect();
+    }
+  }, [accessToken]);
+
+  // Show loading screen while checking session
+  if (isLoading) {
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="large" color="#00D95F" />
@@ -50,8 +66,7 @@ export default function RootNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* <Stack.Screen name="Main" component={MainNavigator} /> */}
-      {isAuthenticated ? (
+      {accessToken ? (
         <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
         <Stack.Screen name="Auth" component={AuthNavigator} />
@@ -61,5 +76,10 @@ export default function RootNavigator() {
 }
 
 const styles = StyleSheet.create({
-  loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#9c3333' },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#9c3333",
+  },
 });

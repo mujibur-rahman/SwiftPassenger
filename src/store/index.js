@@ -1,15 +1,20 @@
-// passenger-app/src/store/index.js
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
-import rideReducer from './slices/rideSlice';
-import locationReducer from './slices/locationSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
+
+import { apiSlice } from "./api/apiSlice";
+import authReducer from "./auth/authSlice";
+import rideReducer from "./slices/rideSlice"; // if you still need local ride state
 
 export const store = configureStore({
   reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
-    ride: rideReducer,
-    location: locationReducer,
+    ride: rideReducer, // optional
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(apiSlice.middleware),
 });
+
+setupListeners(store.dispatch);

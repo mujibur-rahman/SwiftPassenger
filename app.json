@@ -9,6 +9,7 @@
       "backgroundColor": "#0A0A0A"
     },
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#FF6B35"
       },
@@ -31,7 +32,8 @@
           "locationAlwaysAndWhenInUsePermission": "SwiftDrive needs your location to show you on the map and receive ride requests."
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-asset"
     ]
   }
 }
