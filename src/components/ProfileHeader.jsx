@@ -6,7 +6,7 @@ import {
   InstrumentSerif_400Regular,
   InstrumentSerif_400Regular_Italic,
 } from "@expo-google-fonts/instrument-serif";
-import { getName } from "../utils/helper";
+import { getName } from "../utils/helpers";
 import { Ionicons } from "@expo/vector-icons";
 
 const ProfileHeader = () => {

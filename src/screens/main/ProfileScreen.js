@@ -6,7 +6,7 @@ import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 // import { logoutUser } from '../../store/slices/authSlice';
 import { useSocket } from '../../services/SocketContext';
-import { logout } from '../../utils/helper';
+import { logout } from '../../store/auth/authSlice';
 
 const MenuItem = ({ icon, label, value, onPress, danger }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>

@@ -28,6 +28,7 @@ export default function LoginScreen({ navigation }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!phone || !password) {
@@ -107,6 +108,9 @@ export default function LoginScreen({ navigation }) {
               value={password}
               onChangeText={setPassword}
               placeholder="Enter password"
+              secureTextEntry={!showPassword}
+              rightIcon={showPassword ? "eyeOff" : "eye"}
+              onRightPress={() => setShowPassword(!showPassword)}
             />
 
             <TouchableOpacity

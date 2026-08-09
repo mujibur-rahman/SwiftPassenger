@@ -1,10 +1,20 @@
-// src/store/auth/authSlice.js
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiSlice } from "../api/apiSlice";
 
 const initialState = {
   accessToken: null,
   user: null,
 };
+
+// ========== Logout Thunk ==========
+export const logout = createAsyncThunk("auth/logout", async (_, { dispatch }) => {
+  // 1. Clear storage
+  await AsyncStorage.multiRemove(["token", "user"]);
+
+  // 2. Clear RTK Query cache
+  dispatch(apiSlice.util.resetApiState());
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -18,6 +28,12 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.user = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout.fulfilled, (state) => {
+      state.accessToken = null;
+      state.user = null;
+    });
   },
 });
 
