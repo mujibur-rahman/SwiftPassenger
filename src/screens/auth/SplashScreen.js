@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import BrandBadge from '../../components/ui/BrandBadge';
 
 export default function SplashScreen({ navigation }) {
   const scale = useRef(new Animated.Value(0.5)).current;
@@ -21,8 +22,9 @@ export default function SplashScreen({ navigation }) {
   return (
     <LinearGradient colors={['#0A0A0A', '#0D1B0F', '#0A0A0A']} style={styles.container}>
       <Animated.View style={[styles.logoWrap, { transform: [{ scale }], opacity }]}>
-        <View style={styles.logoCircle}><Text style={styles.logoIcon}>⚡</Text></View>
-        <Text style={styles.logoText}>Swift<Text style={styles.logoAccent}>Ride</Text></Text>
+        {/* <View style={styles.logoCircle}><Text style={styles.logoIcon}>⚡</Text></View> */}
+        <BrandBadge size={100} textColor="#FFD700" />
+        {/* <Text style={styles.logoText}>Swift<Text style={styles.logoAccent}>Ride</Text></Text> */}
         <Animated.Text style={[styles.tagline, { opacity: dotOpacity }]}>Your ride, your way</Animated.Text>
       </Animated.View>
     </LinearGradient>
