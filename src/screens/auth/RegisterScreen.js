@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 24,
     right: 24,
+    zIndex: 1
   },
   backBtn: {
     flexDirection: "row",

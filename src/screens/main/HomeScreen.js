@@ -71,7 +71,7 @@ export default function HomeScreen({ navigation }) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, {paddingTop: insets.top}]}>
+    <View style={[styles.container, {paddingVertical: insets.top}]}>
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
       {/* {mapError ? <MapFallback /> : (
@@ -105,7 +105,7 @@ export default function HomeScreen({ navigation }) {
       <Text style={{color: 'white'}}>Advertisement will show...</Text>
      </View>
 
-      <View style={styles.grid}>
+      <View style={[styles.grid, {marginBottom: insets.bottom + 50}]}>
         {JOBS.map((job) => (
           <ServiceCard key={job.id} job={job} />
         ))}
@@ -225,7 +225,7 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A', paddingHorizontal: 18, paddingTop: 18, paddingBottom: 80 },
+  container: { flex: 1, backgroundColor: '#0A0A0A', paddingHorizontal: 18 },
   // cardWrapper: {
   //   width: "30%",
   //   overflow: "hidden",
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderWidth: 1,
     borderColor: "#2A2F35",
-    borderRadius: 20,
+    borderRadius: 20,    
   },
   map: { flex: 1 },
   mapFallback: {

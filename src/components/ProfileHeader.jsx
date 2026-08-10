@@ -8,8 +8,10 @@ import {
 } from "@expo-google-fonts/instrument-serif";
 import { getName } from "../utils/helpers";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileHeader = () => {
+  const navigation = useNavigation();
   const [fontsLoaded] = useFonts({
     InstrumentSerif: InstrumentSerif_400Regular_Italic,
   });
@@ -21,7 +23,7 @@ const ProfileHeader = () => {
         <Text style={[styles.brand, { fontFamily: "InstrumentSerif" }]}>
           ZyroApp
         </Text>
-        <TouchableOpacity onPress={() => goTo("profile")} style={styles.avatar}>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")} style={styles.avatar}>
           {true ? (
             <Text style={styles.avatarText}>{getName("Alex Carter")}</Text>
           ) : (
@@ -63,7 +65,7 @@ const ProfileHeader = () => {
 export default ProfileHeader;
 
 const styles = StyleSheet.create({
-  homeHeader: { marginBottom: 32 },
+  homeHeader: { marginBottom: 32, paddingTop: 20 },
   rowBetween: {
     flexDirection: "row",
     justifyContent: "space-between",
