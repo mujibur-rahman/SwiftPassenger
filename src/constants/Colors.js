@@ -6,6 +6,7 @@
 
 export const COLORS = {
   background: "#0B141A",
+  foreground: "#fff9e3",
   card: "#111B21",
   // border: "#232A31",
   border: '#2A2A2A',

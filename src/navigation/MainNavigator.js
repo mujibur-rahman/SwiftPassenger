@@ -15,11 +15,14 @@ import PaymentMethodsScreen  from '../screens/main/PaymentMethodsScreen';
 import NotificationsScreen   from '../screens/main/NotificationsScreen';
 import SavedPlacesScreen     from '../screens/main/SavedPlacesScreen';
 import HelpCenterScreen      from '../screens/main/HelpCenterScreen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 const Tab   = createBottomTabNavigator();
 
 function TabNavigator() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -27,14 +30,15 @@ function TabNavigator() {
         tabBarStyle: {
           backgroundColor: '#CBA35C', borderColor: '#CBA35C',
           borderWidth: 1, height: 60, paddingBottom: 6, paddingTop: 6, borderRadius: 30,
-          position: 'absolute', paddingHorizontal: 6, marginHorizontal: 10, bottom: 6,
+          position: 'absolute', paddingHorizontal: 6, marginHorizontal: 10, 
+          bottom: Math.max(insets.bottom),
           // Shadow (iOS)
           shadowColor: '#ddd',          // ← change this for the shadow color
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.15,
           shadowRadius: 8,
           // Shadow (Android)
-          elevation: 8,
+          elevation: 0,
         },
         // tabBarActiveTintColor:   '#00D95F',
         tabBarItemStyle: {borderRadius: 23, paddingVertical: 4},

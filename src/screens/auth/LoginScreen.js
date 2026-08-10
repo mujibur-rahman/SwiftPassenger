@@ -20,10 +20,12 @@ import { userLoggedIn } from "../../store/auth/authSlice";
 import { COLORS } from "../../constants/Colors";
 import BrandBadge from "../../components/ui/BrandBadge";
 import AppTextInput from "../../components/ui/AppTextInput";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation(); // Tuple - Fixed length array
+  const insets = useSafeAreaInsets();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -31,6 +33,7 @@ export default function LoginScreen({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
+
     if (!phone || !password) {
       Alert.alert("Error", "Please fill in all fields");
       return;
@@ -75,9 +78,10 @@ export default function LoginScreen({ navigation }) {
         <ScrollView
           contentContainerStyle={styles.scroll}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           <BrandBadge
-            style={{ position: "absolute", right: 16, top: 12 }}
+            style={{ position: "absolute", right: 16, top: Math.max(insets.top) }}
             size={100}
             textColor="#FFD700"
           />
