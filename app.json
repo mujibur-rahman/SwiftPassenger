@@ -9,6 +9,7 @@
       "backgroundColor": "#0A0A0A"
     },
     "android": {
+      "backgroundColor": "#0A0A0A",
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#FF6B35"
@@ -25,6 +26,9 @@
         }
       }
     },
+    "ios": {
+      "backgroundColor": "#0A0A0A"
+    },
     "plugins": [
       [
         "expo-location",
@@ -32,7 +36,16 @@
           "locationAlwaysAndWhenInUsePermission": "SwiftDrive needs your location to show you on the map and receive ride requests."
         }
       ],
-      "expo-font",
+      ["expo-font", {
+        "fonts": [
+          "./assets/fonts/PlusJakartaSans-Light.ttf",
+          "./assets/fonts/PlusJakartaSans-Regular.ttf",
+          "./assets/fonts/PlusJakartaSans-Medium.ttf",
+          "./assets/fonts/PlusJakartaSans-SemiBold.ttf",
+          "./assets/fonts/PlusJakartaSans-Bold.ttf",
+          "./assets/fonts/PlusJakartaSans-ExtraBold.ttf"
+        ]
+      }],
       "expo-asset"
     ]
   }

@@ -1,14 +1,14 @@
-// src/navigation/RootNavigator.js
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
-import { ActivityIndicator, View, StyleSheet } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AuthNavigator from "./AuthNavigator";
 import MainNavigator from "./MainNavigator";
 import { userLoggedIn, userLoggedOut } from "../store/auth/authSlice";
 import { useSocket } from "../services/SocketContext";
+import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +19,16 @@ export default function RootNavigator() {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load session from AsyncStorage when app starts
+  const [fontsLoaded] = useFonts({
+    "sans-light": require("../../assets/fonts/PlusJakartaSans-Light.ttf"),
+    "sans-regular": require("../../assets/fonts/PlusJakartaSans-Regular.ttf"),
+    "sans-medium": require("../../assets/fonts/PlusJakartaSans-Medium.ttf"),
+    "sans-semibold": require("../../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
+    "sans-bold": require("../../assets/fonts/PlusJakartaSans-Bold.ttf"),
+    "sans-extrabold": require("../../assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
+  });
+
+  // ✅ All hooks must be called before any early return
   useEffect(() => {
     const loadSession = async () => {
       try {
@@ -48,24 +57,29 @@ export default function RootNavigator() {
     loadSession();
   }, [dispatch]);
 
-  // Connect socket when user is authenticated
   useEffect(() => {
     if (accessToken) {
       connect();
     }
   }, [accessToken]);
 
-  // Show loading screen while checking session
-  if (isLoading) {
+  // Now safe to return early
+  if (!fontsLoaded || isLoading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#00D95F" />
+      <View className="flex-1 justify-center items-center bg-background">
+        <ActivityIndicator size="large" color="#CBA35C" />
       </View>
     );
   }
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: "#0A0A0A" },
+        contentStyle: { backgroundColor: "#0A0A0A" },
+      }}
+    >
       {accessToken ? (
         <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
@@ -74,12 +88,3 @@ export default function RootNavigator() {
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#9c3333",
-  },
-});

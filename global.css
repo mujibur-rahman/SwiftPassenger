@@ -1,0 +1,139 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+@theme {
+  --color-background: #0a0a0a; /*Final*/
+  --color-foreground: #f5f5f5; /*Final*/
+  --color-card: #141414; /*Final*/
+  --color-border: #2a2a2a; /*Final*/
+
+  --color-badge: #232a31; /*Final*/
+  --color-avatar-bg: #1b1e27; /*Final*/
+
+  --color-muted: #888; 
+  --color-muted-foreground: #a1a1a1;
+
+  --color-primary: #cba35c; /*Final*/
+  --color-primary-foreground: #0a0a0a;
+
+  --color-secondary: #9CA3AF;  /*Final*/
+  --color-secondary-foreground: #e8d5a3;
+
+  --color-danger: #ef4444; /*Final*/
+  --color-danger-foreground: #ffffff;
+
+  --color-success: #22c55e; /*Final*/
+  --color-success-foreground: #0a0a0a;
+
+  --color-warning: #f59e0b; /*Final*/
+  --color-warning-foreground: #0a0a0a;
+
+  --color-outline: #3f3f3f;
+  --color-accent: #d4af6a;
+  --color-accent-foreground: #0a0a0a;
+
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  --color-subscription: #cba35c;
+  --color-subscription-foreground: #0a0a0a;
+
+  --font-sans: sans-regular;
+  --font-sans-light: sans-light;
+  --font-sans-medium: sans-medium;
+  --font-sans-semibold: sans-semibold;
+  --font-sans-bold: sans-bold;
+  --font-sans-extrabold: sans-extrabold;
+
+  --font-instrument: "InstrumentSerif";
+
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-11: 44px;
+  --spacing-12: 48px;
+  --spacing-14: 56px;
+  --spacing-16: 64px;
+  --spacing-18: 72px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-30: 120px;
+}
+
+/* @media (prefers-color-scheme: light) {
+  @theme {
+    --color-background: #fafaf9;
+    --color-foreground: #1c1917;
+    --color-card: #ffffff;
+    --color-border: #e7e5e4;
+
+    --color-muted: #f5f5f4;
+    --color-muted-foreground: #78716c;
+
+    --color-primary: #cba35c;
+    --color-primary-foreground: #ffffff;
+
+    --color-secondary: #f5f0e6;
+    --color-secondary-foreground: #44403c;
+
+    --color-danger: #ef4444;
+    --color-danger-foreground: #ffffff;
+
+    --color-success: #22c55e;
+    --color-success-foreground: #ffffff;
+
+    --color-warning: #f59e0b;
+    --color-warning-foreground: #1c1917;
+
+    --color-outline: #d6d3d1;
+    --color-accent: #d4af6a;
+    --color-accent-foreground: #1c1917;
+
+    --color-destructive: #ef4444;
+    --color-destructive-foreground: #ffffff;
+
+    --color-subscription: #cba35c;
+    --color-subscription-foreground: #ffffff;
+  }
+} */
+
+@layer components {
+  .profile-header {
+    @apply mb-8 pt-5;
+  }
+
+  .avatar-sm {
+    @apply size-9 rounded-full bg-avatar-bg border border-border items-center justify-center;
+  }
+
+  .avatar-text {
+    @apply text-primary font-bold;
+  }
+
+  .screen-container {
+    @apply flex-1 bg-background px-4.5;
+  }
+
+  .service-grid {
+    @apply flex-row flex-wrap justify-start gap-4 py-5 border border-border rounded-[20px];
+  }
+
+  .service-card-circle {
+    @apply items-center justify-center size-16 rounded-full bg-badge border border-white/8;
+  }
+
+  .service-card-title {
+    @apply font-sans-medium text-sm text-primary text-center;
+  }
+}

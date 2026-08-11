@@ -1,13 +1,6 @@
 import React, { forwardRef, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import SvgIcon from "./SvgIcon";
-import { COLORS } from "../../constants/Colors";
 
 const AppTextInput = forwardRef(
   (
@@ -26,8 +19,8 @@ const AppTextInput = forwardRef(
 
       onRightPress,
 
-      containerStyle,
-      inputStyle,
+      containerStyle, // can still accept className string
+      inputStyle, // can still accept className string
 
       ...props
     },
@@ -36,46 +29,52 @@ const AppTextInput = forwardRef(
     const [focused, setFocused] = useState(false);
 
     return (
-      <View style={containerStyle}>
+      <View className={containerStyle}>
         {/* Label */}
         {label && (
-          <Text style={styles.label}>
+          <Text className="text-muted-foreground text-sm font-sans-semibold mb-1.5 tracking-wide">
             {label}
-            {required && <Text style={styles.required}> *</Text>}
+            {required && <Text className="text-danger"> *</Text>}
           </Text>
         )}
 
         {/* Input Container */}
         <View
-          style={[
-            styles.inputContainer,
-            focused && styles.focused,
-            error && styles.errorBorder,
-          ]}
+          className={`
+            h-13.5 rounded-2xl border flex-row items-center px-3.5
+            bg-card border-border
+            ${focused ? "border-primary" : ""}
+            ${error ? "border-danger" : ""}
+          `}
         >
           {/* Left Content / Icon */}
           {leftContent !== undefined && leftContent !== null ? (
-            <View style={styles.leftContent}>
+            <View className="mr-2.5 justify-center items-center">
               {typeof leftContent === "string" ||
               typeof leftContent === "number" ? (
-                <Text style={styles.leftContentText}>{leftContent}</Text>
+                <Text className="text-muted-foreground text-base font-sans-semibold">
+                  {leftContent}
+                </Text>
               ) : (
                 leftContent
               )}
             </View>
           ) : leftIcon ? (
-            <View style={styles.leftContent}>
-              <SvgIcon name={leftIcon} size={20} color={COLORS.placeholder} />
+            <View className="mr-2.5 justify-center items-center">
+              <SvgIcon name={leftIcon} size={20} color="#A1A1A1" />
             </View>
           ) : null}
 
           {/* Input */}
           <TextInput
             ref={ref}
-            style={[styles.input, inputStyle]}
-            placeholderTextColor={COLORS.placeholder}
-            selectionColor="#00D95F"
-            cursorColor="#00D95F"
+            className={`
+              flex-1 text-foreground font-sans text-base h-full p-0
+              ${inputStyle || ""}
+            `}
+            placeholderTextColor="#A1A1A1"
+            selectionColor="#CBA35C"
+            cursorColor="#CBA35C"
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             {...props}
@@ -83,102 +82,29 @@ const AppTextInput = forwardRef(
 
           {/* Right Content / Icon */}
           {rightContent ? (
-            <View style={styles.rightContent}>
-              <Text style={styles.leftContentText}>{rightContent}</Text>
+            <View className="ml-2.5 justify-center items-center">
+              <Text className="text-muted-foreground text-base font-sans-semibold">
+                {rightContent}
+              </Text>
             </View>
           ) : (
             rightIcon && (
               <TouchableOpacity
-                style={styles.rightContent}
+                className="ml-2.5 justify-center items-center"
                 onPress={onRightPress}
                 activeOpacity={0.7}
               >
-                <SvgIcon name={rightIcon} size={20} color={COLORS.placeholder} />
+                <SvgIcon name={rightIcon} size={20} color="#A1A1A1" />
               </TouchableOpacity>
             )
           )}
         </View>
 
         {/* Error */}
-        {!!error && <Text style={styles.error}>{error}</Text>}
+        {!!error && <Text className="mt-1.5 text-danger text-xs">{error}</Text>}
       </View>
     );
   },
 );
 
 export default React.memo(AppTextInput);
-
-const styles = StyleSheet.create({
-  // container: {
-  //   marginBottom: 16,
-  // },
-
-  label: {
-    color: COLORS.subText,
-    fontSize: 12,
-    fontWeight: "600",
-    marginBottom: 6,
-    letterSpacing: 0.4,
-  },
-
-  required: {
-    color: "#FF4D4F",
-  },
-
-  inputContainer: {
-    height: 54,
-
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#2A2A2A",
-
-    backgroundColor: "#161616",
-
-    flexDirection: "row",
-    alignItems: "center",
-
-    paddingHorizontal: 14,
-  },
-
-  focused: {
-    borderColor: "#00D95F",
-  },
-
-  errorBorder: {
-    borderColor: "#FF4D4F",
-  },
-
-  leftContent: {
-    marginRight: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  leftContentText: {
-    color: COLORS.placeholder,
-    fontSize: 15,
-    fontWeight: "600",
-  },
-
-  rightContent: {
-    marginLeft: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  input: {
-    flex: 1,
-
-    color: "#FFF",
-    fontSize: 15,
-
-    height: "100%",
-    paddingHorizontal: 0,
-  },
-
-  error: {
-    marginTop: 5,
-    color: "#FF4D4F",
-    fontSize: 12,
-  },
-});
