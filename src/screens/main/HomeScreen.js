@@ -1,14 +1,12 @@
-// src/screens/main/HomeScreen.js  (Passenger)
-import React from "react";
-import {
-  View,
-  Text,
-  StatusBar,
-} from "react-native";
+// src/screens/main/HomeScreen.js
+import React, { useEffect } from "react";
+import { View, Text, StatusBar } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import * as Location from "expo-location";
 import ServiceCard from "../../components/ServiceCard";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProfileHeader from "../../components/ProfileHeader";
+import { setCurrentLocation } from "../../features/location/locationSlice";
 
 const JOBS = [
   { id: "1", title: "Ride", icon: "ride", iconColor: "#38BDF8" },
@@ -21,10 +19,32 @@ const JOBS = [
   { id: "8", title: "Car rental", icon: "uploadTruck", iconColor: "#38BDF8" },
 ];
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
   const dispatch = useDispatch();
-  const { user } = useSelector((s) => s.auth);
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") return;
+
+        const loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+
+        dispatch(
+          setCurrentLocation({
+            latitude: loc.coords.latitude,
+            longitude: loc.coords.longitude,
+            accuracy: loc.coords.accuracy,
+          }),
+        );
+      } catch (e) {
+        console.log("Location error:", e);
+      }
+    })();
+  }, [dispatch]);
 
   return (
     <View className="screen-container" style={{ paddingVertical: insets.top }}>
@@ -33,18 +53,10 @@ export default function HomeScreen({ navigation }) {
         translucent
         backgroundColor="transparent"
       />
-
       <ProfileHeader />
 
-      {/* Advertisement placeholder */}
       <View className="flex-1">
         <Text className="text-2xl text-primary font-sans-bold">
-          Advertisement will show...
-        </Text>
-        <Text className="text-2xl text-primary font-bold">
-          Advertisement will show...
-        </Text>
-        <Text className="text-2xl font-instrument text-primary">
           Advertisement will show...
         </Text>
       </View>

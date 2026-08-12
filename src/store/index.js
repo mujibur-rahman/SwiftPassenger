@@ -3,18 +3,19 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { apiSlice } from "../features/api/apiSlice";
 import authReducer from "../features/auth/authSlice";
-
-import rideReducer from "./slices/rideSlice"; // if you still need local ride state
+import rideReducer from "../features/ride/rideSlice";
+import locationReducer from "../features/location/locationSlice";
 
 export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
-    ride: rideReducer, // optional
+    ride: rideReducer,
+    location: locationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
+      serializableCheck: false, // location object এর জন্য দরকার
     }).concat(apiSlice.middleware),
 });
 
