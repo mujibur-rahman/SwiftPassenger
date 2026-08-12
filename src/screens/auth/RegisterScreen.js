@@ -8,12 +8,12 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import { useRegisterMutation } from "../../store/auth/authApi";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRegisterMutation } from "../../features/auth/authApi";
 import BrandBadge from "../../components/ui/BrandBadge";
 import SvgIcon from "../../components/ui/SvgIcon";
 import AppTextInput from "../../components/ui/AppTextInput";
 import Button from "../../components/ui/Button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function RegisterScreen({ navigation }) {
   const [register, { isLoading }] = useRegisterMutation();

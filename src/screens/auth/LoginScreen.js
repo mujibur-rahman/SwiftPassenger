@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { useLoginMutation } from "../../store/auth/authApi";
-import { userLoggedIn } from "../../store/auth/authSlice";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useLoginMutation } from "../../features/auth/authApi";
+import { userLoggedIn } from "../../features/auth/authSlice";
 import BrandBadge from "../../components/ui/BrandBadge";
 import AppTextInput from "../../components/ui/AppTextInput";
 import Button from "../../components/ui/Button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();

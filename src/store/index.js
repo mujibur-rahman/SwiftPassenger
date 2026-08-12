@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import { apiSlice } from "./api/apiSlice";
-import authReducer from "./auth/authSlice";
+import { apiSlice } from "../features/api/apiSlice";
+import authReducer from "../features/auth/authSlice";
+
 import rideReducer from "./slices/rideSlice"; // if you still need local ride state
 
 export const store = configureStore({

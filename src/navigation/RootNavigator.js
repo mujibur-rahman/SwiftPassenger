@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AuthNavigator from "./AuthNavigator";
 import MainNavigator from "./MainNavigator";
-import { userLoggedIn, userLoggedOut } from "../store/auth/authSlice";
+import { userLoggedIn, userLoggedOut } from "../features/auth/authSlice";
 import { useSocket } from "../services/SocketContext";
 import { useFonts } from "expo-font";
 

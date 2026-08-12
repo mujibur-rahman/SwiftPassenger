@@ -12,12 +12,12 @@ import {
 import {
   useSendOtpMutation,
   useVerifyOtpMutation,
-} from "../../store/auth/authApi";
+} from "../../features/auth/authApi";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SvgIcon from "../../components/ui/SvgIcon";
 import BrandBadge from "../../components/ui/BrandBadge";
 import AppTextInput from "../../components/ui/AppTextInput";
 import Button from "../../components/ui/Button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function OTPScreen({ navigation }) {
   const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
