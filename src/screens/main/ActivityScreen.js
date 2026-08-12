@@ -53,7 +53,7 @@ export default function ActivityScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A' },
+  container: { flex: 1, backgroundColor: '#060E1A' },
   header: { padding: 24, paddingTop: 60, paddingBottom: 16 },
   title: { fontSize: 28, fontWeight: '800', color: '#FFF' },
   subtitle: { color: '#555', fontSize: 14, marginTop: 4 },

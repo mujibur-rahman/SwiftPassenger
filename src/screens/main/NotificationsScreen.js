@@ -49,7 +49,7 @@ export default function NotificationsScreen({ navigation }) {
   const totalCount   = Object.values(settings).length;
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={22} color="#FFF" />

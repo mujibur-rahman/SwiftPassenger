@@ -11,7 +11,8 @@ import {
 
 const DriverSocketContext = createContext(null);
 
-const SOCKET_URL = 'http://10.0.2.2:8000';
+// const SOCKET_URL = 'http://10.0.2.2:8000';
+const SOCKET_URL = 'http://192.168.0.101:3000';
 
 export const DriverSocketProvider = ({ children }) => {
   const socketRef = useRef(null);

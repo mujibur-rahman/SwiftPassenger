@@ -28,8 +28,8 @@ function TabNavigator() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#CBA35C",
-          borderColor: "#CBA35C",
+          backgroundColor: "#38BDF8",
+          borderColor: "#38BDF8",
           borderWidth: 1,
           height: 60,
           paddingBottom: 6,
@@ -75,8 +75,8 @@ export default function MainNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: "#0A0A0A" },
-        contentStyle: { backgroundColor: "#0A0A0A" },
+        cardStyle: { backgroundColor: "#060E1A" },
+        contentStyle: { backgroundColor: "#060E1A" },
       }}
     >
       <Stack.Screen name="Tabs" component={TabNavigator} />

@@ -35,7 +35,7 @@ export default function EditProfileScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   changePhotoBtn: {
     backgroundColor: '#1A1A1A', borderRadius: 20,
     paddingHorizontal: 16, paddingVertical: 6,
-    borderWidth: 1, borderColor: '#2A2A2A',
+    borderWidth: 1, borderColor: '#1E3A5F',
   },
   changePhotoText: { color: '#00D95F', fontSize: 14, fontWeight: '500' },
   form: { gap: 20, marginBottom: 32 },
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   label: { color: '#888', fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
   input: {
     backgroundColor: '#161616', borderRadius: 12, borderWidth: 1,
-    borderColor: '#2A2A2A', paddingHorizontal: 16, height: 56,
+    borderColor: '#1E3A5F', paddingHorizontal: 16, height: 56,
     color: '#FFF', fontSize: 16,
   },
   disabledInput: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   saveBtnText: { color: '#000', fontSize: 16, fontWeight: '700' },
   cancelBtn: {
     height: 52, borderRadius: 14, borderWidth: 1,
-    borderColor: '#2A2A2A', justifyContent: 'center', alignItems: 'center',
+    borderColor: '#1E3A5F', justifyContent: 'center', alignItems: 'center',
   },
   cancelBtnText: { color: '#666', fontSize: 15 },
 });

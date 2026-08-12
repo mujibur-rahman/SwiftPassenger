@@ -5,9 +5,15 @@ import SvgIcon from "./SvgIcon";
 const AppTextInput = forwardRef(
   (
     {
+      // Label
       label,
       required = false,
+      rightLabel, // e.g. "Forgot?"
+      onRightLabelPress,
+
+      // Validation
       error,
+      helperText,
 
       // Left side
       leftIcon,
@@ -16,43 +22,95 @@ const AppTextInput = forwardRef(
       // Right side
       rightIcon,
       rightContent,
-
       onRightPress,
 
-      containerStyle, // can still accept className string
-      inputStyle, // can still accept className string
+      // Behavior
+      secureTextEntry = false,
+      disabled = false,
+
+      // Styling
+      containerClassName = "",
+      inputClassName = "",
+      size = "md", // sm | md | lg
 
       ...props
     },
     ref,
   ) => {
     const [focused, setFocused] = useState(false);
+    const [isSecure, setIsSecure] = useState(secureTextEntry);
+
+    // Auto eye icon when secureTextEntry is used
+    const showEyeToggle = secureTextEntry;
+    const finalRightIcon = showEyeToggle
+      ? isSecure
+        ? "eye"
+        : "eyeOff"
+      : rightIcon;
+
+    const handleRightPress = () => {
+      if (showEyeToggle) {
+        setIsSecure((prev) => !prev);
+      } else if (onRightPress) {
+        onRightPress();
+      }
+    };
+
+    // Size variants
+    const sizeStyles = {
+      sm: "h-11 rounded-xl px-3",
+      md: "h-[54px] rounded-2xl px-3.5",
+      lg: "h-16 rounded-2xl px-4",
+    };
+
+    const hasError = !!error;
+    const isFocused = focused && !disabled;
 
     return (
-      <View className={containerStyle}>
-        {/* Label */}
-        {label && (
-          <Text className="text-muted-foreground text-sm font-sans-semibold mb-1.5 tracking-wide">
-            {label}
-            {required && <Text className="text-danger"> *</Text>}
-          </Text>
+      <View className={containerClassName}>
+        {/* Label row */}
+        {(label || rightLabel) && (
+          <View className="mb-1.5 flex-row items-center justify-between">
+            {label ? (
+              <Text className="text-sm font-sans-semibold tracking-wide text-foreground-secondary">
+                {label}
+                {required && <Text className="text-error"> *</Text>}
+              </Text>
+            ) : (
+              <View />
+            )}
+
+            {rightLabel && (
+              <TouchableOpacity
+                onPress={onRightLabelPress}
+                activeOpacity={0.7}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              >
+                <Text className="text-sm font-sans-medium text-primary">
+                  {rightLabel}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         )}
 
-        {/* Input Container */}
+        {/* Input container */}
         <View
           className={`
-            h-13.5 rounded-2xl border flex-row items-center px-3.5
-            bg-card border-border
-            ${focused ? "border-primary" : ""}
-            ${error ? "border-danger" : ""}
+            flex-row items-center border
+            bg-input
+            ${sizeStyles[size] || sizeStyles.md}
+            ${isFocused ? "border-ring" : "border-border"}
+            ${hasError ? "border-error" : ""}
+            ${disabled ? "opacity-50" : ""}
           `}
         >
           {/* Left Content / Icon */}
-          {leftContent !== undefined && leftContent !== null ? (
-            <View className="mr-2.5 justify-center items-center">
+          {leftContent != null ? (
+            <View className="mr-2.5 items-center justify-center">
               {typeof leftContent === "string" ||
               typeof leftContent === "number" ? (
-                <Text className="text-muted-foreground text-base font-sans-semibold">
+                <Text className="text-base font-sans-semibold text-foreground">
                   {leftContent}
                 </Text>
               ) : (
@@ -60,51 +118,81 @@ const AppTextInput = forwardRef(
               )}
             </View>
           ) : leftIcon ? (
-            <View className="mr-2.5 justify-center items-center">
-              <SvgIcon name={leftIcon} size={20} color="#A1A1A1" />
+            <View className="mr-2.5 items-center justify-center">
+              <SvgIcon
+                name={leftIcon}
+                size={20}
+                color={isFocused ? "#38BDF8" : "#7DD3FC"}
+              />
             </View>
           ) : null}
 
-          {/* Input */}
+          {/* TextInput */}
           <TextInput
             ref={ref}
             className={`
-              flex-1 text-foreground font-sans text-base h-full p-0
-              ${inputStyle || ""}
+              h-full flex-1 p-0
+              text-base font-sans text-foreground
+              ${inputClassName}
             `}
-            placeholderTextColor="#A1A1A1"
-            selectionColor="#CBA35C"
-            cursorColor="#CBA35C"
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
+            placeholderTextColor="#7DD3FC"
+            selectionColor="#38BDF8"
+            cursorColor="#38BDF8"
+            secureTextEntry={isSecure}
+            editable={!disabled}
+            onFocus={(e) => {
+              setFocused(true);
+              props.onFocus?.(e);
+            }}
+            onBlur={(e) => {
+              setFocused(false);
+              props.onBlur?.(e);
+            }}
             {...props}
           />
 
-          {/* Right Content / Icon */}
-          {rightContent ? (
-            <View className="ml-2.5 justify-center items-center">
-              <Text className="text-muted-foreground text-base font-sans-semibold">
-                {rightContent}
-              </Text>
+          {/* Right Content / Icon / Eye */}
+          {rightContent != null ? (
+            <View className="ml-2.5 items-center justify-center">
+              {typeof rightContent === "string" ||
+              typeof rightContent === "number" ? (
+                <Text className="text-base font-sans-semibold text-foreground">
+                  {rightContent}
+                </Text>
+              ) : (
+                rightContent
+              )}
             </View>
-          ) : (
-            rightIcon && (
-              <TouchableOpacity
-                className="ml-2.5 justify-center items-center"
-                onPress={onRightPress}
-                activeOpacity={0.7}
-              >
-                <SvgIcon name={rightIcon} size={20} color="#A1A1A1" />
-              </TouchableOpacity>
-            )
-          )}
+          ) : finalRightIcon ? (
+            <TouchableOpacity
+              className="ml-2.5 items-center justify-center"
+              onPress={handleRightPress}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              disabled={disabled}
+            >
+              <SvgIcon
+                name={finalRightIcon}
+                size={20}
+                color={isFocused ? "#38BDF8" : "#7DD3FC"}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
 
-        {/* Error */}
-        {!!error && <Text className="mt-1.5 text-danger text-xs">{error}</Text>}
+        {/* Error or Helper text */}
+        {hasError ? (
+          <Text className="mt-1.5 text-xs font-sans text-error">{error}</Text>
+        ) : helperText ? (
+          <Text className="mt-1.5 text-xs font-sans text-foreground-muted">
+            {helperText}
+          </Text>
+        ) : null}
       </View>
     );
   },
 );
+
+AppTextInput.displayName = "AppTextInput";
 
 export default React.memo(AppTextInput);

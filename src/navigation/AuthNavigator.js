@@ -13,8 +13,8 @@ export default function AuthNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: "#0A0A0A" },
-        contentStyle: { backgroundColor: "#0A0A0A" },
+        cardStyle: { backgroundColor: "#060E1A" },
+        contentStyle: { backgroundColor: "#060E1A" },
       }}
     >
       <Stack.Screen name="Splash" component={SplashScreen} />

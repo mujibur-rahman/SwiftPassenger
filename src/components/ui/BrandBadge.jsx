@@ -12,9 +12,9 @@ const BrandBadge = ({
   size = 90,
   fontSize = 26,
   fontFamily = "InstrumentSerif",
-  backgroundColor = COLORS.badge,
-  textColor = COLORS.gold,
-  borderColor = COLORS.border,
+  backgroundColor = "#0D1E32",
+  textColor = "#38BDF8",
+  borderColor = "#1E3A5F",
   style,
   textStyle,
 }) => {

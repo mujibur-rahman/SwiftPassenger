@@ -103,7 +103,7 @@ export default function PaymentMethodsScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
 
       {/* Header */}
       <View style={styles.header}>
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   setDefaultBtn: {
     backgroundColor: '#1A1A1A', borderRadius: 8,
     paddingHorizontal: 10, paddingVertical: 6,
-    borderWidth: 1, borderColor: '#2A2A2A',
+    borderWidth: 1, borderColor: '#1E3A5F',
   },
   setDefaultText: { color: '#888', fontSize: 11 },
   deleteBtn: {

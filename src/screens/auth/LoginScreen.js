@@ -4,20 +4,18 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
   Alert,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../store/auth/authApi";
 import { userLoggedIn } from "../../store/auth/authSlice";
 import BrandBadge from "../../components/ui/BrandBadge";
 import AppTextInput from "../../components/ui/AppTextInput";
+import Button from "../../components/ui/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginScreen({ navigation }) {
@@ -27,7 +25,6 @@ export default function LoginScreen({ navigation }) {
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!phone || !password) {
@@ -36,28 +33,18 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      // 1. Call RTK Query mutation
       const result = await login({ phone, password }).unwrap();
-
-      console.log("Login success →", result);
-
       const token = result.accessToken || result.token;
 
-      // 2. Save token & user
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("user", JSON.stringify(result.user));
 
-      console.log("AsyncStorage saved");
-
-      // 3. Update Redux auth state
       dispatch(
         userLoggedIn({
           accessToken: token,
           user: result.user,
         }),
       );
-
-      console.log("Redux updated");
     } catch (err) {
       console.log("Login error →", JSON.stringify(err, null, 2));
 
@@ -71,27 +58,25 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={["#0A0A0A", "#0A0A0A"]} className="flex-1">
+    <View className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         className="flex-1"
       >
-        <ScrollView contentContainerClassName="grow justify-center p-6">
+        <ScrollView
+          contentContainerClassName="flex-grow justify-center px-6 py-6"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           {/* Brand Badge */}
-          <BrandBadge
-            style={{
-              position: "absolute",
-              right: 16,
-              top: Math.max(insets.top),
-            }}
-            size={100}
-            textColor="#FFD700"
-          />
+          <View className="absolute right-4 z-10" style={{ top: insets.top }}>
+            <BrandBadge size={100} />
+          </View>
 
           {/* Header */}
-          <View className="mb-10">
-            <View className="self-start mb-4 rounded bg-[#00D95F]/12.5 border border-[#00D95F]/25 px-2.5 py-1">
-              <Text className="text-[10px] font-bold tracking-[1.5px] text-success">
+          <View className="mb-10 mt-8">
+            <View className="mb-4 self-start rounded-md border border-success/25 bg-success/10 px-2.5 py-1">
+              <Text className="text-[10px] font-sans-bold tracking-[1.5px] text-success">
                 PASSENGER
               </Text>
             </View>
@@ -100,7 +85,7 @@ export default function LoginScreen({ navigation }) {
               Welcome Back 👋
             </Text>
 
-            <Text className="mt-2 text-base text-muted-foreground">
+            <Text className="mt-2 text-base font-sans text-foreground-muted">
               Sign in to your account
             </Text>
           </View>
@@ -110,68 +95,58 @@ export default function LoginScreen({ navigation }) {
             <AppTextInput
               label="Phone Number"
               required
+              leftContent="+1"
               value={phone}
               onChangeText={setPhone}
               placeholder="(555) 000-0000"
-              leftContent="+1"
               keyboardType="phone-pad"
             />
 
             <AppTextInput
               label="Password"
+              rightLabel="Forgot?"
+              onRightLabelPress={() => navigation.navigate("ForgotPassword")}
               required
+              leftIcon="lock"
+              secureTextEntry
               value={password}
               onChangeText={setPassword}
               placeholder="Enter password"
-              secureTextEntry={!showPassword}
-              rightIcon={showPassword ? "eyeOff" : "eye"}
-              onRightPress={() => setShowPassword(!showPassword)}
             />
 
-            {/* Login Button */}
-            <TouchableOpacity
-              className="mt-2 overflow-hidden rounded-xl"
-              style={{ opacity: isLoading ? 0.7 : 1 }}
+            <Button
+              variant="primary"
               onPress={handleLogin}
+              loading={isLoading}
+              disabled={isLoading}
+              className="mt-1"
+            >
+              Sign In
+            </Button>
+
+            <Button
+              variant="outline"
+              onPress={() => navigation.navigate("OTP")}
               disabled={isLoading}
             >
-              <LinearGradient
-                colors={["#00D95F", "#00B84F"]}
-                className="h-14 items-center justify-center"
-              >
-                {isLoading ? (
-                  <ActivityIndicator color="#000" />
-                ) : (
-                  <Text className="text-base font-sans-bold tracking-[0.5px] text-black">
-                    Sign In
-                  </Text>
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
-
-            {/* OTP Button */}
-            <TouchableOpacity
-              className="h-14 items-center justify-center rounded-xl border border-border"
-              onPress={() => navigation.navigate("OTP")}
-            >
-              <Text className="text-[15px] font-sans-medium text-foreground">
-                📱 Continue with OTP
-              </Text>
-            </TouchableOpacity>
+              Continue with OTP
+            </Button>
           </View>
 
-          {/* Register */}
-          <TouchableOpacity
-            className="mt-8 items-center"
+          {/* Footer link */}
+          <Button
+            variant="link"
+            size="sm"
+            className="mt-8"
             onPress={() => navigation.navigate("Register")}
           >
-            <Text className="text-[15px] text-[#666666]">
+            <Text className="text-center text-[15px] font-sans text-foreground-muted">
               Don't have an account?{" "}
-              <Text className="font-sans-semibold text-success">Sign Up</Text>
+              <Text className="font-sans-semibold text-primary">Sign Up</Text>
             </Text>
-          </TouchableOpacity>
+          </Button>
         </ScrollView>
       </KeyboardAvoidingView>
-    </LinearGradient>
+    </View>
   );
 }

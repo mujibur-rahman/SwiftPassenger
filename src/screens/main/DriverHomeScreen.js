@@ -173,7 +173,7 @@ export default function DriverHomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A' },
+  container: { flex: 1, backgroundColor: '#060E1A' },
   map: { flex: 1 },
   topOverlay: { position: 'absolute', top: 0, left: 0, right: 0, paddingTop: 50, paddingHorizontal: 20, paddingBottom: 40 },
   topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
@@ -206,5 +206,5 @@ const styles = StyleSheet.create({
   metricItem: { flex: 1, alignItems: 'center', gap: 4 },
   metricValue: { color: '#FFF', fontSize: 16, fontWeight: '700' },
   metricLabel: { color: '#555', fontSize: 11 },
-  metricDivider: { width: 1, height: 30, backgroundColor: '#2A2A2A' },
+  metricDivider: { width: 1, height: 30, backgroundColor: '#1E3A5F' },
 });

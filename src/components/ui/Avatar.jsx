@@ -73,7 +73,7 @@ export default function Avatar({
 
   if (loading) {
     content = (
-      <ActivityIndicator size={spinnerSize} color="#cba35c" /> // gold
+      <ActivityIndicator size={spinnerSize} color="#38BDF8" /> // primary
     );
   } else if (!showIcon && name) {
     content = (
@@ -94,7 +94,7 @@ export default function Avatar({
       disabled={loading}
       className={`
         ${sizeClass}
-        rounded-full bg-avatar-bg border border-border
+        rounded-full bg-primary border border-border
         items-center justify-center
         ${loading ? "opacity-70" : ""}
         ${className}

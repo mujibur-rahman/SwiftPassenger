@@ -67,7 +67,7 @@ export default function RootNavigator() {
   if (!fontsLoaded || isLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-background">
-        <ActivityIndicator size="large" color="#CBA35C" />
+        <ActivityIndicator size="large" color="#38BDF8" />
       </View>
     );
   }
@@ -76,8 +76,8 @@ export default function RootNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: "#0A0A0A" },
-        contentStyle: { backgroundColor: "#0A0A0A" },
+        cardStyle: { backgroundColor: "#060E1A" },
+        contentStyle: { backgroundColor: "#060E1A" },
       }}
     >
       {accessToken ? (

@@ -104,7 +104,7 @@ export default function ActiveRideScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A' },
+  container: { flex: 1, backgroundColor: '#060E1A' },
   map: { flex: 1 },
   statusPill: { position: 'absolute', top: 50, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: 'rgba(0,0,0,0.85)', borderRadius: 20, paddingHorizontal: 16, paddingVertical: 8, borderWidth: 1, borderColor: '#222' },
   statusDot: { width: 8, height: 8, borderRadius: 4 },

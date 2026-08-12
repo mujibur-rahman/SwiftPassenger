@@ -3,24 +3,20 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
   Alert,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRegisterMutation } from "../../store/auth/authApi";
 import BrandBadge from "../../components/ui/BrandBadge";
 import SvgIcon from "../../components/ui/SvgIcon";
 import AppTextInput from "../../components/ui/AppTextInput";
-import { COLORS } from "../../constants/Colors";
+import Button from "../../components/ui/Button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function RegisterScreen({ navigation }) {
   const [register, { isLoading }] = useRegisterMutation();
-  const [showPassword, setShowPassword] = useState(false);
   const insets = useSafeAreaInsets();
 
   const [form, setForm] = useState({
@@ -29,6 +25,10 @@ export default function RegisterScreen({ navigation }) {
     email: "",
     password: "",
   });
+
+  const updateForm = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleRegister = async () => {
     if (!form.name || !form.phone || !form.password) {
@@ -54,61 +54,72 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={["#0A0A0A", "#0A0A0A"]} style={styles.container}>
+    <View className="flex-1 bg-background">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={{ flex: 1 }}
+        className="flex-1"
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerClassName="flex-grow justify-center px-6 py-6"
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <View style={[styles.topRow, { top: insets.top }]}>
+          {/* Top row: Back + Brand */}
+          <View
+            className="absolute left-6 right-6 z-10 flex-row items-center justify-between"
+            style={{ top: insets.top }}
+          >
             <TouchableOpacity
-              style={styles.backBtn}
+              className="flex-row items-center gap-2"
               onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
             >
-              <SvgIcon name="arrowLeft" size={24} color={COLORS.gold} />
-              <Text style={styles.backText}>Back</Text>
+              <SvgIcon name="arrowLeft" size={24} color="#38BDF8" />
+              <Text className="text-base font-sans-extrabold text-primary">
+                Back
+              </Text>
             </TouchableOpacity>
 
-            <BrandBadge size={100} textColor="#FFD700" />
+            <BrandBadge size={100} />
           </View>
 
-          <View style={styles.header}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Join millions of riders today</Text>
+          {/* Header */}
+          <View className="mb-8 mt-16">
+            <Text className="text-[36px] font-sans-extrabold leading-[44px] text-foreground">
+              Create Account
+            </Text>
+            <Text className="mt-2 text-[15px] font-sans text-foreground-muted">
+              Join millions of riders today
+            </Text>
           </View>
 
-          <View style={styles.form}>
+          {/* Form */}
+          <View className="gap-3.5">
             <AppTextInput
               label="Full Name"
+              leftIcon="user"
               required
               value={form.name}
-              onChangeText={(text) =>
-                setForm((prev) => ({ ...prev, name: text }))
-              }
+              onChangeText={(text) => updateForm("name", text)}
               placeholder="John Doe"
+              autoCapitalize="words"
             />
 
             <AppTextInput
               label="Phone Number"
               required
+              leftContent="+1"
               value={form.phone}
-              onChangeText={(text) =>
-                setForm((prev) => ({ ...prev, phone: text }))
-              }
+              onChangeText={(text) => updateForm("phone", text)}
               keyboardType="phone-pad"
               placeholder="(555) 000-0000"
-              leftContent="+1"
             />
 
             <AppTextInput
               label="Email (optional)"
+              leftIcon="mail"
               value={form.email}
-              onChangeText={(text) =>
-                setForm((prev) => ({ ...prev, email: text }))
-              }
+              onChangeText={(text) => updateForm("email", text)}
               keyboardType="email-address"
               autoCapitalize="none"
               placeholder="john@example.com"
@@ -116,81 +127,38 @@ export default function RegisterScreen({ navigation }) {
 
             <AppTextInput
               label="Password"
+              leftIcon="lock"
               required
+              secureTextEntry
               value={form.password}
-              onChangeText={(text) =>
-                setForm((prev) => ({ ...prev, password: text }))
-              }
+              onChangeText={(text) => updateForm("password", text)}
               placeholder="Min 6 characters"
-              secureTextEntry={!showPassword}
-              rightIcon={showPassword ? "eyeOff" : "eye"}
-              onRightPress={() => setShowPassword(!showPassword)}
             />
 
-            <TouchableOpacity
-              style={[styles.btn, isLoading && styles.btnDisabled]}
+            <Button
+              variant="primary"
               onPress={handleRegister}
+              loading={isLoading}
               disabled={isLoading}
+              className="mt-2"
             >
-              <LinearGradient
-                colors={["#00D95F", "#00B84F"]}
-                style={styles.btnGrad}
-              >
-                {isLoading ? (
-                  <ActivityIndicator color="#000" />
-                ) : (
-                  <Text style={styles.btnText}>Create Account</Text>
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
+              Create Account
+            </Button>
 
-            <TouchableOpacity
-              style={styles.loginLink}
+            <Button
+              variant="link"
+              size="sm"
+              className="mt-6"
               onPress={() => navigation.navigate("Login")}
             >
-              <Text style={styles.loginText}>
+              <Text className="text-center text-[15px] font-sans text-foreground-muted">
                 Already have an account?{" "}
-                <Text style={styles.loginAccent}>Sign In</Text>
+                <Text className="font-sans-semibold text-primary">Sign In</Text>
               </Text>
-            </TouchableOpacity>
+            </Button>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </LinearGradient>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scroll: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 24,
-  },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    position: "absolute",
-    left: 24,
-    right: 24,
-    zIndex: 1
-  },
-  backBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  backText: { color: "#888", fontSize: 16 },
-  header: { marginBottom: 32 },
-  title: { fontSize: 36, fontWeight: "800", color: "#FFF", lineHeight: 44 },
-  subtitle: { color: "#666", fontSize: 15, marginTop: 8 },
-  form: { gap: 14 },
-  btn: { borderRadius: 12, overflow: "hidden", marginTop: 8 },
-  btnDisabled: { opacity: 0.7 },
-  btnGrad: { height: 56, justifyContent: "center", alignItems: "center" },
-  btnText: { color: "#000", fontSize: 16, fontWeight: "700" },
-  loginLink: { alignItems: "center", marginTop: 16 },
-  loginText: { color: "#666", fontSize: 15 },
-  loginAccent: { color: "#00D95F", fontWeight: "600" },
-});

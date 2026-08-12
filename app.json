@@ -6,10 +6,10 @@
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "splash": {
-      "backgroundColor": "#0A0A0A"
+      "backgroundColor": "#060E1A"
     },
     "android": {
-      "backgroundColor": "#0A0A0A",
+      "backgroundColor": "#060E1A",
       "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#FF6B35"
@@ -27,7 +27,7 @@
       }
     },
     "ios": {
-      "backgroundColor": "#0A0A0A"
+      "backgroundColor": "#060E1A"
     },
     "plugins": [
       [

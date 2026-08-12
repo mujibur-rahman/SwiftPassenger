@@ -34,7 +34,7 @@ export default function RideCompletedScreen({ navigation }) {
   const fare = currentRide?.fare || 14.50;
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0D1B0F', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#0D1B0F', '#060E1A']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View style={[styles.checkWrap, { transform: [{ scale: scaleAnim }] }]}>
           <LinearGradient colors={['#00D95F', '#00B84F']} style={styles.checkCircle}>

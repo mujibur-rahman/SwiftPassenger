@@ -122,7 +122,7 @@ export default function IncomingRideModal({ navigation }) {
 
 const styles = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.75)', justifyContent: 'flex-end' },
-  modal: { backgroundColor: '#111', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingBottom: 40, overflow: 'hidden', borderWidth: 1, borderColor: '#2A2A2A' },
+  modal: { backgroundColor: '#111', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingBottom: 40, overflow: 'hidden', borderWidth: 1, borderColor: '#1E3A5F' },
   countdownBar: { height: 4, backgroundColor: '#222' },
   countdownFill: { height: '100%', borderRadius: 2 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, paddingBottom: 12 },

@@ -17,26 +17,26 @@ const AppTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    background: "#0A0A0A",
-    card: "#0A0A0A",
-    border: "#2A2A2A",
-    text: "#F5F5F5",
-    primary: "#CBA35C",
+    background: "#060E1A",
+    card: "#0D1E32",
+    border: "#1E3A5F",
+    text: "#BAE6FD",
+    primary: "#38BDF8",
   },
 };
 
 export default function App() {
   // inside App component
   useEffect(() => {
-    SystemUI.setBackgroundColorAsync("#0A0A0A");
+    SystemUI.setBackgroundColorAsync("#060E1A");
   }, []);
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#060E1A" }}>
       <Provider store={store}>
         <SafeAreaProvider>
           <SocketProvider>
             <NavigationContainer theme={AppTheme}>
-              <StatusBar barStyle="light-content" backgroundColor="#0A0A0A" />
+              <StatusBar barStyle="light-content" backgroundColor="#060E1A" />
               <RootNavigator />
             </NavigationContainer>
           </SocketProvider>

@@ -56,7 +56,7 @@ export default function HelpCenterScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={22} color="#FFF" />
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#1A1A1A', justifyContent: 'center', alignItems: 'center' },
   title: { color: '#FFF', fontSize: 18, fontWeight: '700' },
   scroll: { padding: 16, paddingBottom: 40 },
-  searchBar: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#161616', borderRadius: 14, paddingHorizontal: 16, height: 52, borderWidth: 1, borderColor: '#2A2A2A', marginBottom: 20 },
+  searchBar: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#161616', borderRadius: 14, paddingHorizontal: 16, height: 52, borderWidth: 1, borderColor: '#1E3A5F', marginBottom: 20 },
   searchInput: { flex: 1, color: '#FFF', fontSize: 15 },
   contactRow: { flexDirection: 'row', gap: 10, marginBottom: 24 },
   contactBtn: { flex: 1, alignItems: 'center', gap: 8, backgroundColor: '#111', borderRadius: 14, padding: 16, borderWidth: 1, borderColor: '#1E1E1E' },

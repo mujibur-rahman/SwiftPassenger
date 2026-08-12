@@ -64,7 +64,7 @@ export default function SavedPlacesScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={22} color="#FFF" />
@@ -190,16 +190,16 @@ const styles = StyleSheet.create({
   addPlaceIcon: { width: 48, height: 48, borderRadius: 14, backgroundColor: '#00D95F15', justifyContent: 'center', alignItems: 'center' },
   addPlaceText: { color: '#00D95F', fontSize: 15, fontWeight: '500' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'flex-end' },
-  modal: { backgroundColor: '#111', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40, gap: 14, borderWidth: 1, borderColor: '#2A2A2A' },
+  modal: { backgroundColor: '#111', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40, gap: 14, borderWidth: 1, borderColor: '#1E3A5F' },
   modalTitle: { color: '#FFF', fontSize: 20, fontWeight: '700', marginBottom: 4 },
   label: { color: '#888', fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
   iconPicker: { marginBottom: 4 },
   iconOption: { width: 48, height: 48, borderRadius: 12, backgroundColor: '#1A1A1A', justifyContent: 'center', alignItems: 'center', marginRight: 8, borderWidth: 2, borderColor: 'transparent' },
   iconOptionActive: { borderColor: '#00D95F', backgroundColor: '#0D1F13' },
   iconOptionText: { fontSize: 22 },
-  input: { backgroundColor: '#161616', borderRadius: 12, borderWidth: 1, borderColor: '#2A2A2A', paddingHorizontal: 16, height: 54, color: '#FFF', fontSize: 15 },
+  input: { backgroundColor: '#161616', borderRadius: 12, borderWidth: 1, borderColor: '#1E3A5F', paddingHorizontal: 16, height: 54, color: '#FFF', fontSize: 15 },
   modalActions: { flexDirection: 'row', gap: 12, marginTop: 4 },
-  cancelModalBtn: { flex: 1, height: 52, borderRadius: 12, borderWidth: 1, borderColor: '#2A2A2A', justifyContent: 'center', alignItems: 'center' },
+  cancelModalBtn: { flex: 1, height: 52, borderRadius: 12, borderWidth: 1, borderColor: '#1E3A5F', justifyContent: 'center', alignItems: 'center' },
   cancelModalText: { color: '#888', fontSize: 15 },
   saveModalBtn: { flex: 2, borderRadius: 12, overflow: 'hidden' },
   saveModalGrad: { height: 52, justifyContent: 'center', alignItems: 'center' },

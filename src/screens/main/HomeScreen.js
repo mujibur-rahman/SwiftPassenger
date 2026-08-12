@@ -11,14 +11,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ProfileHeader from "../../components/ProfileHeader";
 
 const JOBS = [
-  { id: "1", title: "Ride", icon: "ride", iconColor: "#cba35c" },
-  { id: "2", title: "Food delivery", icon: "food", iconColor: "#cba35c" },
-  { id: "3", title: "Gig jobs", icon: "gig", iconColor: "#cba35c" },
-  { id: "4", title: "Parcel delivery", icon: "delivery", iconColor: "#cba35c" },
-  { id: "5", title: "Shop for me", icon: "shoppingCart", iconColor: "#cba35c" },
-  { id: "6", title: "Marketplace pickup", icon: "card", iconColor: "#cba35c" },
-  { id: "7", title: "Car insurance", icon: "store", iconColor: "#cba35c" },
-  { id: "8", title: "Car rental", icon: "uploadTruck", iconColor: "#cba35c" },
+  { id: "1", title: "Ride", icon: "ride", iconColor: "#38BDF8" },
+  { id: "2", title: "Food delivery", icon: "food", iconColor: "#38BDF8" },
+  { id: "3", title: "Gig jobs", icon: "gig", iconColor: "#38BDF8" },
+  { id: "4", title: "Parcel delivery", icon: "delivery", iconColor: "#38BDF8" },
+  { id: "5", title: "Shop for me", icon: "shoppingCart", iconColor: "#38BDF8" },
+  { id: "6", title: "Marketplace pickup", icon: "card", iconColor: "#38BDF8" },
+  { id: "7", title: "Car insurance", icon: "store", iconColor: "#38BDF8" },
+  { id: "8", title: "Car rental", icon: "uploadTruck", iconColor: "#38BDF8" },
 ];
 
 export default function HomeScreen({ navigation }) {
@@ -41,7 +41,10 @@ export default function HomeScreen({ navigation }) {
         <Text className="text-2xl text-primary font-sans-bold">
           Advertisement will show...
         </Text>
-        <Text className="text-2xl font-instrument text-muted">
+        <Text className="text-2xl text-primary font-bold">
+          Advertisement will show...
+        </Text>
+        <Text className="text-2xl font-instrument text-primary">
           Advertisement will show...
         </Text>
       </View>

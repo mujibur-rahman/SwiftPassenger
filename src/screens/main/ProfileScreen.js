@@ -35,7 +35,7 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scroll}>
-      <LinearGradient colors={['#0D1B0F', '#0A0A0A']} style={styles.headerGrad}>
+      <LinearGradient colors={['#0D1B0F', '#060E1A']} style={styles.headerGrad}>
         <TouchableOpacity style={styles.avatarWrap} onPress={() => navigation.navigate('EditProfile')} activeOpacity={0.8}>
           <LinearGradient colors={['#00D95F', '#00B84F']} style={styles.avatar}>
             <Text style={styles.avatarText}>{user?.name?.[0]?.toUpperCase() || 'R'}</Text>
@@ -100,13 +100,13 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A' },
+  container: { flex: 1, backgroundColor: '#060E1A' },
   scroll: { paddingBottom: 40 },
   headerGrad: { padding: 24, paddingTop: 60, alignItems: 'center', gap: 4 },
   avatarWrap: { position: 'relative', marginBottom: 12 },
   avatar: { width: 88, height: 88, borderRadius: 44, justifyContent: 'center', alignItems: 'center' },
   avatarText: { color: '#000', fontWeight: '800', fontSize: 32 },
-  editBadge: { position: 'absolute', bottom: 0, right: 0, width: 26, height: 26, borderRadius: 13, backgroundColor: '#00D95F', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#0A0A0A' },
+  editBadge: { position: 'absolute', bottom: 0, right: 0, width: 26, height: 26, borderRadius: 13, backgroundColor: '#00D95F', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#060E1A' },
   userName: { color: '#FFF', fontSize: 22, fontWeight: '700' },
   userPhone: { color: '#666', fontSize: 14 },
   userEmail: { color: '#555', fontSize: 13 },

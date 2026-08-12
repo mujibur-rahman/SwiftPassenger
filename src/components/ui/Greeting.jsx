@@ -34,14 +34,14 @@ export default function Greeting({
   return (
     <View className={className}>
       <Text
-        className={`mt-3.5 text-xl font-sans-semibold text-white ${titleClassName}`}
+        className={`mt-3.5 text-xl font-sans-semibold text-foreground ${titleClassName}`}
       >
         {getGreeting()}, {firstName}
       </Text>
 
       {subtitle ? (
         <Text
-          className={`mt-0.5 text-[13px] font-sans text-secondary ${subtitleClassName}`}
+          className={`mt-0.5 text-[13px] font-sans text-foreground-muted ${subtitleClassName}`}
         >
           {subtitle}
         </Text>
