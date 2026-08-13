@@ -1,3 +1,4 @@
+// src/components/ui/Avatar.jsx
 import React from "react";
 import { TouchableOpacity, Text, View, ActivityIndicator } from "react-native";
 import SvgIcon from "./SvgIcon";
@@ -14,31 +15,13 @@ import { getName } from "../../utils/helpers";
  * - className?: string
  * - textClassName?: string
  * - showIcon?: boolean
- * - loading?: boolean          ← new
+ * - loading?: boolean
  * - activeOpacity?: number
  */
 const sizeMap = {
-  sm: "w-9 h-9",
-  md: "w-11 h-11",
-  lg: "w-14 h-14",
-};
-
-const textSizeMap = {
-  sm: "text-sm",
-  md: "text-base",
-  lg: "text-lg",
-};
-
-const iconSizeMap = {
-  sm: 18,
-  md: 22,
-  lg: 26,
-};
-
-const spinnerSizeMap = {
-  sm: "small",
-  md: "small",
-  lg: "large",
+  sm: { className: "w-9 h-9", text: "text-sm", icon: 18, spinner: "small" },
+  md: { className: "w-11 h-11", text: "text-base", icon: 22, spinner: "small" },
+  lg: { className: "w-14 h-14", text: "text-lg", icon: 26, spinner: "large" },
 };
 
 export default function Avatar({
@@ -52,37 +35,34 @@ export default function Avatar({
   loading = false,
   activeOpacity = 0.7,
 }) {
-  const sizeClass =
-    typeof size === "number"
-      ? `w-[${size}px] h-[${size}px]`
-      : sizeMap[size] || sizeMap.sm;
+  const isNumber = typeof size === "number";
 
-  const textSize = textSizeMap[size] || textSizeMap.sm;
-  const iconSize =
-    typeof size === "number" ? Math.round(size * 0.5) : iconSizeMap[size] || 18;
-
-  const spinnerSize =
-    typeof size === "number"
-      ? size > 44
-        ? "large"
-        : "small"
-      : spinnerSizeMap[size] || "small";
+  const config = isNumber
+    ? {
+        className: "",
+        text: size >= 56 ? "text-xl" : size >= 44 ? "text-lg" : "text-base",
+        icon: Math.round(size * 0.5),
+        spinner: size > 44 ? "large" : "small",
+        style: { width: size, height: size },
+      }
+    : {
+        ...(sizeMap[size] || sizeMap.sm),
+        style: undefined,
+      };
 
   // ── Content ────────────────────────────────
   let content = null;
 
   if (loading) {
-    content = (
-      <ActivityIndicator size={spinnerSize} color="#38BDF8" /> // primary
-    );
+    content = <ActivityIndicator size={config.spinner} color="#38BDF8" />;
   } else if (!showIcon && name) {
     content = (
-      <Text className={`avatar-text ${textSize} ${textClassName}`}>
+      <Text className={`avatar-text ${config.text} ${textClassName}`}>
         {getName(name)}
       </Text>
     );
   } else {
-    content = <SvgIcon name={icon} size={iconSize} color="#fff" />;
+    content = <SvgIcon name={icon} size={config.icon} color="#fff" />;
   }
 
   const Container = onPress && !loading ? TouchableOpacity : View;
@@ -92,8 +72,9 @@ export default function Avatar({
       onPress={loading ? undefined : onPress}
       activeOpacity={activeOpacity}
       disabled={loading}
+      style={config.style}
       className={`
-        ${sizeClass}
+        ${config.className}
         rounded-full bg-primary border border-border
         items-center justify-center
         ${loading ? "opacity-70" : ""}

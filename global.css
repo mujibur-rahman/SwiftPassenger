@@ -99,7 +99,7 @@
 } */
 
 @layer components {
-  .profile-header {
+  .logo-avatar {
     @apply mb-8 pt-5;
   }
 

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Location from "expo-location";
 import ServiceCard from "../../components/ServiceCard";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ProfileHeader from "../../components/ProfileHeader";
+import LogoAvatar from "../../components/ui/LogoAvatar";
 import { setCurrentLocation } from "../../features/location/locationSlice";
 
 const JOBS = [
@@ -53,7 +53,7 @@ export default function HomeScreen() {
         translucent
         backgroundColor="transparent"
       />
-      <ProfileHeader />
+      <LogoAvatar />
 
       <View className="flex-1">
         <Text className="text-2xl text-primary font-sans-bold">

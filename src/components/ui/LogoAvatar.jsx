@@ -4,10 +4,10 @@ import {
   InstrumentSerif_400Regular_Italic,
 } from "@expo-google-fonts/instrument-serif";
 import { useNavigation } from "@react-navigation/native";
-import Avatar from "./ui/Avatar";
-import Greeting from "./ui/Greeting";
+import Avatar from "./Avatar";
+import Greeting from "./Greeting";
 
-const ProfileHeader = () => {
+const LogoAvatar = () => {
   const navigation = useNavigation();
 
   const [fontsLoaded] = useFonts({
@@ -17,7 +17,7 @@ const ProfileHeader = () => {
   if (!fontsLoaded) return null;
 
   return (
-    <View className="profile-header">
+    <View className="logo-avatar">
       <View className="flex-row justify-between items-center">
         <Text className="text-[26px] text-primary font-instrument font-semibold">
           ZyroApp
@@ -34,4 +34,4 @@ const ProfileHeader = () => {
   );
 };
 
-export default ProfileHeader;
+export default LogoAvatar;
