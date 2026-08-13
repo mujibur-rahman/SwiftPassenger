@@ -1,23 +1,15 @@
 // src/components/ui/Avatar.jsx
 import React from "react";
-import { TouchableOpacity, Text, View, ActivityIndicator } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  View,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 import SvgIcon from "./SvgIcon";
 import { getName } from "../../utils/helpers";
 
-/**
- * Reusable Avatar
- *
- * Props:
- * - name?: string
- * - size?: "sm" | "md" | "lg" | number
- * - onPress?: () => void
- * - icon?: string
- * - className?: string
- * - textClassName?: string
- * - showIcon?: boolean
- * - loading?: boolean
- * - activeOpacity?: number
- */
 const sizeMap = {
   sm: { className: "w-9 h-9", text: "text-sm", icon: 18, spinner: "small" },
   md: { className: "w-11 h-11", text: "text-base", icon: 22, spinner: "small" },
@@ -26,6 +18,7 @@ const sizeMap = {
 
 export default function Avatar({
   name,
+  uri, // ← new: image URI
   size = "sm",
   onPress,
   icon = "user",
@@ -50,11 +43,19 @@ export default function Avatar({
         style: undefined,
       };
 
-  // ── Content ────────────────────────────────
   let content = null;
 
   if (loading) {
     content = <ActivityIndicator size={config.spinner} color="#38BDF8" />;
+  } else if (uri) {
+    // Show image when URI is provided
+    content = (
+      <Image
+        source={{ uri }}
+        style={{ width: "100%", height: "100%", borderRadius: 999 }}
+        resizeMode="cover"
+      />
+    );
   } else if (!showIcon && name) {
     content = (
       <Text className={`avatar-text ${config.text} ${textClassName}`}>
@@ -76,7 +77,7 @@ export default function Avatar({
       className={`
         ${config.className}
         rounded-full bg-primary border border-border
-        items-center justify-center
+        items-center justify-center overflow-hidden
         ${loading ? "opacity-70" : ""}
         ${className}
       `}
