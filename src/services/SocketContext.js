@@ -15,7 +15,8 @@ import {
 const SocketContext = createContext(null);
 
 // Android emulator: 10.0.2.2 | Real device: your local IP
-const SOCKET_URL = "http://10.0.2.2:8000";
+// const SOCKET_URL = "http://10.0.2.2:8000";
+const SOCKET_URL = "http://192.168.0.101:8000"; // for mobile
 
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
@@ -28,7 +29,7 @@ export const SocketProvider = ({ children }) => {
 
     socketRef.current = io(SOCKET_URL, {
       auth: { token },
-      transports: ["polling"],
+      transports: ["websocket", "polling"],   // try both
       reconnection: true,
       reconnectionDelay: 3000,
       reconnectionDelayMax: 15000,
@@ -41,8 +42,13 @@ export const SocketProvider = ({ children }) => {
       console.log("[Socket] Passenger connected:", socketRef.current.id);
     });
 
+    // socketRef.current.on("connect_error", (err) => {
+    //   console.warn("[RubelSocket] error:", err.message);
+    // });
+
     socketRef.current.on("connect_error", (err) => {
-      console.warn("[Socket] error:", err.message);
+      console.warn("[RubelSocket] error:", err.message);
+      console.warn("[RubelSocket] full error:", err); // add this
     });
 
     socketRef.current.on("disconnect", (reason) => {

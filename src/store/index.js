@@ -5,6 +5,7 @@ import { apiSlice } from "../features/api/apiSlice";
 import authReducer from "../features/auth/authSlice";
 import rideReducer from "../features/ride/rideSlice";
 import locationReducer from "../features/location/locationSlice";
+import driverReducer from "../features/driver/driverSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     auth: authReducer,
     ride: rideReducer,
     location: locationReducer,
+    driver: driverReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

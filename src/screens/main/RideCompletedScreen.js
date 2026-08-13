@@ -1,239 +1,426 @@
-// src/screens/main/RideCompletedScreen.js
-import React, { useState, useRef, useEffect } from "react";
+// src/screens/main/RideBookingScreen.js
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  Animated,
   ScrollView,
-  ActivityIndicator,
+  TextInput,
+  Alert,
+  Animated,
+  StatusBar,
+  Keyboard,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { resetRide } from "../../features/ride/rideSlice";
-import { clearLocations } from "../../features/location/locationSlice";
-import { useSubmitRatingMutation } from "../../features/ride/rideApi";
+import { useNavigation } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Location from "expo-location";
 
-export default function RideCompletedScreen({ navigation }) {
+import Button from "../../components/ui/Button";
+import { useSocket } from "../../services/SocketContext";
+import {
+  useGetFareEstimateMutation,
+  useRequestRideMutation,
+} from "../../features/ride/rideApi";
+import {
+  setPickup,
+  setDestination,
+  setCurrentLocation,
+} from "../../features/location/locationSlice";
+import {
+  setCurrentRide,
+  setFareEstimate,
+  updateRideStatus,
+} from "../../features/ride/rideSlice";
+
+const RIDE_TYPES = [
+  { id: "economy", name: "SwiftX", icon: "car", multiplier: 1.0 },
+  { id: "comfort", name: "Comfort", icon: "car-side", multiplier: 1.4 },
+  { id: "xl", name: "XL", icon: "van-passenger", multiplier: 1.8 },
+  { id: "premium", name: "Black", icon: "car-sports", multiplier: 2.5 },
+];
+
+const DARK_MAP_STYLE = [
+  { elementType: "geometry", stylers: [{ color: "#0d1e32" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#7dd3fc" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#060e1a" }] },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [{ color: "#1e3a5f" }],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#162a44" }],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [{ color: "#060e1a" }],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [{ color: "#162a44" }],
+  },
+];
+
+export default function RideBookingScreen() {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { currentRide } = useSelector((s) => s.ride);
-  const { pickupAddress, destinationAddress } = useSelector((s) => s.location);
+  const insets = useSafeAreaInsets();
+  const mapRef = useRef(null);
+  const { emit, connected } = useSocket();
 
-  const [rating, setRating] = useState(0);
-  const [tip, setTip] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  const {
+    currentLocation,
+    pickup,
+    destination,
+    pickupAddress,
+    destinationAddress,
+  } = useSelector((s) => s.location);
+  const { fareEstimate } = useSelector((s) => s.ride);
 
-  const [submitRating, { isLoading }] = useSubmitRatingMutation();
+  const [getFareEstimate, { isLoading: estimating }] =
+    useGetFareEstimateMutation();
+  const [requestRide, { isLoading: requesting }] = useRequestRideMutation();
 
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [selectedRide, setSelectedRide] = useState("economy");
+  const [pickupInput, setPickupInput] = useState(
+    pickupAddress || "Current Location",
+  );
+  const [destInput, setDestInput] = useState(destinationAddress || "");
+  const [stage, setStage] = useState("search"); // search | confirm
+  const [routeCoords, setRouteCoords] = useState([]);
 
+  const sheetAnim = useRef(new Animated.Value(0)).current;
+
+  // Fade-in bottom sheet
   useEffect(() => {
-    Animated.sequence([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-        tension: 60,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 400,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    Animated.timing(sheetAnim, {
+      toValue: 1,
+      duration: 380,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
-  const handleSubmitRating = async () => {
-    if (!currentRide?.id || rating === 0) return;
+  // Get current location on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") return;
+
+        const loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+        const coords = {
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude,
+        };
+        dispatch(setCurrentLocation(coords));
+
+        if (!pickup) {
+          const [addr] = await Location.reverseGeocodeAsync(coords);
+          const address = addr
+            ? `${addr.name || ""} ${addr.street || ""}, ${addr.city || ""}`.trim()
+            : "Current Location";
+          dispatch(setPickup({ coords, address }));
+          setPickupInput(address);
+        }
+
+        mapRef.current?.animateToRegion(
+          {
+            ...coords,
+            latitudeDelta: 0.04,
+            longitudeDelta: 0.04,
+          },
+          500,
+        );
+      } catch (e) {
+        console.log("Location error:", e);
+      }
+    })();
+  }, [dispatch]);
+
+  // Fit route when both points exist
+  useEffect(() => {
+    if (pickup && destination && mapRef.current) {
+      mapRef.current.fitToCoordinates([pickup, destination], {
+        edgePadding: { top: 100, right: 50, bottom: 320, left: 50 },
+        animated: true,
+      });
+    }
+  }, [pickup, destination]);
+
+  const handleSearch = async () => {
+    Keyboard.dismiss();
+    if (!destInput.trim()) {
+      Alert.alert("Destination required", "Please enter where you want to go");
+      return;
+    }
+
+    // For now we keep a mock destination (you can later wire Google Places / Mapbox)
+    // Replace this block with real geocoding when ready
+    const mockDest = {
+      latitude: (pickup?.latitude || 23.8103) + 0.018,
+      longitude: (pickup?.longitude || 90.4125) + 0.012,
+    };
+
+    dispatch(setDestination({ coords: mockDest, address: destInput }));
+
+    if (pickup) {
+      try {
+        const result = await getFareEstimate({
+          origin: pickup,
+          destination: mockDest,
+        }).unwrap();
+        dispatch(setFareEstimate(result));
+      } catch (err) {
+        // still allow booking with fallback price
+        console.log("Fare estimate error:", err);
+      }
+
+      setRouteCoords([pickup, mockDest]);
+    }
+
+    setStage("confirm");
+  };
+
+  const handleBookRide = async () => {
+    if (!pickup || !destination) {
+      Alert.alert("Error", "Please set pickup and destination");
+      return;
+    }
 
     try {
-      await submitRating({
-        rideId: currentRide.id,
-        rating,
-        tip,
-      }).unwrap();
-      setSubmitted(true);
-    } catch (e) {
-      // silent fail বা toast দেখাতে পারো
-      setSubmitted(true);
+      const selected = RIDE_TYPES.find((r) => r.id === selectedRide);
+      const base = fareEstimate?.fare || fareEstimate?.price || 150;
+      const finalFare = Math.round(base * (selected?.multiplier || 1));
+
+      const payload = {
+        pickup: {
+          latitude: pickup.latitude,
+          longitude: pickup.longitude,
+          address: pickupInput,
+        },
+        destination: {
+          latitude: destination.latitude,
+          longitude: destination.longitude,
+          address: destInput,
+        },
+        rideType: selectedRide,
+        estimatedFare: finalFare,
+      };
+
+      const ride = await requestRide(payload).unwrap();
+
+      dispatch(setCurrentRide(ride));
+      dispatch(updateRideStatus("searching"));
+
+      if (connected) {
+        emit("ride:request", {
+          rideId: ride.id || ride._id,
+          ...payload,
+        });
+      }
+
+      navigation.replace("ActiveRide");
+    } catch (err) {
+      Alert.alert(
+        "Request failed",
+        err?.data?.message || "Could not request ride. Try again.",
+      );
     }
   };
 
-  const handleDone = () => {
-    dispatch(resetRide());
-    dispatch(clearLocations());
-    navigation.navigate("Tabs");
-  };
-
-  const fare = currentRide?.fare ?? 14.5;
+  const selected = RIDE_TYPES.find((r) => r.id === selectedRide);
+  const basePrice = fareEstimate?.fare || fareEstimate?.price || 150;
 
   return (
     <View className="flex-1 bg-background">
-      <LinearGradient
-        colors={["#060E1A", "#0D1B0F", "#060E1A"]}
-        className="flex-1"
+      <StatusBar
+        barStyle="light-content"
+        translucent
+        backgroundColor="transparent"
+      />
+
+      {/* Map */}
+      <MapView
+        ref={mapRef}
+        provider={PROVIDER_GOOGLE}
+        style={{ flex: 1 }}
+        customMapStyle={DARK_MAP_STYLE}
+        showsUserLocation
+        showsMyLocationButton={false}
+        initialRegion={{
+          latitude: currentLocation?.latitude || 23.8103,
+          longitude: currentLocation?.longitude || 90.4125,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }}
       >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          className="px-6 pt-20"
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Success Check */}
-          <Animated.View
-            style={{ transform: [{ scale: scaleAnim }] }}
-            className="items-center mb-6"
-          >
-            <LinearGradient
-              colors={["#00D95F", "#00B84F"]}
-              className="w-24 h-24 rounded-full items-center justify-center"
-            >
-              <Icon name="check" size={48} color="#000" />
-            </LinearGradient>
-          </Animated.View>
+        {pickup && (
+          <Marker coordinate={pickup} pinColor="#38BDF8" title="Pickup" />
+        )}
+        {destination && (
+          <Marker
+            coordinate={destination}
+            pinColor="#34D399"
+            title="Destination"
+          />
+        )}
+        {routeCoords.length > 1 && (
+          <Polyline
+            coordinates={routeCoords}
+            strokeColor="#38BDF8"
+            strokeWidth={4}
+          />
+        )}
+      </MapView>
 
-          <Animated.View
-            style={{ opacity: fadeAnim }}
-            className="items-center gap-4"
-          >
-            <Text className="text-3xl font-sans-extrabold text-foreground text-center">
-              You've arrived!
-            </Text>
-            <Text className="text-base font-sans text-foreground-muted text-center">
-              Thanks for riding with SwiftRide
-            </Text>
+      {/* Back button */}
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.85}
+        className="absolute left-4 size-11 rounded-2xl bg-card/90 border border-border items-center justify-center"
+        style={{ top: insets.top + 10 }}
+      >
+        <Icon name="arrow-left" size={22} color="#BAE6FD" />
+      </TouchableOpacity>
 
-            {/* Fare Card */}
-            <View className="w-full bg-card rounded-2xl p-5 border border-border mt-2">
-              <View className="flex-row justify-between items-center">
-                <Text className="text-sm font-sans text-foreground-muted">
-                  Total Fare
-                </Text>
-                <Text className="text-3xl font-sans-extrabold text-success">
-                  ${Number(fare).toFixed(2)}
-                </Text>
+      {/* Bottom panel */}
+      <Animated.View
+        style={{
+          opacity: sheetAnim,
+          paddingBottom: insets.bottom + 16,
+        }}
+        className="absolute left-0 right-0 bottom-0 bg-card border-t border-border rounded-t-[28px] px-5 pt-4"
+      >
+        {/* Handle */}
+        <View className="w-10 h-1 rounded-full bg-border self-center mb-4" />
+
+        {stage === "search" ? (
+          <View className="gap-4">
+            {/* Location inputs with dots */}
+            <View className="flex-row gap-3 items-center">
+              <View className="items-center py-2 gap-1">
+                <View className="size-3 rounded-full bg-primary" />
+                <View className="w-0.5 flex-1 min-h-5 bg-border" />
+                <View className="size-3 rounded-full bg-success" />
               </View>
 
-              {(pickupAddress || destinationAddress) && (
-                <View className="mt-4 pt-4 border-t border-border gap-2">
-                  {pickupAddress ? (
-                    <View className="flex-row items-center gap-2">
-                      <View className="w-2 h-2 rounded-full bg-success" />
-                      <Text
-                        className="flex-1 text-sm font-sans text-foreground-secondary"
-                        numberOfLines={1}
-                      >
-                        {pickupAddress}
-                      </Text>
-                    </View>
-                  ) : null}
-                  {destinationAddress ? (
-                    <View className="flex-row items-center gap-2">
-                      <View className="w-2 h-2 rounded-full bg-error" />
-                      <Text
-                        className="flex-1 text-sm font-sans text-foreground-secondary"
-                        numberOfLines={1}
-                      >
-                        {destinationAddress}
-                      </Text>
-                    </View>
-                  ) : null}
-                </View>
-              )}
+              <View className="flex-1 gap-2">
+                <TextInput
+                  className="h-12 bg-input border border-border rounded-xl px-3.5 text-base font-sans text-foreground"
+                  value={pickupInput}
+                  onChangeText={setPickupInput}
+                  placeholder="Pickup location"
+                  placeholderTextColor="#7DD3FC"
+                  selectionColor="#38BDF8"
+                />
+                <TextInput
+                  className="h-12 bg-input border border-border rounded-xl px-3.5 text-base font-sans text-foreground"
+                  value={destInput}
+                  onChangeText={setDestInput}
+                  placeholder="Where are you going?"
+                  placeholderTextColor="#7DD3FC"
+                  selectionColor="#38BDF8"
+                  returnKeyType="search"
+                  onSubmitEditing={handleSearch}
+                  autoFocus
+                />
+              </View>
             </View>
 
-            {/* Rating Section */}
-            {!submitted ? (
-              <View className="w-full items-center gap-4 mt-2">
-                <Text className="text-xl font-sans-bold text-foreground">
-                  How was your ride?
-                </Text>
-
-                {/* Stars */}
-                <View className="flex-row gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <TouchableOpacity
-                      key={star}
-                      onPress={() => setRating(star)}
-                      activeOpacity={0.7}
-                    >
-                      <Icon
-                        name={star <= rating ? "star" : "star-outline"}
-                        size={40}
-                        color={star <= rating ? "#FFD700" : "#334155"}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                {/* Tips */}
-                <View className="flex-row gap-2.5 w-full">
-                  {[0, 1, 2, 5].map((t) => (
-                    <TouchableOpacity
-                      key={t}
-                      onPress={() => setTip(t)}
-                      activeOpacity={0.8}
-                      className={`flex-1 h-11 rounded-xl border items-center justify-center ${
-                        tip === t
-                          ? "border-success bg-success/10"
-                          : "border-border bg-transparent"
-                      }`}
-                    >
-                      <Text
-                        className={`text-sm font-sans-medium ${
-                          tip === t ? "text-success" : "text-foreground-muted"
-                        }`}
-                      >
-                        {t === 0 ? "No tip" : `$${t}`}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                {/* Submit Button */}
-                <TouchableOpacity
-                  onPress={handleSubmitRating}
-                  disabled={rating === 0 || isLoading}
-                  activeOpacity={0.85}
-                  className={`w-full rounded-2xl overflow-hidden ${
-                    rating === 0 ? "opacity-40" : "opacity-100"
-                  }`}
-                >
-                  <LinearGradient
-                    colors={["#00D95F", "#00B84F"]}
-                    className="h-14 items-center justify-center"
-                  >
-                    {isLoading ? (
-                      <ActivityIndicator color="#000" />
-                    ) : (
-                      <Text className="text-base font-sans-bold text-black">
-                        Submit Rating
-                      </Text>
-                    )}
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View className="items-center py-5">
-                <Text className="text-xl font-sans-bold text-foreground">
-                  🙏 Thanks for rating!
-                </Text>
-              </View>
-            )}
-
-            {/* Back to Home */}
-            <TouchableOpacity
-              onPress={handleDone}
-              activeOpacity={0.8}
-              className="w-full h-14 rounded-2xl border border-border items-center justify-center mt-2"
+            <Button
+              variant="primary"
+              onPress={handleSearch}
+              loading={estimating}
+              disabled={estimating}
             >
-              <Text className="text-base font-sans-medium text-foreground-muted">
-                Back to Home
+              Search
+            </Button>
+          </View>
+        ) : (
+          <View className="gap-4">
+            {/* Ride types */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="-mx-5 px-5"
+              contentContainerStyle={{ gap: 10 }}
+            >
+              {RIDE_TYPES.map((ride) => {
+                const active = selectedRide === ride.id;
+                const price = Math.round(basePrice * ride.multiplier);
+                return (
+                  <TouchableOpacity
+                    key={ride.id}
+                    onPress={() => setSelectedRide(ride.id)}
+                    activeOpacity={0.85}
+                    className={`
+                      w-25.5 rounded-2xl p-3.5 items-center border-2
+                      ${
+                        active
+                          ? "border-primary bg-primary/10"
+                          : "border-border bg-background-muted"
+                      }
+                    `}
+                  >
+                    <Icon
+                      name={ride.icon}
+                      size={26}
+                      color={active ? "#38BDF8" : "#7DD3FC"}
+                    />
+                    <Text className="mt-2 text-sm font-sans-semibold text-foreground">
+                      {ride.name}
+                    </Text>
+                    <Text
+                      className={`
+                        mt-1 text-sm font-sans-bold
+                        ${active ? "text-primary" : "text-foreground-muted"}
+                      `}
+                    >
+                      ৳{price}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* Book button */}
+            <Button
+              variant="primary"
+              onPress={handleBookRide}
+              loading={requesting}
+              disabled={requesting}
+            >
+              <View className="flex-row items-center justify-between w-full px-1">
+                <Text className="text-base font-sans-bold text-primary-foreground">
+                  Book {selected?.name}
+                </Text>
+                <Text className="text-base font-sans-bold text-primary-foreground">
+                  ৳{Math.round(basePrice * (selected?.multiplier || 1))}
+                </Text>
+              </View>
+            </Button>
+
+            {/* Edit destination */}
+            <TouchableOpacity
+              onPress={() => setStage("search")}
+              className="items-center py-1"
+            >
+              <Text className="text-sm font-sans-medium text-foreground-muted">
+                Edit destination
               </Text>
             </TouchableOpacity>
-          </Animated.View>
-        </ScrollView>
-      </LinearGradient>
+          </View>
+        )}
+      </Animated.View>
     </View>
   );
 }

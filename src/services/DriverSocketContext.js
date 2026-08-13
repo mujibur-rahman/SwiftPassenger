@@ -12,7 +12,7 @@ import {
 const DriverSocketContext = createContext(null);
 
 // const SOCKET_URL = 'http://10.0.2.2:8000';
-const SOCKET_URL = 'http://192.168.0.101:3000';
+const SOCKET_URL = 'http://192.168.0.101:8000'; // for mobile
 
 export const DriverSocketProvider = ({ children }) => {
   const socketRef = useRef(null);
@@ -26,7 +26,7 @@ export const DriverSocketProvider = ({ children }) => {
     socketRef.current = io(SOCKET_URL, {
       auth: { token },
       // polling only — avoids websocket keepalive ping timeout on mobile
-      transports: ['polling'],
+      transports: ["websocket", "polling"],   // try both
       reconnection: true,
       reconnectionDelay: 3000,
       reconnectionDelayMax: 15000,
