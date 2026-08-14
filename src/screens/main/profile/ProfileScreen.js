@@ -11,11 +11,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSocket } from "../../services/SocketContext";
-import { logout } from "../../features/auth/authSlice";
-import Button from "../../components/ui/Button";
-import ProfileHeader from "../../components/ui/ProfileHeader";
-import ScreenHeader from "../../components/ui/ScreenHeader";
+import { useSocket } from "../../../services/SocketContext";
+import { logout } from "../../../features/auth/authSlice";
+import Button from "../../../components/ui/Button";
+import ProfileHeader from "../../../components/ui/ProfileHeader";
+import ScreenHeader from "../../../components/ui/ScreenHeader";
 
 const MenuItem = ({
   icon,

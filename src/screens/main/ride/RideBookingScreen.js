@@ -18,23 +18,23 @@ import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 
-import Button from "../../components/ui/Button";
-import LocationAutocomplete from "../../components/LocationAutocomplete";
-import { useSocket } from "../../services/SocketContext";
+import Button from "../../../components/ui/Button";
+import LocationAutocomplete from "../../../components/LocationAutocomplete";
+import { useSocket } from "../../../services/SocketContext";
 import {
   useGetFareEstimateMutation,
   useRequestRideMutation,
-} from "../../features/ride/rideApi";
+} from "../../../features/ride/rideApi";
 import {
   setPickup,
   setDestination,
   setCurrentLocation,
-} from "../../features/location/locationSlice";
+} from "../../../features/location/locationSlice";
 import {
   setCurrentRide,
   setFareEstimate,
   updateRideStatus,
-} from "../../features/ride/rideSlice";
+} from "../../../features/ride/rideSlice";
 
 const RIDE_TYPES = [
   { id: "economy", name: "SwiftX", icon: "car", multiplier: 1.0 },
