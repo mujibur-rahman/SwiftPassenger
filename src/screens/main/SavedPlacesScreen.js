@@ -16,6 +16,7 @@ import ListRow from "../../components/ui/ListRow";
 import AppTextInput from "../../components/ui/AppTextInput";
 import Button from "../../components/ui/Button";
 import IconListItem from "../../components/ui/IconListItem";
+import AppModal from "../../components/ui/AppModal";
 
 const DEFAULT_PLACES = [
   {
@@ -165,78 +166,54 @@ export default function SavedPlacesScreen({ navigation }) {
       </ScrollView>
 
       {/* Edit / Add modal */}
-      <Modal visible={showModal} transparent animationType="slide">
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          className="flex-1"
+      <AppModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        title={editingPlace ? "Edit Place" : "Add New Place"}
+        primaryLabel="Save"
+        onPrimary={handleSave}
+        secondaryLabel="Cancel"
+      >
+        {/* Icon picker */}
+        <Text className="mb-2 text-xs font-sans-semibold tracking-wide text-foreground-muted">
+          Icon
+        </Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="mb-4"
         >
-          <View className="flex-1 justify-end bg-black/80">
-            <View className="rounded-t-3xl border border-border bg-card px-6 pb-10 pt-6">
-              <Text className="mb-5 text-xl font-sans-bold text-foreground">
-                {editingPlace ? "Edit Place" : "Add New Place"}
-              </Text>
+          {PLACE_ICONS.map((ic) => (
+            <TouchableOpacity
+              key={ic}
+              className={`mr-2 h-12 w-12 items-center justify-center rounded-xl border-2 ${
+                formIcon === ic
+                  ? "border-primary bg-primary/15"
+                  : "border-transparent bg-background-muted"
+              }`}
+              onPress={() => setFormIcon(ic)}
+            >
+              <Text className="text-[22px]">{ic}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
-              {/* Icon picker */}
-              <Text className="mb-2 text-xs font-sans-semibold tracking-wide text-foreground-muted">
-                Icon
-              </Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="mb-4"
-              >
-                {PLACE_ICONS.map((ic) => {
-                  const active = formIcon === ic;
-                  return (
-                    <TouchableOpacity
-                      key={ic}
-                      className={`mr-2 h-12 w-12 items-center justify-center rounded-xl border-2 ${
-                        active
-                          ? "border-primary bg-primary/15"
-                          : "border-transparent bg-background-muted"
-                      }`}
-                      onPress={() => setFormIcon(ic)}
-                      activeOpacity={0.7}
-                    >
-                      <Text className="text-[22px]">{ic}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-
-              <View className="gap-3.5">
-                <AppTextInput
-                  label="Label"
-                  value={formLabel}
-                  onChangeText={setFormLabel}
-                  placeholder="e.g. Home, Gym..."
-                />
-
-                <AppTextInput
-                  label="Address"
-                  required
-                  value={formAddress}
-                  onChangeText={setFormAddress}
-                  placeholder="Enter full address"
-                />
-              </View>
-
-              <View className="mt-5 flex-row gap-3">
-                <View className="flex-1">
-                  <Button variant="outline" onPress={() => setShowModal(false)}>
-                    Cancel
-                  </Button>
-                </View>
-                <View className="flex-2">
-                  <Button variant="primary" onPress={handleSave}>
-                    Save
-                  </Button>
-                </View>
-              </View>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+        <View className="gap-3.5">
+          <AppTextInput
+            label="Label"
+            value={formLabel}
+            onChangeText={setFormLabel}
+            placeholder="e.g. Home, Gym..."
+          />
+          <AppTextInput
+            label="Address"
+            required
+            value={formAddress}
+            onChangeText={setFormAddress}
+            placeholder="Enter full address"
+          />
+        </View>
+      </AppModal>
     </View>
   );
 }
