@@ -18,6 +18,8 @@ import AppTextInput from "../../components/ui/AppTextInput";
 import Button from "../../components/ui/Button";
 import { userLoggedIn } from "../../features/auth/authSlice";
 import { apiSlice } from "../../features/api/apiSlice";
+import ScreenHeader from "../../components/ui/ScreenHeader";
+import AvatarPicker from "../../components/ui/AvatarPicker";
 
 export default function EditProfileScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -169,46 +171,16 @@ export default function EditProfileScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Header */}
-          <View
-            className="mb-8 flex-row items-center justify-between"
-            style={{ paddingTop: insets.top + 8 }}
-          >
-            <TouchableOpacity
-              className="h-10 w-10 items-center justify-center rounded-full border border-border bg-card"
-              onPress={() => navigation.goBack()}
-              activeOpacity={0.7}
-            >
-              <Icon name="arrow-left" size={22} color="#38BDF8" />
-            </TouchableOpacity>
+          <ScreenHeader title="Edit Profile" className="mb-4" />
 
-            <Text className="text-lg font-sans-bold text-foreground">
-              Edit Profile
-            </Text>
-
-            <View className="h-10 w-10" />
-          </View>
-
-          {/* Avatar + Change Photo */}
-          <View className="mb-8 items-center gap-3">
-            <Avatar
-              name={name || user?.name}
-              uri={avatarUri}
-              size={90}
-              onPress={handleChangePhoto}
-              loading={loading}
-            />
-
-            <TouchableOpacity
-              className="rounded-full border border-border bg-card px-4 py-1.5"
-              activeOpacity={0.7}
-              onPress={handleChangePhoto}
-            >
-              <Text className="text-sm font-sans-medium text-primary">
-                Change Photo
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <AvatarPicker
+            name={name || user?.name}
+            uri={avatarUri}
+            size={90}
+            loading={loading}
+            onPress={handleChangePhoto}
+            className="mb-8"
+          />
 
           {/* Form */}
           <View className="gap-4">

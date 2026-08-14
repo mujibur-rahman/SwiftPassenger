@@ -15,6 +15,7 @@ import { useSocket } from "../../services/SocketContext";
 import { logout } from "../../features/auth/authSlice";
 import Button from "../../components/ui/Button";
 import ProfileHeader from "../../components/ui/ProfileHeader";
+import ScreenHeader from "../../components/ui/ScreenHeader";
 
 const MenuItem = ({
   icon,
@@ -128,20 +129,18 @@ export default function ProfileScreen({ navigation }) {
         contentContainerClassName="pb-28"
         showsVerticalScrollIndicator={false}
       >
-        {/* ── Top bar ── */}
-        <View
-          className="flex-row items-center justify-between px-5"
-          style={{ paddingTop: insets.top + 8 }}
-        >
-          <Text className="text-2xl font-sans-bold text-foreground">You</Text>
-          <TouchableOpacity
-            onPress={() => Alert.alert("Settings", "App settings coming soon!")}
-            activeOpacity={0.7}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Icon name="cog-outline" size={24} color="#7DD3FC" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          title="You"
+          showBack={false}
+          rightIcon="cog-outline"
+          rightVariant="plain"
+          rightIconSize={24}
+          className="px-5"
+          titleClassName="text-2xl"
+          onRightPress={() =>
+            Alert.alert("Settings", "App settings coming soon!")
+          }
+        />
 
         <ProfileHeader
           name={user?.name || "Rider"}

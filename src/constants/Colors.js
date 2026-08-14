@@ -1,3 +1,5 @@
+// src/constants/colors.js  (optional helper)
+
 // export const COLORS = {
 //   bg: '#0A0B0F', card: '#14161D', border: 'rgba(255,255,255,0.07)',
 //   text: '#F2F0EA', sub: '#8D909C', gold: '#38BDF8', green: '#4ADE80',
@@ -22,4 +24,11 @@ export const COLORS = {
   black: "#000000",
 
   transparent: "transparent",
+};
+
+export const CARD_BRAND = {
+  visa: { icon: "credit-card", color: "#38BDF8", tw: "bg-primary/15" },
+  mastercard: { icon: "credit-card", color: "#38BDF8", tw: "bg-primary/15" },
+  amex: { icon: "credit-card", color: "#38BDF8", tw: "bg-primary/15" },
+  default: { icon: "credit-card-outline", color: "#38BDF8", tw: "bg-primary/15" },
 };

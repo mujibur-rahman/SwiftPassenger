@@ -1,101 +1,146 @@
 // src/screens/main/PaymentMethodsScreen.js
-import React, { useState, useEffect } from 'react';
+import React from "react";
 import {
-  View, Text, TouchableOpacity, StyleSheet,
-  ScrollView, Alert, ActivityIndicator,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import api from '../../services/api';
-
-const CARD_BRAND_ICONS = {
-  visa:       { icon: 'credit-card', color: '#1A1F71' },
-  mastercard: { icon: 'credit-card', color: '#EB001B' },
-  amex:       { icon: 'credit-card', color: '#007BC1' },
-  default:    { icon: 'credit-card-outline', color: '#888' },
-};
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
+import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CARD_BRAND } from "../../constants/Colors";
+import {
+  useGetPaymentMethodsQuery,
+  useSetDefaultPaymentMethodMutation,
+  useDeletePaymentMethodMutation,
+} from "../../features/payment/paymentApi";
+import ScreenHeader from "../../components/ui/ScreenHeader";
+import ListRow from "../../components/ui/ListRow";
 
 const MOCK_METHODS = [
-  { id: '1', type: 'card', brand: 'visa',       lastFour: '4242', isDefault: true,  label: 'Visa' },
-  { id: '2', type: 'card', brand: 'mastercard', lastFour: '8888', isDefault: false, label: 'Mastercard' },
+  {
+    id: "1",
+    type: "card",
+    brand: "visa",
+    lastFour: "4242",
+    isDefault: true,
+    label: "Visa",
+  },
+  {
+    id: "2",
+    type: "card",
+    brand: "mastercard",
+    lastFour: "8888",
+    isDefault: false,
+    label: "Mastercard",
+  },
 ];
 
 export default function PaymentMethodsScreen({ navigation }) {
-  const [methods,  setMethods]  = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [deleting, setDeleting] = useState(null);
+  const insets = useSafeAreaInsets();
 
-  useEffect(() => { fetchMethods(); }, []);
+  const {
+    data: methods = [],
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetPaymentMethodsQuery(undefined, {
+    // caching + revalidation
+    refetchOnMountOrArgChange: 30, // 30s এর মধ্যে mount হলে cache use
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
-  const fetchMethods = async () => {
-    setLoading(true);
+  const [setDefault, { isLoading: isSettingDefault }] =
+    useSetDefaultPaymentMethodMutation();
+  const [deleteMethod, { isLoading: isDeleting }] =
+    useDeletePaymentMethodMutation();
+
+  // API fail হলে mock fallback (dev)
+  const list = !isError && methods.length ? methods : MOCK_METHODS;
+
+  const handleSetDefault = async (id) => {
     try {
-      const res = await api.get('/passengers/payment-methods');
-      setMethods(res.data.methods?.length ? res.data.methods : MOCK_METHODS);
+      await setDefault(id).unwrap();
     } catch {
-      setMethods(MOCK_METHODS);
-    } finally {
-      setLoading(false);
+      Alert.alert("Error", "Could not set default payment method");
     }
   };
 
-  const setDefault = async (id) => {
-    setMethods((prev) =>
-      prev.map((m) => ({ ...m, isDefault: m.id === id }))
-    );
-  };
-
-  const deleteMethod = (id) => {
-    Alert.alert('Remove Card', 'Remove this payment method?', [
-      { text: 'Cancel', style: 'cancel' },
+  const handleDelete = (id) => {
+    Alert.alert("Remove Card", "Remove this payment method?", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: 'Remove', style: 'destructive',
+        text: "Remove",
+        style: "destructive",
         onPress: async () => {
-          setDeleting(id);
           try {
-            await api.delete(`/passengers/payment-methods/${id}`);
-          } catch {}
-          setMethods((prev) => prev.filter((m) => m.id !== id));
-          setDeleting(null);
+            await deleteMethod(id).unwrap();
+          } catch {
+            Alert.alert("Error", "Could not remove payment method");
+          }
         },
       },
     ]);
   };
 
   const CardItem = ({ item }) => {
-    const brand = CARD_BRAND_ICONS[item.brand] || CARD_BRAND_ICONS.default;
+    const brand = CARD_BRAND[item.brand] || CARD_BRAND.default;
+
     return (
-      <View style={[styles.cardItem, item.isDefault && styles.cardItemDefault]}>
-        <View style={[styles.cardIconWrap, { backgroundColor: `${brand.color}20` }]}>
+      <View
+        className={`flex-row items-center gap-3 rounded-2xl border bg-card p-4 ${
+          item.isDefault ? "border-primary/40" : "border-border"
+        }`}
+      >
+        <View
+          className={`h-12 w-12 items-center justify-center rounded-xl ${brand.tw}`}
+        >
           <Icon name={brand.icon} size={24} color={brand.color} />
         </View>
 
-        <View style={styles.cardInfo}>
-          <Text style={styles.cardLabel}>{item.label} •••• {item.lastFour}</Text>
+        <View className="flex-1 gap-1">
+          <Text className="text-[15px] font-sans-medium text-foreground">
+            {item.label} •••• {item.lastFour}
+          </Text>
           {item.isDefault && (
-            <View style={styles.defaultBadge}>
-              <Text style={styles.defaultBadgeText}>DEFAULT</Text>
+            <View className="self-start rounded border border-primary/40 bg-primary/15 px-2 py-0.5">
+              <Text className="text-[10px] font-sans-bold tracking-wide text-primary">
+                DEFAULT
+              </Text>
             </View>
           )}
         </View>
 
-        <View style={styles.cardActions}>
+        <View className="flex-row items-center gap-2">
           {!item.isDefault && (
             <TouchableOpacity
-              style={styles.setDefaultBtn}
-              onPress={() => setDefault(item.id)}
+              className="rounded-lg border border-border bg-background-muted px-2.5 py-1.5"
+              onPress={() => handleSetDefault(item.id)}
+              disabled={isSettingDefault}
+              activeOpacity={0.7}
             >
-              <Text style={styles.setDefaultText}>Set default</Text>
+              <Text className="text-[11px] font-sans text-foreground-muted">
+                Set default
+              </Text>
             </TouchableOpacity>
           )}
+
           <TouchableOpacity
-            style={styles.deleteBtn}
-            onPress={() => deleteMethod(item.id)}
-            disabled={deleting === item.id}
+            className="h-9 w-9 items-center justify-center rounded-[10px] border border-error/30 bg-error/15"
+            onPress={() => handleDelete(item.id)}
+            disabled={isDeleting}
+            activeOpacity={0.7}
           >
-            {deleting === item.id
-              ? <ActivityIndicator size="small" color="#FF4444" />
-              : <Icon name="trash-can-outline" size={18} color="#FF4444" />}
+            {isDeleting ? (
+              <ActivityIndicator size="small" color="#F87171" />
+            ) : (
+              <Icon name="trash-can-outline" size={18} color="#F87171" />
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -103,178 +148,111 @@ export default function PaymentMethodsScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
+    <View className="flex-1 bg-background">
+      <ScreenHeader title="Payment Methods" className="px-5" />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={22} color="#FFF" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Payment Methods</Text>
-        <View style={{ width: 40 }} />
-      </View>
-
-      <ScrollView contentContainerStyle={styles.scroll}>
-
-        {/* Wallet balance card */}
-        <LinearGradient colors={['#00D95F20', '#00D95F05']} style={styles.walletCard}>
-          <View style={styles.walletRow}>
-            <Icon name="wallet-outline" size={28} color="#00D95F" />
-            <View style={styles.walletInfo}>
-              <Text style={styles.walletLabel}>Swift Wallet</Text>
-              <Text style={styles.walletBalance}>$24.50</Text>
+      <ScrollView
+        contentContainerClassName="px-5 pb-10"
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isFetching && !isLoading}
+            onRefresh={refetch}
+            tintColor="#38BDF8"
+            colors={["#38BDF8"]}
+          />
+        }
+      >
+        {/* Wallet */}
+        <View className="mb-6 rounded-2xl border border-primary/25 bg-primary/10 p-5">
+          <View className="flex-row items-center gap-3.5">
+            <Icon name="wallet-outline" size={28} color="#38BDF8" />
+            <View className="flex-1">
+              <Text className="text-[13px] font-sans text-foreground-muted">
+                Swift Wallet
+              </Text>
+              <Text className="mt-0.5 text-2xl font-sans-extrabold text-foreground">
+                $24.50
+              </Text>
             </View>
-            <TouchableOpacity style={styles.topUpBtn}>
-              <Text style={styles.topUpText}>Top Up</Text>
+            <TouchableOpacity
+              className="rounded-[10px] bg-primary px-4 py-2"
+              activeOpacity={0.85}
+              onPress={() =>
+                Alert.alert("Top Up", "Wallet top-up coming soon.")
+              }
+            >
+              <Text className="text-sm font-sans-bold text-primary-foreground">
+                Top Up
+              </Text>
             </TouchableOpacity>
           </View>
-        </LinearGradient>
+        </View>
 
         {/* Saved cards */}
-        <Text style={styles.sectionTitle}>Saved Cards</Text>
+        <Text className="mb-3 text-xs font-sans-semibold tracking-wide text-foreground-muted">
+          Saved Cards
+        </Text>
 
-        {loading ? (
-          <ActivityIndicator color="#00D95F" style={{ marginTop: 20 }} />
-        ) : methods.length === 0 ? (
-          <View style={styles.empty}>
-            <Icon name="credit-card-off-outline" size={48} color="#333" />
-            <Text style={styles.emptyText}>No payment methods saved</Text>
+        {isLoading ? (
+          <ActivityIndicator color="#38BDF8" className="mt-5" />
+        ) : list.length === 0 ? (
+          <View className="items-center gap-3 py-10">
+            <Icon name="credit-card-off-outline" size={48} color="#1E3A5F" />
+            <Text className="text-[15px] font-sans text-foreground-muted">
+              No payment methods saved
+            </Text>
           </View>
         ) : (
-          <View style={styles.cardList}>
-            {methods.map((item) => <CardItem key={item.id} item={item} />)}
+          <View className="mb-3 gap-2.5">
+            {list.map((item) => (
+              <CardItem key={item.id} item={item} />
+            ))}
           </View>
         )}
 
-        {/* Add new card */}
-        <TouchableOpacity
-          style={styles.addCardBtn}
-          onPress={() => Alert.alert('Add Card', 'Card entry form coming soon.\nIntegrate Stripe SDK for production.')}
-        >
-          <View style={styles.addCardIcon}>
-            <Icon name="plus" size={22} color="#00D95F" />
-          </View>
-          <Text style={styles.addCardText}>Add New Card</Text>
-          <Icon name="chevron-right" size={18} color="#444" />
-        </TouchableOpacity>
+        {/* Add card */}
+        <ListRow
+          variant="dashed"
+          icon="plus"
+          label="Add New Card"
+          className="mt-1"
+          onPress={() =>
+            Alert.alert(
+              "Add Card",
+              "Card entry form coming soon.\nIntegrate Stripe SDK for production.",
+            )
+          }
+        />
 
         {/* Other options */}
-        <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Other Options</Text>
-        <View style={styles.otherOptions}>
+        <Text className="mb-3 mt-6 text-xs font-sans-semibold tracking-wide text-foreground-muted">
+          Other Options
+        </Text>
+
+        <View className="gap-2">
           {[
-            { icon: 'cash',           label: 'Cash',        sub: 'Pay with cash on arrival' },
-            { icon: 'bank-outline',   label: 'Bank Transfer', sub: 'Direct bank payment' },
+            { icon: "cash", label: "Cash", sub: "Pay with cash on arrival" },
+            {
+              icon: "bank-outline",
+              label: "Bank Transfer",
+              sub: "Direct bank payment",
+            },
           ].map((opt) => (
-            <TouchableOpacity key={opt.label} style={styles.otherOption}>
-              <View style={styles.otherOptionIcon}>
-                <Icon name={opt.icon} size={22} color="#00D95F" />
-              </View>
-              <View style={styles.otherOptionInfo}>
-                <Text style={styles.otherOptionLabel}>{opt.label}</Text>
-                <Text style={styles.otherOptionSub}>{opt.sub}</Text>
-              </View>
-              <Icon name="chevron-right" size={18} color="#444" />
-            </TouchableOpacity>
+            <ListRow
+              key={opt.label}
+              icon={opt.icon}
+              label={opt.label}
+              subtitle={opt.sub}
+              onPress={() => {}}
+            />
           ))}
         </View>
 
-        <Text style={styles.secureNote}>
-          🔒  Your payment details are encrypted and secure
+        <Text className="mt-6 text-center text-xs font-sans leading-5 text-foreground-muted">
+          🔒 Your payment details are encrypted and secure
         </Text>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    flexDirection: 'row', alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingTop: 60, paddingBottom: 16,
-  },
-  backBtn: {
-    width: 40, height: 40, borderRadius: 20,
-    backgroundColor: '#1A1A1A', justifyContent: 'center', alignItems: 'center',
-  },
-  title: { color: '#FFF', fontSize: 18, fontWeight: '700' },
-  scroll: { padding: 16, paddingBottom: 40 },
-  walletCard: {
-    borderRadius: 16, padding: 20, marginBottom: 24,
-    borderWidth: 1, borderColor: '#00D95F30',
-  },
-  walletRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  walletInfo: { flex: 1 },
-  walletLabel: { color: '#888', fontSize: 13 },
-  walletBalance: { color: '#FFF', fontSize: 24, fontWeight: '800', marginTop: 2 },
-  topUpBtn: {
-    backgroundColor: '#00D95F', borderRadius: 10,
-    paddingHorizontal: 16, paddingVertical: 8,
-  },
-  topUpText: { color: '#000', fontWeight: '700', fontSize: 14 },
-  sectionTitle: {
-    color: '#888', fontSize: 12, fontWeight: '600',
-    letterSpacing: 0.5, marginBottom: 12,
-  },
-  cardList: { gap: 10, marginBottom: 12 },
-  cardItem: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    backgroundColor: '#111', borderRadius: 14, padding: 16,
-    borderWidth: 1, borderColor: '#1E1E1E',
-  },
-  cardItemDefault: { borderColor: '#00D95F40', backgroundColor: '#0D1F13' },
-  cardIconWrap: {
-    width: 48, height: 48, borderRadius: 12,
-    justifyContent: 'center', alignItems: 'center',
-  },
-  cardInfo: { flex: 1, gap: 4 },
-  cardLabel: { color: '#FFF', fontSize: 15, fontWeight: '500' },
-  defaultBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#00D95F20', borderRadius: 4,
-    paddingHorizontal: 8, paddingVertical: 2,
-    borderWidth: 1, borderColor: '#00D95F40',
-  },
-  defaultBadgeText: { color: '#00D95F', fontSize: 10, fontWeight: '700', letterSpacing: 0.5 },
-  cardActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  setDefaultBtn: {
-    backgroundColor: '#1A1A1A', borderRadius: 8,
-    paddingHorizontal: 10, paddingVertical: 6,
-    borderWidth: 1, borderColor: '#1E3A5F',
-  },
-  setDefaultText: { color: '#888', fontSize: 11 },
-  deleteBtn: {
-    width: 36, height: 36, borderRadius: 10,
-    backgroundColor: '#FF444415', justifyContent: 'center', alignItems: 'center',
-    borderWidth: 1, borderColor: '#FF444430',
-  },
-  addCardBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 14,
-    backgroundColor: '#111', borderRadius: 14, padding: 16,
-    borderWidth: 1, borderColor: '#00D95F30', borderStyle: 'dashed',
-  },
-  addCardIcon: {
-    width: 48, height: 48, borderRadius: 12,
-    backgroundColor: '#00D95F15', justifyContent: 'center', alignItems: 'center',
-  },
-  addCardText: { flex: 1, color: '#00D95F', fontSize: 15, fontWeight: '500' },
-  otherOptions: { gap: 8 },
-  otherOption: {
-    flexDirection: 'row', alignItems: 'center', gap: 14,
-    backgroundColor: '#111', borderRadius: 14, padding: 16,
-    borderWidth: 1, borderColor: '#1E1E1E',
-  },
-  otherOptionIcon: {
-    width: 44, height: 44, borderRadius: 12,
-    backgroundColor: '#00D95F15', justifyContent: 'center', alignItems: 'center',
-  },
-  otherOptionInfo: { flex: 1 },
-  otherOptionLabel: { color: '#FFF', fontSize: 15, fontWeight: '500' },
-  otherOptionSub:   { color: '#666', fontSize: 12, marginTop: 2 },
-  empty: { alignItems: 'center', paddingVertical: 40, gap: 12 },
-  emptyText: { color: '#555', fontSize: 15 },
-  secureNote: {
-    color: '#444', fontSize: 12, textAlign: 'center',
-    marginTop: 24, lineHeight: 18,
-  },
-});

@@ -5,6 +5,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AppSwitch from "../../components/ui/AppSwitch";
 import SwitchRow from "../../components/ui/SwitchRow";
+import ScreenHeader from "../../components/ui/ScreenHeader";
 
 const NOTIFICATION_GROUPS = [
   {
@@ -109,25 +110,7 @@ export default function NotificationsScreen({ navigation }) {
 
   return (
     <View className="flex-1 bg-background">
-      {/* Header */}
-      <View
-        className="flex-row items-center justify-between px-5 pb-4"
-        style={{ paddingTop: insets.top + 8 }}
-      >
-        <TouchableOpacity
-          className="h-10 w-10 items-center justify-center rounded-full border border-border bg-card"
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.7}
-        >
-          <Icon name="arrow-left" size={22} color="#38BDF8" />
-        </TouchableOpacity>
-
-        <Text className="text-lg font-sans-bold text-foreground">
-          Notifications
-        </Text>
-
-        <View className="h-10 w-10" />
-      </View>
+      <ScreenHeader title="Notifications" className="px-5" />
 
       <ScrollView
         contentContainerClassName="px-5 pb-10"

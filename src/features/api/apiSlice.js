@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // const BASE_URL = 'http://10.0.2.2:3000'; // Android emulator
-const BASE_URL = 'http://192.168.0.101:3000'; // Android emulator PC
+const BASE_URL = "http://192.168.0.101:3000"; // Android emulator PC
 // const BASE_URL = 'http://192.168.x.x:3000'; // real device
 
 const rawBaseQuery = fetchBaseQuery({
@@ -31,6 +31,6 @@ const baseQueryWithAuth = async (args, api, extraOptions) => {
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithAuth,
-  tagTypes: ["User", "Ride", "ActiveRide"],
+  tagTypes: ["User", "Driver", "Ride", "ActiveRide", "PaymentMethods"],
   endpoints: () => ({}), // empty – features will inject
 });
