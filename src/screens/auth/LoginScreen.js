@@ -11,17 +11,15 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLoginMutation } from "@/features/auth/authApi";
 import { userLoggedIn } from "@/features/auth/authSlice";
-import BrandBadge from "@/components/ui/BrandBadge";
 import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
+import AuthHeader from "@/components/ui/AuthHeader";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
-  const insets = useSafeAreaInsets();
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -68,12 +66,8 @@ export default function LoginScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Brand Badge */}
-          <View className="absolute right-4 z-10" style={{ top: insets.top }}>
-            <BrandBadge size={100} />
-          </View>
+          <AuthHeader showBack={false} />
 
-          {/* Header */}
           <View className="mb-10 mt-8">
             <View className="mb-4 self-start rounded-md border border-success/25 bg-success/10 px-2.5 py-1">
               <Text className="text-[10px] font-sans-bold tracking-[1.5px] text-success">
@@ -86,7 +80,6 @@ export default function LoginScreen({ navigation }) {
             <Text className="sub mt-2">Sign in to your account</Text>
           </View>
 
-          {/* Form */}
           <View className="gap-4">
             <AppTextInput
               label="Phone Number"
@@ -129,7 +122,6 @@ export default function LoginScreen({ navigation }) {
             </Button>
           </View>
 
-          {/* Footer link */}
           <Button
             variant="link"
             size="sm"

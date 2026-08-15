@@ -2,22 +2,18 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   Alert,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRegisterMutation } from "@/features/auth/authApi";
-import BrandBadge from "@/components/ui/BrandBadge";
-import SvgIcon from "@/components/ui/SvgIcon";
 import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
+import AuthHeader from "@/components/ui/AuthHeader";
 
 export default function RegisterScreen({ navigation }) {
   const [register, { isLoading }] = useRegisterMutation();
-  const insets = useSafeAreaInsets();
 
   const [form, setForm] = useState({
     name: "",
@@ -64,32 +60,13 @@ export default function RegisterScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Top row: Back + Brand */}
-          <View
-            className="absolute left-6 right-6 z-10 flex-row items-center justify-between"
-            style={{ top: insets.top }}
-          >
-            <TouchableOpacity
-              className="flex-row items-center gap-2"
-              onPress={() => navigation.goBack()}
-              activeOpacity={0.7}
-            >
-              <SvgIcon name="arrowLeft" size={24} color="#38BDF8" />
-              <Text className="text-base font-sans-extrabold text-primary">
-                Back
-              </Text>
-            </TouchableOpacity>
+          <AuthHeader />
 
-            <BrandBadge size={100} />
-          </View>
-
-          {/* Header */}
           <View className="mb-8 mt-16">
             <Text className="h1">Create Account</Text>
             <Text className="sub mt-2">Join millions of riders today</Text>
           </View>
 
-          {/* Form */}
           <View className="gap-3.5">
             <AppTextInput
               label="Full Name"

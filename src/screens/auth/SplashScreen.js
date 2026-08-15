@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { View, Text, Animated } from "react-native";
 import BrandBadge from "@/components/ui/BrandBadge";
+import AuthHeader from "@/components/ui/AuthHeader";
 
 export default function SplashScreen({ navigation }) {
   const scale = useRef(new Animated.Value(0.5)).current;
@@ -41,7 +42,7 @@ export default function SplashScreen({ navigation }) {
           opacity,
         }}
       >
-        <BrandBadge size={100} />
+        <AuthHeader showBack={false} absolute={false} />
 
         <Animated.Text
           className="mt-3 text-sm font-sans tracking-[1px] text-foreground-muted"

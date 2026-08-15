@@ -13,16 +13,13 @@ import {
   useSendOtpMutation,
   useVerifyOtpMutation,
 } from "@/features/auth/authApi";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import SvgIcon from "@/components/ui/SvgIcon";
-import BrandBadge from "@/components/ui/BrandBadge";
 import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
+import AuthHeader from "@/components/ui/AuthHeader";
 
 export default function OTPScreen({ navigation }) {
   const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
   const [verifyOtp, { isLoading: verifying }] = useVerifyOtpMutation();
-  const insets = useSafeAreaInsets();
 
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -95,26 +92,8 @@ export default function OTPScreen({ navigation }) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Top row: Back + Brand */}
-          <View
-            className="absolute left-6 right-6 z-10 flex-row items-center justify-between"
-            style={{ top: insets.top }}
-          >
-            <TouchableOpacity
-              className="flex-row items-center gap-2"
-              onPress={() => navigation.goBack()}
-              activeOpacity={0.7}
-            >
-              <SvgIcon name="arrowLeft" size={24} color="#38BDF8" />
-              <Text className="text-base font-sans-extrabold text-primary">
-                Back
-              </Text>
-            </TouchableOpacity>
+          <AuthHeader />
 
-            <BrandBadge size={100} />
-          </View>
-
-          {/* Header */}
           <View className="mb-9 mt-16">
             <Text className="h1 mb-2.5">
               {step === "phone" ? "Enter Phone Number" : "Verify OTP"}
@@ -126,7 +105,6 @@ export default function OTPScreen({ navigation }) {
             </Text>
           </View>
 
-          {/* Form */}
           <View className="gap-5">
             {step === "phone" ? (
               <AppTextInput

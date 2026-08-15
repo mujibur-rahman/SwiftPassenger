@@ -1,68 +1,52 @@
+// src/components/ui/BrandBadge.jsx
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { COLORS } from "../../constants/Colors";
+import { View, Text } from "react-native";
 import {
   useFonts,
-  InstrumentSerif_400Regular,
   InstrumentSerif_400Regular_Italic,
 } from "@expo-google-fonts/instrument-serif";
 
-const BrandBadge = ({
+/**
+ * Circular brand mark
+ *
+ * Props:
+ * - text?: string
+ * - size?: number
+ * - fontSize?: number
+ * - className?: string
+ * - textClassName?: string
+ */
+export default function BrandBadge({
   text = "ZyroApp",
   size = 90,
   fontSize = 26,
-  fontFamily = "InstrumentSerif",
-  backgroundColor = "#0D1E32",
-  textColor = "#38BDF8",
-  borderColor = "#1E3A5F",
-  style,
-  textStyle,
-}) => {
+  className = "",
+  textClassName = "",
+}) {
   const [fontsLoaded] = useFonts({
     InstrumentSerif: InstrumentSerif_400Regular_Italic,
   });
-  if (!fontsLoaded) return null;
+
+  if (!fontsLoaded) {
+    return (
+      <View
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        className="border border-border bg-card"
+      />
+    );
+  }
 
   return (
     <View
-      style={[
-        styles.wrapper,
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor,
-          borderColor,
-        },
-        style,
-      ]}
+      style={{ width: size, height: size, borderRadius: size / 2 }}
+      className={`items-center justify-center border border-border bg-card ${className}`}
     >
       <Text
-        style={[
-          styles.brand,
-          {
-            fontSize,
-            fontFamily,
-            color: textColor,
-          },
-          textStyle,
-        ]}
+        style={{ fontSize, fontFamily: "InstrumentSerif" }}
+        className={`font-semibold text-primary ${textClassName}`}
       >
         {text}
       </Text>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  wrapper: {
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  brand: {
-    fontWeight: "600",
-  },
-});
-
-export default BrandBadge;
+}
