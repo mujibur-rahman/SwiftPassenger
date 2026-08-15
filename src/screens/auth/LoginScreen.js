@@ -16,6 +16,7 @@ import { userLoggedIn } from "@/features/auth/authSlice";
 import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/ui/AuthHeader";
+import Badge from "@/components/ui/Badge";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -69,11 +70,12 @@ export default function LoginScreen({ navigation }) {
           <AuthHeader showBack={false} />
 
           <View className="mb-10 mt-8">
-            <View className="mb-4 self-start rounded-md border border-success/25 bg-success/10 px-2.5 py-1">
-              <Text className="text-[10px] font-sans-bold tracking-[1.5px] text-success">
-                PASSENGER
-              </Text>
-            </View>
+            <Badge
+              label="Passenger"
+              variant="success"
+              uppercase
+              className="mb-4"
+            />
 
             <Text className="h1">Welcome Back 👋</Text>
 

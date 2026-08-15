@@ -1,8 +1,8 @@
 // src/components/ui/ProfileHeader.jsx
 import React from "react";
 import { View, Text } from "react-native";
-import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import Avatar from "./Avatar";
+import Avatar from "@/components/ui/Avatar";
+import Badge from "@/components/ui/Badge";
 
 /**
  * Reusable Profile Header
@@ -62,12 +62,15 @@ export default function ProfileHeader({
         ) : null}
 
         {verified && (
-          <View className="mt-1.5 flex-row items-center gap-1 self-start rounded-full bg-success/15 px-2 py-0.5">
-            <Icon name="check-decagram" size={12} color="#34D399" />
-            <Text className="text-[11px] font-sans-semibold text-success">
-              {verifiedLabel}
-            </Text>
-          </View>
+          <Badge
+            label={verifiedLabel || "Verified"}
+            variant="success"
+            shape="pill"
+            size="sm"
+            icon="check-decagram"
+            bordered={false}
+            className="mt-1.5"
+          />
         )}
       </View>
 
