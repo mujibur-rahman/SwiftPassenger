@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { ActivityIndicator, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import AuthNavigator from "./AuthNavigator";
-import MainNavigator from "./MainNavigator";
-import { userLoggedIn, userLoggedOut } from "../features/auth/authSlice";
-import { useSocket } from "../services/SocketContext";
+import AuthNavigator from "@/navigation/AuthNavigator";
+import MainNavigator from "@/navigation/MainNavigator";
+import { userLoggedIn, userLoggedOut } from "@/features/auth/authSlice";
+import { useSocket } from "@/services/SocketContext";
 import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();

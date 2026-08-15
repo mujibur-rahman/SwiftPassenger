@@ -12,11 +12,11 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useLoginMutation } from "../../features/auth/authApi";
-import { userLoggedIn } from "../../features/auth/authSlice";
-import BrandBadge from "../../components/ui/BrandBadge";
-import AppTextInput from "../../components/ui/AppTextInput";
-import Button from "../../components/ui/Button";
+import { useLoginMutation } from "@/features/auth/authApi";
+import { userLoggedIn } from "@/features/auth/authSlice";
+import BrandBadge from "@/components/ui/BrandBadge";
+import AppTextInput from "@/components/ui/AppTextInput";
+import Button from "@/components/ui/Button";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -81,13 +81,9 @@ export default function LoginScreen({ navigation }) {
               </Text>
             </View>
 
-            <Text className="text-3xl font-sans-extrabold text-foreground">
-              Welcome Back 👋
-            </Text>
+            <Text className="h1">Welcome Back 👋</Text>
 
-            <Text className="mt-2 text-base font-sans text-foreground-muted">
-              Sign in to your account
-            </Text>
+            <Text className="sub mt-2">Sign in to your account</Text>
           </View>
 
           {/* Form */}

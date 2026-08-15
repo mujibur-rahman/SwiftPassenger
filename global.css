@@ -126,4 +126,12 @@
   .service-card-title {
     @apply font-sans-medium text-sm text-primary text-center;
   }
+
+  .h1 {
+    @apply text-3xl font-sans-extrabold text-foreground;
+  }
+
+  .sub {
+    @apply text-base font-sans text-foreground-muted;
+  }
 }

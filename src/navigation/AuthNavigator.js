@@ -1,10 +1,10 @@
 // passenger-app/src/navigation/AuthNavigator.js
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import SplashScreen from "../screens/auth/SplashScreen";
-import LoginScreen from "../screens/auth/LoginScreen";
-import RegisterScreen from "../screens/auth/RegisterScreen";
-import OTPScreen from "../screens/auth/OTPScreen";
+import SplashScreen from "@/screens/auth/SplashScreen";
+import LoginScreen from "@/screens/auth/LoginScreen";
+import RegisterScreen from "@/screens/auth/RegisterScreen";
+import OTPScreen from "@/screens/auth/OTPScreen";
 
 const Stack = createStackNavigator();
 

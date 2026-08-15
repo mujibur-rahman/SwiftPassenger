@@ -11,19 +11,16 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import Avatar from "../../../components/ui/Avatar";
-import AppTextInput from "../../../components/ui/AppTextInput";
-import Button from "../../../components/ui/Button";
-import { userLoggedIn } from "../../../features/auth/authSlice";
-import { apiSlice } from "../../../features/api/apiSlice";
-import ScreenHeader from "../../../components/ui/ScreenHeader";
-import AvatarPicker from "../../../components/ui/AvatarPicker";
+import AppTextInput from "@/components/ui/AppTextInput";
+import Button from "@/components/ui/Button";
+import { userLoggedIn } from "@/features/auth/authSlice";
+import { apiSlice } from "@/features/api/apiSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import AvatarPicker from "@/components/ui/AvatarPicker";
 
 export default function EditProfileScreen({ navigation }) {
   const dispatch = useDispatch();
-  const insets = useSafeAreaInsets();
   const { user, accessToken } = useSelector((s) => s.auth);
 
   const [name, setName] = useState(user?.name || "");

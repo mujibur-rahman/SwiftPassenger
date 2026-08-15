@@ -137,14 +137,13 @@ export default function HelpCenterScreen({ navigation }) {
         contentContainerClassName="px-5 pb-10"
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-      >        
-
-	<SearchBar
-  		value={searchText}
-  		onChangeText={setSearchText}
-		placeholder="Search help articles..."
-  		className="mb-5"
-	/>
+      >
+        <SearchBar
+          value={searchText}
+          onChangeText={setSearchText}
+          placeholder="Search help articles..."
+          className="mb-5"
+        />
 
         {/* Quick contact */}
         <View className="mb-6 flex-row gap-2.5">
@@ -157,8 +156,7 @@ export default function HelpCenterScreen({ navigation }) {
             {
               icon: "email-outline",
               label: "Email Us",
-              onPress: () =>
-                Linking.openURL("mailto:support@swiftride.com"),
+              onPress: () => Linking.openURL("mailto:support@swiftride.com"),
             },
             {
               icon: "phone-outline",
@@ -213,21 +211,21 @@ export default function HelpCenterScreen({ navigation }) {
           /* Grouped FAQs */
           FAQS.map((section, si) => (
             <ExpandableGroup key={section.category} title={section.category}>
-    		{section.items.map((item, idx) => {
-      			const key = `${si}-${idx}`;
-      			return (
-        			<Expandable
-          				key={key}
-          				title={item.q}
-          				expanded={expandedId === key}
-          				onToggle={(open) => setExpandedId(open ? key : null)}
-          				isLast={idx === section.items.length - 1}
-        			>
-          				{item.a}
-        			</Expandable>
-      			);
-    		})}
-  	     </ExpandableGroup>
+              {section.items.map((item, idx) => {
+                const key = `${si}-${idx}`;
+                return (
+                  <Expandable
+                    key={key}
+                    title={item.q}
+                    expanded={expandedId === key}
+                    onToggle={(open) => setExpandedId(open ? key : null)}
+                    isLast={idx === section.items.length - 1}
+                  >
+                    {item.a}
+                  </Expandable>
+                );
+              })}
+            </ExpandableGroup>
           ))
         )}
 

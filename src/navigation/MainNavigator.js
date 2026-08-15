@@ -6,17 +6,17 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Easing } from "react-native";
 
-import HomeScreen from "../screens/main/HomeScreen";
-import RideBookingScreen from "../screens/main/ride/RideBookingScreen";
-import ActiveRideScreen from "../screens/main/ride/ActiveRideScreen";
-import RideCompletedScreen from "../screens/main/ride/RideCompletedScreen";
-import ActivityScreen from "../screens/main/ActivityScreen";
-import ProfileScreen from "../screens/main/profile/ProfileScreen";
-import EditProfileScreen from "../screens/main/profile/EditProfileScreen";
-import PaymentMethodsScreen from "../screens/main/PaymentMethodsScreen";
-import NotificationsScreen from "../screens/main/NotificationsScreen";
-import SavedPlacesScreen from "../screens/main/SavedPlacesScreen";
-import HelpCenterScreen from "../screens/main/HelpCenterScreen";
+import HomeScreen from "@/screens/main/HomeScreen";
+import RideBookingScreen from "@/screens/main/ride/RideBookingScreen";
+import ActiveRideScreen from "@/screens/main/ride/ActiveRideScreen";
+import RideCompletedScreen from "@/screens/main/ride/RideCompletedScreen";
+import ActivityScreen from "@/screens/main/ActivityScreen";
+import ProfileScreen from "@/screens/main/profile/ProfileScreen";
+import EditProfileScreen from "@/screens/main/profile/EditProfileScreen";
+import PaymentMethodsScreen from "@/screens/main/PaymentMethodsScreen";
+import NotificationsScreen from "@/screens/main/NotificationsScreen";
+import SavedPlacesScreen from "@/screens/main/SavedPlacesScreen";
+import HelpCenterScreen from "@/screens/main/HelpCenterScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

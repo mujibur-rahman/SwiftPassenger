@@ -12,12 +12,12 @@ import {
 import {
   useSendOtpMutation,
   useVerifyOtpMutation,
-} from "../../features/auth/authApi";
+} from "@/features/auth/authApi";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import SvgIcon from "../../components/ui/SvgIcon";
-import BrandBadge from "../../components/ui/BrandBadge";
-import AppTextInput from "../../components/ui/AppTextInput";
-import Button from "../../components/ui/Button";
+import SvgIcon from "@/components/ui/SvgIcon";
+import BrandBadge from "@/components/ui/BrandBadge";
+import AppTextInput from "@/components/ui/AppTextInput";
+import Button from "@/components/ui/Button";
 
 export default function OTPScreen({ navigation }) {
   const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
@@ -116,10 +116,10 @@ export default function OTPScreen({ navigation }) {
 
           {/* Header */}
           <View className="mb-9 mt-16">
-            <Text className="mb-2.5 text-[34px] font-sans-extrabold leading-10.5 text-foreground">
+            <Text className="h1 mb-2.5">
               {step === "phone" ? "Enter Phone Number" : "Verify OTP"}
             </Text>
-            <Text className="text-[15px] leading-5.5 font-sans text-foreground-muted">
+            <Text className="sub">
               {step === "phone"
                 ? "We'll send you a verification code"
                 : `Code sent to +1 ${phone}`}

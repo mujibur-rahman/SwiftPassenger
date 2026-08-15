@@ -1,7 +1,7 @@
 // src/screens/auth/SplashScreen.js
 import React, { useEffect, useRef } from "react";
 import { View, Text, Animated } from "react-native";
-import BrandBadge from "../../components/ui/BrandBadge";
+import BrandBadge from "@/components/ui/BrandBadge";
 
 export default function SplashScreen({ navigation }) {
   const scale = useRef(new Animated.Value(0.5)).current;

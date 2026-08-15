@@ -9,11 +9,11 @@ import {
   Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRegisterMutation } from "../../features/auth/authApi";
-import BrandBadge from "../../components/ui/BrandBadge";
-import SvgIcon from "../../components/ui/SvgIcon";
-import AppTextInput from "../../components/ui/AppTextInput";
-import Button from "../../components/ui/Button";
+import { useRegisterMutation } from "@/features/auth/authApi";
+import BrandBadge from "@/components/ui/BrandBadge";
+import SvgIcon from "@/components/ui/SvgIcon";
+import AppTextInput from "@/components/ui/AppTextInput";
+import Button from "@/components/ui/Button";
 
 export default function RegisterScreen({ navigation }) {
   const [register, { isLoading }] = useRegisterMutation();
@@ -85,12 +85,8 @@ export default function RegisterScreen({ navigation }) {
 
           {/* Header */}
           <View className="mb-8 mt-16">
-            <Text className="text-[36px] font-sans-extrabold leading-[44px] text-foreground">
-              Create Account
-            </Text>
-            <Text className="mt-2 text-[15px] font-sans text-foreground-muted">
-              Join millions of riders today
-            </Text>
+            <Text className="h1">Create Account</Text>
+            <Text className="sub mt-2">Join millions of riders today</Text>
           </View>
 
           {/* Form */}
