@@ -284,14 +284,15 @@ export default function RideBookingScreen() {
       </MapView>
 
       {/* Back button */}
-      <TouchableOpacity
+      <Button
+        icon="arrow-left"
+        variant="card"
+        size="md"
+        fullWidth={false}
         onPress={() => navigation.goBack()}
-        activeOpacity={0.85}
-        className="absolute left-4 size-11 rounded-2xl bg-card/90 border border-border items-center justify-center"
+        className="absolute left-4"
         style={{ top: insets.top + 10 }}
-      >
-        <Icon name="arrow-left" size={22} color="#BAE6FD" />
-      </TouchableOpacity>
+      />
 
       {/* Bottom panel */}
       <Animated.View

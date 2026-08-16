@@ -10,7 +10,7 @@ import HomeScreen from "@/screens/main/HomeScreen";
 import RideBookingScreen from "@/screens/main/ride/RideBookingScreen";
 import ActiveRideScreen from "@/screens/main/ride/ActiveRideScreen";
 import RideCompletedScreen from "@/screens/main/ride/RideCompletedScreen";
-import ActivityScreen from "@/screens/main/ActivityScreen";
+import ActivityScreen from "@/screens/main/ride/ActivityScreen";
 import ProfileScreen from "@/screens/main/profile/ProfileScreen";
 import EditProfileScreen from "@/screens/main/profile/EditProfileScreen";
 import PaymentMethodsScreen from "@/screens/main/PaymentMethodsScreen";
