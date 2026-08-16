@@ -1,12 +1,12 @@
 // src/screens/main/HomeScreen.js
 import React, { useEffect } from "react";
 import { View, Text, StatusBar } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as Location from "expo-location";
-import ServiceCard from "../../components/ServiceCard";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import LogoAvatar from "../../components/ui/LogoAvatar";
-import { setCurrentLocation } from "../../features/location/locationSlice";
+import ServiceCard from "@/components/ServiceCard";
+import LogoAvatar from "@/components/ui/LogoAvatar";
+import { setCurrentLocation } from "@/features/location/locationSlice";
 
 const JOBS = [
   { id: "1", title: "Ride", icon: "ride", iconColor: "#38BDF8" },

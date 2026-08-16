@@ -1,7 +1,7 @@
 // src/components/ui/SwitchRow.jsx
 import React from "react";
 import { View, Text } from "react-native";
-import AppSwitch from "./AppSwitch";
+import AppSwitch from "@/components/ui/AppSwitch";
 
 /**
  * Settings-style row with Switch

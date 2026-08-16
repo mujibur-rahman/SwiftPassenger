@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import {
   useFonts,
   InstrumentSerif_400Regular_Italic,

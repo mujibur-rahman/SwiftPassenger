@@ -3,8 +3,8 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import SvgIcon from "./SvgIcon";
-import BrandBadge from "./BrandBadge";
+import SvgIcon from "@/components/ui/SvgIcon";
+import BrandBadge from "@/components/ui/BrandBadge";
 
 /**
  * Auth screen top bar: Back link + BrandBadge

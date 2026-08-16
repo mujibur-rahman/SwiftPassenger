@@ -21,7 +21,7 @@ import {
   rideStarted,
   rideCompleted,
   clearActiveRide,
-} from "../features/driver/driverSlice";
+} from "@/features/driver/driverSlice";
 
 const DriverSocketContext = createContext(null);
 

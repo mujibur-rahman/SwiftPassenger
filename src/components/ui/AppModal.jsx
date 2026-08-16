@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Button from "./Button";
+import Button from "@/components/ui/Button";
 
 /**
  * Reusable bottom-sheet modal

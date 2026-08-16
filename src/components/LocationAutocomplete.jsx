@@ -9,7 +9,7 @@ import {
   Keyboard,
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { autocompletePlaces, getPlaceDetails } from "../services/places";
+import { autocompletePlaces, getPlaceDetails } from "@/services/places";
 
 export default function LocationAutocomplete({
   label,

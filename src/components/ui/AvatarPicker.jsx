@@ -1,7 +1,7 @@
 // src/components/ui/AvatarPicker.jsx
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import Avatar from "./Avatar";
+import Avatar from "@/components/ui/Avatar";
 
 /**
  * Avatar + optional action button (e.g. "Change Photo")

@@ -10,11 +10,11 @@ import {
   Alert,
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import ScreenHeader from "../../components/ui/ScreenHeader";
-import Button from "../../components/ui/Button";
-import Expandable from "../../components/ui/Expandable";
-import ExpandableGroup from "../../components/ui/ExpandableGroup";
-import SearchBar from "../../components/ui/SearchBar";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import Button from "@/components/ui/Button";
+import Expandable from "@/components/ui/Expandable";
+import ExpandableGroup from "@/components/ui/ExpandableGroup";
+import SearchBar from "@/components/ui/SearchBar";
 
 const FAQS = [
   {

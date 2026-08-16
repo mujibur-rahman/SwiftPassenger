@@ -5,8 +5,8 @@ import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelRide } from '../../../store/slices/rideSlice';
-import { DARK_MAP_STYLE } from '../../../utils/mapStyles';
+import { cancelRide } from '@/store/slices/rideSlice';
+import { DARK_MAP_STYLE } from '@/utils/mapStyles';
 
 const STATUS_CONFIG = {
   searching: { label: 'Finding your driver...', color: '#FFA500' },

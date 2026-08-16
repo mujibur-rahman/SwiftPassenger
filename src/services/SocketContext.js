@@ -16,7 +16,7 @@ import {
   updateETA,
   setCurrentRide,
   resetRide,
-} from "../features/ride/rideSlice";
+} from "@/features/ride/rideSlice";
 
 const SocketContext = createContext(null);
 

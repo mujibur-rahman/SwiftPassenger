@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutDriver } from '../../store/slices/authSlice';
-import { useDriverSocket } from '../../services/DriverSocketContext';
+import { logoutDriver } from '@/store/slices/authSlice';
+import { useDriverSocket } from '@/services/DriverSocketContext';
 
 const MenuItem = ({ icon, label, value, onPress, danger, badge }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress}>

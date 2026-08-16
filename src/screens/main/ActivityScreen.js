@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRideHistory } from '../../store/slices/rideSlice';
+import { getRideHistory } from '@/store/slices/rideSlice';
 
 const STATUS_COLORS = { completed: '#00D95F', cancelled: '#FF4444', ongoing: '#4A9EFF' };
 

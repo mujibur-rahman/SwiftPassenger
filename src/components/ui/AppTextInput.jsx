@@ -1,6 +1,6 @@
 import React, { forwardRef, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import SvgIcon from "./SvgIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 
 const AppTextInput = forwardRef(
   (

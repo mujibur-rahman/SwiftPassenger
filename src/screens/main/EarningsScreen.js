@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEarnings, fetchRideHistory, setPeriod } from '../../store/slices/earningsSlice';
+import { fetchEarnings, fetchRideHistory, setPeriod } from '@/store/slices/earningsSlice';
 
 const MOCK_CHART = [
   { day: 'Mon', amount: 85 }, { day: 'Tue', amount: 120 },

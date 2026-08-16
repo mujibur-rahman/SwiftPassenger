@@ -1,5 +1,5 @@
 // src/features/payment/paymentApi.js
-import { apiSlice } from "../api/apiSlice";
+import { apiSlice } from '@/features/api/apiSlice';
 
 export const paymentApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

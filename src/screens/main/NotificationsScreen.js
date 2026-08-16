@@ -1,11 +1,11 @@
 // src/screens/main/NotificationsScreen.js
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Switch } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import AppSwitch from "../../components/ui/AppSwitch";
-import SwitchRow from "../../components/ui/SwitchRow";
-import ScreenHeader from "../../components/ui/ScreenHeader";
+import AppSwitch from "@/components/ui/AppSwitch";
+import SwitchRow from "@/components/ui/SwitchRow";
+import ScreenHeader from "@/components/ui/ScreenHeader";
 
 const NOTIFICATION_GROUPS = [
   {

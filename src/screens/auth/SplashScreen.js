@@ -1,7 +1,6 @@
 // src/screens/auth/SplashScreen.js
 import React, { useEffect, useRef } from "react";
 import { View, Text, Animated } from "react-native";
-import BrandBadge from "@/components/ui/BrandBadge";
 import AuthHeader from "@/components/ui/AuthHeader";
 
 export default function SplashScreen({ navigation }) {

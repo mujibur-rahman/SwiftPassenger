@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { apiSlice } from "../api/apiSlice";
-import { userLoggedIn } from "./authSlice";
+import { apiSlice } from '@/features/api/apiSlice';
+import { userLoggedIn } from '@/features/auth/authSlice';
 
 const saveAuthData = async (data, dispatch) => {
   const accessToken = data.accessToken || data.token;

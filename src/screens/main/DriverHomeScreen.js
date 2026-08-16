@@ -9,9 +9,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { useDispatch, useSelector } from 'react-redux';
-import { setOnlineStatus } from '../../store/slices/riderSlice';
-import { useDriverSocket } from '../../services/DriverSocketContext';
-import { DARK_MAP_STYLE } from '../../utils/mapStyles';
+import { setOnlineStatus } from '@/store/slices/riderSlice';
+import { useDriverSocket } from '@/services/DriverSocketContext';
+import { DARK_MAP_STYLE } from '@/utils/mapStyles';
 
 export default function DriverHomeScreen({ navigation }) {
   const dispatch = useDispatch();

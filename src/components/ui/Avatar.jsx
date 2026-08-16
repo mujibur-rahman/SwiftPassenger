@@ -7,8 +7,8 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import SvgIcon from "./SvgIcon";
-import { getName } from "../../utils/helpers";
+import SvgIcon from "@/components/ui/SvgIcon";
+import { getName } from "@/utils/helpers";
 
 const sizeMap = {
   sm: { className: "w-9 h-9", text: "text-sm", icon: 18, spinner: "small" },

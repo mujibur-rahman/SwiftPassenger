@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Animated, Vibration } from 'r
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { acceptRide, rejectRide } from '../../store/slices/driverSlice';
+import { acceptRide, rejectRide } from '@/store/slices/driverSlice';
 
 const COUNTDOWN_SECONDS = 20;
 

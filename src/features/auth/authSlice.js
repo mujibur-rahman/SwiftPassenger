@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { apiSlice } from "../api/apiSlice";
+import { apiSlice } from '@/features/api/apiSlice';
 
 const initialState = {
   accessToken: null,

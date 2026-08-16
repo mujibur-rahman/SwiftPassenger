@@ -1,5 +1,5 @@
 // src/features/driver/driverApi.js
-import { apiSlice } from "../api/apiSlice";
+import { apiSlice } from '@/features/api/apiSlice';
 
 export const driverApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({

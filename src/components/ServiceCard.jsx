@@ -1,6 +1,6 @@
 // src/components/ServiceCard.jsx
 import { Text, View, Pressable } from "react-native";
-import SvgIcon from "../components/ui/SvgIcon";
+import SvgIcon from "@/components/ui/SvgIcon";
 import { useNavigation } from "@react-navigation/native";
 
 const ServiceCard = ({ job }) => {

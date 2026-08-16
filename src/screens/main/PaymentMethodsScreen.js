@@ -11,14 +11,14 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CARD_BRAND } from "../../constants/Colors";
+import { CARD_BRAND } from "@/constants/Colors";
 import {
   useGetPaymentMethodsQuery,
   useSetDefaultPaymentMethodMutation,
   useDeletePaymentMethodMutation,
-} from "../../features/payment/paymentApi";
-import ScreenHeader from "../../components/ui/ScreenHeader";
-import ListRow from "../../components/ui/ListRow";
+} from "@/features/payment/paymentApi";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import ListRow from "@/components/ui/ListRow";
 
 const MOCK_METHODS = [
   {
