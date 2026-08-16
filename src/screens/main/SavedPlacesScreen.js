@@ -1,22 +1,12 @@
 // src/screens/main/SavedPlacesScreen.js
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  Modal,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
-import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import ScreenHeader from "../../components/ui/ScreenHeader";
-import ListRow from "../../components/ui/ListRow";
-import AppTextInput from "../../components/ui/AppTextInput";
-import Button from "../../components/ui/Button";
-import IconListItem from "../../components/ui/IconListItem";
-import AppModal from "../../components/ui/AppModal";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import ListRow from "@/components/ui/ListRow";
+import AppTextInput from "@/components/ui/AppTextInput";
+import IconListItem from "@/components/ui/IconListItem";
+import AppModal from "@/components/ui/AppModal";
+import Heading from "@/components/ui/Heading";
 
 const DEFAULT_PLACES = [
   {
@@ -133,9 +123,11 @@ export default function SavedPlacesScreen({ navigation }) {
         contentContainerClassName="px-5 pb-10"
         showsVerticalScrollIndicator={false}
       >
-        <Text className="mb-4 text-[13px] font-sans text-foreground-muted">
-          Tap a place to set or update its address
-        </Text>
+        <Heading
+          subtitle="Tap a place to set or update its address"
+          size="md"
+          className="mb-4"
+        />
 
         {/* Place list */}
         <View className="mb-4 gap-2.5">

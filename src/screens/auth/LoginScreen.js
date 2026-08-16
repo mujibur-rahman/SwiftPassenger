@@ -17,6 +17,7 @@ import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/ui/AuthHeader";
 import Badge from "@/components/ui/Badge";
+import Heading from "@/components/ui/Heading";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -76,10 +77,12 @@ export default function LoginScreen({ navigation }) {
               uppercase
               className="mb-4"
             />
-
-            <Text className="h1">Welcome Back 👋</Text>
-
-            <Text className="sub mt-2">Sign in to your account</Text>
+            
+            <Heading
+              title="Welcome Back 👋"
+              subtitle="Sign in to your account"
+              size="lg"
+            />
           </View>
 
           <View className="gap-4">

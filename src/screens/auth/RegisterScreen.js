@@ -11,6 +11,7 @@ import { useRegisterMutation } from "@/features/auth/authApi";
 import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/ui/AuthHeader";
+import Heading from "@/components/ui/Heading";
 
 export default function RegisterScreen({ navigation }) {
   const [register, { isLoading }] = useRegisterMutation();
@@ -62,10 +63,12 @@ export default function RegisterScreen({ navigation }) {
         >
           <AuthHeader />
 
-          <View className="mb-8 mt-16">
-            <Text className="h1">Create Account</Text>
-            <Text className="sub mt-2">Join millions of riders today</Text>
-          </View>
+          <Heading
+            title="Create Account"
+            subtitle="Join millions of riders today"
+            size="lg"
+            className="mb-8 mt-16"
+          />
 
           <View className="gap-3.5">
             <AppTextInput

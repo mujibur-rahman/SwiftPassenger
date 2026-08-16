@@ -16,6 +16,7 @@ import {
 import AppTextInput from "@/components/ui/AppTextInput";
 import Button from "@/components/ui/Button";
 import AuthHeader from "@/components/ui/AuthHeader";
+import Heading from "@/components/ui/Heading";
 
 export default function OTPScreen({ navigation }) {
   const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
@@ -94,16 +95,16 @@ export default function OTPScreen({ navigation }) {
         >
           <AuthHeader />
 
-          <View className="mb-9 mt-16">
-            <Text className="h1 mb-2.5">
-              {step === "phone" ? "Enter Phone Number" : "Verify OTP"}
-            </Text>
-            <Text className="sub">
-              {step === "phone"
+          <Heading
+            title={step === "phone" ? "Enter Phone Number" : "Verify OTP"}
+            subtitle={
+              step === "phone"
                 ? "We'll send you a verification code"
-                : `Code sent to +1 ${phone}`}
-            </Text>
-          </View>
+                : `Code sent to +1 ${phone}`
+            }
+            size="lg"
+            className="mb-9 mt-16"
+          />
 
           <View className="gap-5">
             {step === "phone" ? (
