@@ -36,13 +36,16 @@ export const authApi = apiSlice.injectEndpoints({
           await AsyncStorage.setItem("token", token);
           await AsyncStorage.setItem("user", JSON.stringify(data.user));
 
+          // console.log('login token', token)
+          // console.log('login user', data.user)
+
           dispatch(
             userLoggedIn({
               accessToken: token,
               user: data.user,
             }),
           );
-        } catch (err) {}
+        } catch (err) { }
       },
     }),
 
@@ -71,7 +74,7 @@ export const authApi = apiSlice.injectEndpoints({
               user: data.user,
             }),
           );
-        } catch (err) {}
+        } catch (err) { }
       },
     }),
 
@@ -93,7 +96,7 @@ export const authApi = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           await saveAuthData(data, dispatch);
-        } catch (err) {}
+        } catch (err) { }
       },
     }),
   }),

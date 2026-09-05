@@ -12,31 +12,24 @@ import {
   InstrumentSerif_400Regular_Italic,
 } from "@expo-google-fonts/instrument-serif";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
 import { ActivityIndicator, View } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import AuthNavigator from "@/navigation/AuthNavigator";
 import MainNavigator from "@/navigation/MainNavigator";
-import {
-  hydrateAuth,
-  selectAuthHydrated,
-  selectIsAuthenticated,
-} from "@/features/auth/authSlice";
+import { userLoggedIn, userLoggedOut } from "@/features/auth/authSlice";
 import { useSocket } from "@/services/SocketContext";
-// Passenger active ride (optional recovery):
-// import { useGetActiveRideQuery } from "@/features/ride/rideApi";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
 
 export default function RootNavigator() {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isHydrated = useSelector(selectAuthHydrated);
+  const { accessToken } = useSelector((state) => state.auth);
   const { connect } = useSocket();
-
+  const [isLoading, setIsLoading] = useState(true);
   const [fontsLoaded, fontError] = useFonts({
     Inter_300Light,
     Inter_400Regular,
@@ -47,35 +40,53 @@ export default function RootNavigator() {
     InstrumentSerif_400Regular,
     InstrumentSerif_400Regular_Italic,
   });
-
-  // ---------- ALL HOOKS FIRST (no early return before these) ----------
-
-  // 1. Hydrate auth from AsyncStorage
+  // ✅ All hooks must be called before any early return
   useEffect(() => {
-    dispatch(hydrateAuth());
+    const loadSession = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const userString = await AsyncStorage.getItem("user");
+        if (token && userString) {
+          const user = JSON.parse(userString);
+          dispatch(
+            userLoggedIn({
+              accessToken: token,
+              user,
+            }),
+          );
+        } else {
+          dispatch(userLoggedOut());
+        }
+      } catch (error) {
+        console.log("Failed to load session:", error);
+        dispatch(userLoggedOut());
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadSession();
   }, [dispatch]);
-
-  // 2. Socket connection if user is authenticated
   useEffect(() => {
-    if (isAuthenticated) connect();
-  }, [isAuthenticated, connect]);
-
-  // 3. Hide splash when fonts ready
+    if (accessToken) {
+      connect();
+    }
+  }, [accessToken]);
+  // Hide splash when fonts ready
   useEffect(() => {
-    if (fontsLoaded || fontError) SplashScreen.hideAsync();
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
   }, [fontsLoaded, fontError]);
 
   // ---------- THEN conditional UI ----------
-  const showLoader = (!fontsLoaded && !fontError) || !isHydrated;
-
+  const showLoader = (!fontsLoaded && !fontError) || isLoading;
   if (showLoader) {
     return (
       <View className="flex-1 justify-center items-center bg-background">
-        <ActivityIndicator size="large" color="#38bdf8" />
+        <ActivityIndicator size="large" color="#FF6B35" />
       </View>
     );
   }
-
   return (
     <Stack.Navigator
       screenOptions={{
