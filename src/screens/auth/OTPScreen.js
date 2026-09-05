@@ -1,90 +1,177 @@
-// src/screens/auth/OTPScreen.js
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import api from '../../services/api';
-import { useDispatch } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loadUser } from '../../store/slices/authSlice';
+import React, { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
+import {
+  useSendOtpMutation,
+  useVerifyOtpMutation,
+} from "@/features/auth/authApi";
+import AppTextInput from "@/components/ui/AppTextInput";
+import Button from "@/components/ui/Button";
+import AuthHeader from "@/components/ui/AuthHeader";
+import Heading from "@/components/ui/Heading";
 
 export default function OTPScreen({ navigation }) {
-  const dispatch = useDispatch();
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const [step, setStep] = useState('phone');
-  const [loading, setLoading] = useState(false);
+  const [sendOtp, { isLoading: sending }] = useSendOtpMutation();
+  const [verifyOtp, { isLoading: verifying }] = useVerifyOtpMutation();
+
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [step, setStep] = useState("phone"); // "phone" | "otp"
   const refs = useRef([]);
 
-  const sendOTP = async () => {
-    if (!phone) { Alert.alert('Error', 'Enter phone number'); return; }
-    setLoading(true);
-    try { await api.post('/auth/otp/send', { phone }); setStep('otp'); }
-    catch (e) { Alert.alert('Error', e.response?.data?.message || 'Failed to send OTP'); }
-    finally { setLoading(false); }
+  const loading = sending || verifying;
+
+  const handleSendOTP = async () => {
+    if (!phone.trim()) {
+      Alert.alert("Error", "Enter phone number");
+      return;
+    }
+
+    try {
+      const result = await sendOtp({ phone: phone.trim() }).unwrap();
+      setStep("otp");
+
+      // Dev only - remove in production
+      if (result?.debugOtp) {
+        Alert.alert("Dev OTP", result.debugOtp);
+        console.log("OTP ->", result.debugOtp);
+      }
+    } catch (e) {
+      Alert.alert("Error", e?.data?.message || "Failed to send OTP");
+    }
   };
 
-  const verifyOTP = async () => {
-    const code = otp.join('');
-    if (code.length < 6) { Alert.alert('Error', 'Enter complete OTP'); return; }
-    setLoading(true);
+  const handleVerifyOTP = async () => {
+    const code = otp.join("");
+    if (code.length < 6) {
+      Alert.alert("Error", "Enter complete OTP");
+      return;
+    }
+
     try {
-      const res = await api.post('/auth/otp/verify', { phone, otp: code });
-      await AsyncStorage.setItem('token', res.data.token);
-      await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
-      dispatch(loadUser());
-    } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Invalid OTP'); }
-    finally { setLoading(false); }
+      await verifyOtp({ phone: phone.trim(), otp: code }).unwrap();
+      // onQueryStarted saves tokens + userLoggedIn
+      // RootNavigator switches to Main automatically
+    } catch (e) {
+      Alert.alert("Error", e?.data?.message || "Invalid OTP");
+    }
   };
 
   const handleOTPChange = (val, idx) => {
-    const newOtp = [...otp]; newOtp[idx] = val; setOtp(newOtp);
-    if (val && idx < 5) refs.current[idx + 1]?.focus();
-    if (!val && idx > 0) refs.current[idx - 1]?.focus();
+    const digit = val.replace(/[^0-9]/g, "").slice(-1);
+    const newOtp = [...otp];
+    newOtp[idx] = digit;
+    setOtp(newOtp);
+
+    if (digit && idx < 5) {
+      refs.current[idx + 1]?.focus();
+    }
+  };
+
+  const handleOTPKeyPress = (e, idx) => {
+    if (e.nativeEvent.key === "Backspace" && !otp[idx] && idx > 0) {
+      refs.current[idx - 1]?.focus();
+    }
   };
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
-      <TouchableOpacity style={styles.back} onPress={() => navigation.goBack()}>
-        <Text style={styles.backText}>← Back</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>{step === 'phone' ? 'Enter Phone\nNumber' : 'Verify OTP'}</Text>
-      <Text style={styles.subtitle}>{step === 'phone' ? "We'll send you a verification code" : `Code sent to ${phone}`}</Text>
+    <View className="flex-1 bg-background">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        className="flex-1"
+      >
+        <ScrollView
+          contentContainerClassName="flex-grow justify-center px-6 py-6"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <AuthHeader />
 
-      {step === 'phone' ? (
-        <View style={styles.phoneWrap}>
-          <Text style={styles.label}>Phone Number</Text>
-          <TextInput style={styles.phoneInput} placeholder="+1 (555) 000-0000" placeholderTextColor="#444" keyboardType="phone-pad" value={phone} onChangeText={setPhone} selectionColor="#00D95F" />
-        </View>
-      ) : (
-        <View style={styles.otpWrap}>
-          {otp.map((digit, i) => (
-            <TextInput key={i} ref={(r) => (refs.current[i] = r)} style={[styles.otpBox, digit && styles.otpBoxFilled]} maxLength={1} keyboardType="number-pad" value={digit} onChangeText={(v) => handleOTPChange(v, i)} selectionColor="#00D95F" />
-          ))}
-        </View>
-      )}
+          <Heading
+            title={step === "phone" ? "Enter Phone Number" : "Verify OTP"}
+            subtitle={
+              step === "phone"
+                ? "We'll send you a verification code"
+                : `Code sent to +1 ${phone}`
+            }
+            size="lg"
+            className="mb-9 mt-16"
+          />
 
-      <TouchableOpacity style={styles.btn} onPress={step === 'phone' ? sendOTP : verifyOTP} disabled={loading}>
-        <LinearGradient colors={['#00D95F', '#00B84F']} style={styles.btnGrad}>
-          {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.btnText}>{step === 'phone' ? 'Send OTP' : 'Verify'}</Text>}
-        </LinearGradient>
-      </TouchableOpacity>
-    </LinearGradient>
+          <View className="gap-5">
+            {step === "phone" ? (
+              <AppTextInput
+                label="Phone Number"
+                required
+                leftContent="+61"
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="(555) 000-0000"
+                keyboardType="phone-pad"
+              />
+            ) : (
+              <View className="mb-2 flex-row justify-between gap-2">
+                {otp.map((digit, i) => (
+                  <TextInput
+                    key={i}
+                    ref={(r) => (refs.current[i] = r)}
+                    className={`
+                      h-14.5 flex-1 rounded-xl border-2
+                      text-[22px] font-inter-bold text-foreground
+                      bg-input
+                      ${digit ? "border-primary" : "border-border"}
+                    `}
+                    style={{ textAlign: "center" }} // ← use style instead of text-center
+                    maxLength={1}
+                    keyboardType="number-pad"
+                    value={digit}
+                    onChangeText={(v) => handleOTPChange(v, i)}
+                    onKeyPress={(e) => handleOTPKeyPress(e, i)}
+                    selectionColor="#38BDF8"
+                    cursorColor="#38BDF8"
+                    textContentType="oneTimeCode"
+                    autoComplete="sms-otp"
+                  />
+                ))}
+              </View>
+            )}
+
+            <Button
+              variant="primary"
+              onPress={step === "phone" ? handleSendOTP : handleVerifyOTP}
+              loading={loading}
+              disabled={loading}
+              className="mt-2"
+            >
+              {step === "phone" ? "Send OTP" : "Verify"}
+            </Button>
+
+            {step === "otp" && (
+              <TouchableOpacity
+                className="mt-2 items-center"
+                onPress={handleSendOTP}
+                disabled={sending}
+                activeOpacity={0.7}
+              >
+                <Text className="text-sm font-inter text-foreground-muted">
+                  Didn't receive code?{" "}
+                  <Text className="font-inter-semibold text-primary">
+                    Resend
+                  </Text>
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 24, paddingTop: 60 },
-  back: { marginBottom: 40 },
-  backText: { color: '#888', fontSize: 16 },
-  title: { fontSize: 36, fontWeight: '800', color: '#FFF', lineHeight: 44, marginBottom: 8 },
-  subtitle: { color: '#666', fontSize: 15, marginBottom: 40 },
-  label: { color: '#888', fontSize: 12, fontWeight: '600', letterSpacing: 0.5, marginBottom: 8 },
-  phoneWrap: { marginBottom: 24 },
-  phoneInput: { backgroundColor: '#161616', borderRadius: 12, borderWidth: 1, borderColor: '#2A2A2A', paddingHorizontal: 16, height: 56, color: '#FFF', fontSize: 16 },
-  otpWrap: { flexDirection: 'row', gap: 10, marginBottom: 32 },
-  otpBox: { flex: 1, height: 60, borderRadius: 12, borderWidth: 2, borderColor: '#2A2A2A', backgroundColor: '#161616', textAlign: 'center', fontSize: 24, fontWeight: '700', color: '#FFF' },
-  otpBoxFilled: { borderColor: '#00D95F' },
-  btn: { borderRadius: 12, overflow: 'hidden' },
-  btnGrad: { height: 56, justifyContent: 'center', alignItems: 'center' },
-  btnText: { color: '#000', fontSize: 16, fontWeight: '700' },
-});

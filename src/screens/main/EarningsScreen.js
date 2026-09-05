@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchEarnings, fetchRideHistory, setPeriod } from '../../store/slices/earningsSlice';
+import { fetchEarnings, fetchRideHistory, setPeriod } from '@/store/slices/earningsSlice';
 
 const MOCK_CHART = [
   { day: 'Mon', amount: 85 }, { day: 'Tue', amount: 120 },
@@ -108,7 +108,7 @@ export default function EarningsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A' },
+  container: { flex: 1, backgroundColor: '#060E1A' },
   scroll: { paddingBottom: 40 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 24, paddingTop: 60 },
   title: { fontSize: 28, fontWeight: '800', color: '#FFF' },

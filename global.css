@@ -1,0 +1,123 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+/* 1) @theme → generates utilities like bg-background, text-primary */
+@theme {
+  --color-background: #060e1a;
+  --color-background-secondary: #0d1e32;
+  --color-background-muted: #162a44;
+  --color-card: #0d1e32;
+  --color-badge: #0d1e32;
+  --color-avatar: #1b1e27;
+
+  --color-foreground: #f0f9ff;
+  --color-foreground-secondary: #bae6fd;
+  --color-foreground-muted: #7dd3fc;
+  --color-card-foreground: #f0f9ff;
+
+  --color-primary: #38bdf8;
+  --color-primary-foreground: #060e1a;
+
+  --color-secondary: #1e3a5f;
+  --color-secondary-foreground: #bae6fd;
+
+  --color-border: #1e3a5f;
+  --color-input: #162a44;
+  --color-ring: #38bdf8;
+
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+  --color-accent: #d4af6a;
+
+  --font-inter: "Inter_400Regular";
+  --font-inter-light: "Inter_300Light";
+  --font-inter-medium: "Inter_500Medium";
+  --font-inter-semibold: "Inter_600SemiBold";
+  --font-inter-bold: "Inter_700Bold";
+  --font-inter-extrabold: "Inter_800ExtraBold";
+
+  --font-instrument: "InstrumentSerif_400Regular";
+  --font-instrument-italic: "InstrumentSerif_400Regular_Italic";
+}
+
+/* 2) :root → REQUIRED for VariableContextProvider runtime override */
+:root {
+  --color-background: #060e1a;
+  --color-background-secondary: #0d1e32;
+  --color-background-muted: #162a44;
+  --color-card: #0d1e32;
+  --color-badge: #0d1e32;
+  --color-avatar: #1b1e27;
+
+  --color-foreground: #f0f9ff;
+  --color-foreground-secondary: #bae6fd;
+  --color-foreground-muted: #7dd3fc;
+  --color-card-foreground: #f0f9ff;
+
+  --color-primary: #38bdf8;
+  --color-primary-foreground: #060e1a;
+
+  --color-secondary: #1e3a5f;
+  --color-secondary-foreground: #bae6fd;
+
+  --color-border: #1e3a5f;
+  --color-input: #162a44;
+  --color-ring: #38bdf8;
+
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+  --color-accent: #d4af6a;
+}
+
+@layer components {
+  .logo-avatar {
+    @apply mb-8;
+  }
+
+  .avatar-sm {
+    @apply size-9 rounded-full bg-avatar border border-border items-center justify-center;
+  }
+
+  .avatar-text {
+    @apply text-primary-foreground font-bold;
+  }
+
+  .screen-container {
+    @apply flex-1 bg-background px-4.5;
+  }
+
+  .service-grid {
+    @apply flex-row flex-wrap justify-start border border-border bg-card py-2.5 rounded-[20px];
+  }
+
+  .service-card {
+    @apply flex-1/3 max-w-1/3 items-center my-2.5;
+  }
+
+  .service-card-circle {
+    @apply mb-2 size-14.5 items-center justify-center rounded-full border border-border bg-background-muted;
+  }
+
+  .service-card-title {
+    @apply px-0.5 text-center text-xs font-inter-medium leading-4 text-foreground;
+  }
+
+  .h1 {
+    @apply text-3xl font-inter-extrabold text-foreground;
+  }
+
+  .sub {
+    @apply text-base font-inter text-foreground-muted;
+  }
+
+  .pad {
+    @apply rounded-2xl border border-dashed overflow-hidden;
+  }
+}

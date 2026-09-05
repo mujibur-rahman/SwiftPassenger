@@ -1,15 +1,19 @@
 // src/store/slices/authSlice.js
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api';
 
 export const loginUser = createAsyncThunk('auth/login', async ({ phone, password }, { rejectWithValue }) => {
   try {
-    const res = await api.post('/auth/passenger/login', { phone, password });
+    console.log('testing: ', phone, password);
+    const res = await api.post('/users', { phone, password });
     await AsyncStorage.setItem('token', res.data.token);
     await AsyncStorage.setItem('user', JSON.stringify(res.data.user));
     return res.data;
   } catch (err) {
+    console.log('err', err);
     return rejectWithValue(err.response?.data?.detail || 'Login failed');
   }
 });

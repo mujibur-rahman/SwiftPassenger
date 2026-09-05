@@ -45,7 +45,7 @@ export default function DriverRegisterScreen({ navigation }) {
   );
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
 
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   label: { color: '#888', fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
   input: {
     backgroundColor: '#161616', borderRadius: 12, borderWidth: 1,
-    borderColor: '#2A2A2A', paddingHorizontal: 16, height: 52,
+    borderColor: '#1E3A5F', paddingHorizontal: 16, height: 52,
     color: '#FFF', fontSize: 15,
   },
   btn: { borderRadius: 12, overflow: 'hidden', marginTop: 8 },

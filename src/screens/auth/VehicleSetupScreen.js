@@ -6,7 +6,7 @@ import {LinearGradient} from 'react-native-linear-gradient';
 
 export default function VehicleSetupScreen({ navigation }) {
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.emoji}>📄</Text>
         <Text style={styles.title}>Upload Documents</Text>

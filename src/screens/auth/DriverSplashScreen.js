@@ -15,7 +15,7 @@ export default function DriverSplashScreen({ navigation }) {
   }, []);
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#150E0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#150E0A', '#060E1A']} style={styles.container}>
       <Animated.View style={[styles.content, { transform: [{ scale }], opacity }]}>
         <View style={styles.logoCircle}>
           <Text style={styles.logoIcon}>🚗</Text>

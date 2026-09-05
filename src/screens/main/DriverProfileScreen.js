@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutDriver } from '../../store/slices/authSlice';
-import { useDriverSocket } from '../../services/DriverSocketContext';
+import { logoutDriver } from '@/store/slices/authSlice';
+import { useDriverSocket } from '@/services/DriverSocketContext';
 
 const MenuItem = ({ icon, label, value, onPress, danger, badge }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress}>
@@ -35,7 +35,7 @@ export default function DriverProfileScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scroll}>
-      <LinearGradient colors={['#150E0A', '#0A0A0A']} style={styles.headerGrad}>
+      <LinearGradient colors={['#150E0A', '#060E1A']} style={styles.headerGrad}>
         <View style={styles.avatarWrap}>
           <LinearGradient colors={['#FF6B35', '#E55A25']} style={styles.avatar}>
             <Text style={styles.avatarText}>{driver?.name?.[0] || 'D'}</Text>
@@ -98,7 +98,7 @@ export default function DriverProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0A0A0A' },
+  container: { flex: 1, backgroundColor: '#060E1A' },
   scroll: { paddingBottom: 40 },
   headerGrad: { padding: 24, paddingTop: 60, alignItems: 'center', gap: 4 },
   avatarWrap: { marginBottom: 12 },

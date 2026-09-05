@@ -1,15 +1,24 @@
-// passenger-app/src/store/index.js
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
-import rideReducer from './slices/rideSlice';
-import locationReducer from './slices/locationSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
+
+import { apiSlice } from "@/features/api/apiSlice";
+import authReducer from "@/features/auth/authSlice";
+import rideReducer from "@/features/ride/rideSlice";
+import locationReducer from "@/features/location/locationSlice";
+import driverReducer from "@/features/driver/driverSlice";
 
 export const store = configureStore({
   reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
     ride: rideReducer,
     location: locationReducer,
+    driver: driverReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
+    getDefaultMiddleware({
+      serializableCheck: false, // location object এর জন্য দরকার
+    }).concat(apiSlice.middleware),
 });
+
+setupListeners(store.dispatch);

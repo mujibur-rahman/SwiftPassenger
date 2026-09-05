@@ -1,49 +1,77 @@
-// passenger-app/src/navigation/RootNavigator.js
-import React, { useEffect } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { useFonts } from "expo-font";
+import {
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_800ExtraBold,
+} from "@expo-google-fonts/inter";
+import {
+  InstrumentSerif_400Regular,
+  InstrumentSerif_400Regular_Italic,
+} from "@expo-google-fonts/instrument-serif";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { useDispatch, useSelector } from "react-redux";
+import { ActivityIndicator, View } from "react-native";
 
-import AuthNavigator from './AuthNavigator';
-import MainNavigator from './MainNavigator';
-import { loadUser } from '../store/slices/authSlice';
-import { useSocket } from '../services/SocketContext';
+import AuthNavigator from "@/navigation/AuthNavigator";
+import MainNavigator from "@/navigation/MainNavigator";
+import {
+  hydrateAuth,
+  selectAuthHydrated,
+  selectIsAuthenticated,
+} from "@/features/auth/authSlice";
+import { useSocket } from "@/services/SocketContext";
+// Passenger active ride (optional recovery):
+// import { useGetActiveRideQuery } from "@/features/ride/rideApi";
 
+SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
 
 export default function RootNavigator() {
   const dispatch = useDispatch();
-  const { isAuthenticated, loading } = useSelector((s) => s.auth);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const isHydrated = useSelector(selectAuthHydrated);
   const { connect } = useSocket();
 
-  useEffect(() => {
-    dispatch(loadUser());
-  }, []);
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    InstrumentSerif_400Regular,
+    InstrumentSerif_400Regular_Italic,
+  });
 
+  // ---------- ALL HOOKS FIRST (no early return before these) ----------
+
+  // 1. Hydrate auth from AsyncStorage
+  useEffect(() => {
+    dispatch(hydrateAuth());
+  }, [dispatch]);
+
+  // 2. Socket connection if user is authenticated
   useEffect(() => {
     if (isAuthenticated) connect();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, connect]);
 
+  // 3. Hide splash when fonts ready
   useEffect(() => {
-    checkActiveRide();
-  }, []);
+    if (fontsLoaded || fontError) SplashScreen.hideAsync();
+  }, [fontsLoaded, fontError]);
 
-  const checkActiveRide = async () => {
-    try {
-      const res = await api.get('/rides/active');
-      if (res.data?.ride) {
-        dispatch(setCurrentRide(res.data.ride));
-        dispatch(updateRideStatus(res.data.ride.status));
-        if (res.data.driver) dispatch(setDriver(res.data.driver));
-          navigation.navigate('ActiveRide');
-      }
-    } catch (e) {}
-  };
+  // ---------- THEN conditional UI ----------
+  const showLoader = (!fontsLoaded && !fontError) || !isHydrated;
 
-  if (loading) {
+  if (showLoader) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#00D95F" />
+      <View className="flex-1 justify-center items-center bg-background">
+        <ActivityIndicator size="large" color="#38bdf8" />
       </View>
     );
   }
@@ -58,7 +86,3 @@ export default function RootNavigator() {
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  loader: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0A0A0A' },
-});

@@ -24,7 +24,7 @@ export default function DriverLoginScreen({ navigation }) {
   };
 
   return (
-    <LinearGradient colors={['#0A0A0A', '#0A0A0A']} style={styles.container}>
+    <LinearGradient colors={['#060E1A', '#060E1A']} style={styles.container}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.header}>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   form: { gap: 16 },
   fieldWrap: { gap: 8 },
   label: { color: '#888', fontSize: 12, fontWeight: '600', letterSpacing: 0.5 },
-  input: { backgroundColor: '#161616', borderRadius: 12, borderWidth: 1, borderColor: '#2A2A2A', paddingHorizontal: 16, height: 56, color: '#FFF', fontSize: 16 },
+  input: { backgroundColor: '#161616', borderRadius: 12, borderWidth: 1, borderColor: '#1E3A5F', paddingHorizontal: 16, height: 56, color: '#FFF', fontSize: 16 },
   btn: { borderRadius: 12, overflow: 'hidden', marginTop: 8 },
   btnDisabled: { opacity: 0.7 },
   btnGrad: { height: 56, justifyContent: 'center', alignItems: 'center' },
