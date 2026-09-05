@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  TextInput,
   Linking,
   Alert,
 } from "react-native";
@@ -120,7 +119,7 @@ export default function HelpCenterScreen({ navigation }) {
         </TouchableOpacity>
         {open && (
           <View className="px-4 pb-4 pt-0">
-            <Text className="text-[13px] font-inter leading-5 text-foreground-muted">
+            <Text className="text-sm font-inter leading-5 text-foreground-muted">
               {answer}
             </Text>
           </View>
@@ -234,7 +233,7 @@ export default function HelpCenterScreen({ navigation }) {
           <Text className="text-base font-inter-bold text-foreground">
             Still need help?
           </Text>
-          <Text className="text-[13px] font-inter text-foreground-muted">
+          <Text className="text-sm font-inter text-foreground-muted">
             Our support team is available 24/7
           </Text>
           <View className="mt-2 w-full">

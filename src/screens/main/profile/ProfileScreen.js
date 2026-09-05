@@ -1,4 +1,4 @@
-// src/screens/main/ProfileScreen.js
+// @/screens/main/ProfileScreen.js
 import React from "react";
 import {
   View,

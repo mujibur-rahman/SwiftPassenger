@@ -1,4 +1,4 @@
-// src/screens/main/SavedPlacesScreen.js
+// @/screens/main/SavedPlacesScreen.js
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import ScreenHeader from "@/components/ui/ScreenHeader";
@@ -179,8 +179,8 @@ export default function SavedPlacesScreen({ navigation }) {
             <TouchableOpacity
               key={ic}
               className={`mr-2 h-12 w-12 items-center justify-center rounded-xl border-2 ${formIcon === ic
-                  ? "border-primary bg-primary/15"
-                  : "border-transparent bg-background-muted"
+                ? "border-primary bg-primary/15"
+                : "border-transparent bg-background-muted"
                 }`}
               onPress={() => setFormIcon(ic)}
             >

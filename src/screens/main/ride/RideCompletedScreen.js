@@ -1,4 +1,4 @@
-// src/screens/main/ride/RideCompletedScreen.js
+// @/screens/main/ride/RideCompletedScreen.js
 import React, { useState, useRef, useEffect } from "react";
 import {
   View,

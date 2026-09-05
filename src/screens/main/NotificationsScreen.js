@@ -1,4 +1,4 @@
-// src/screens/main/NotificationsScreen.js
+// @/screens/main/NotificationsScreen.js
 import React, { useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";

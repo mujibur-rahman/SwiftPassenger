@@ -82,7 +82,7 @@ export default function LocationAutocomplete({
   return (
     <View className={`relative ${containerClassName}`}>
       {label ? (
-        <Text className="mb-1.5 text-xs font-inter-semibold text-foreground-muted">
+        <Text className="mb-1.5 text-xs font-sans-semibold text-foreground-muted">
           {label}
         </Text>
       ) : null}
@@ -95,7 +95,7 @@ export default function LocationAutocomplete({
       >
         <Icon name="map-marker" size={18} color="#7DD3FC" />
         <TextInput
-          className="flex-1 ml-2 h-full p-0 text-base font-inter text-foreground"
+          className="flex-1 ml-2 h-full p-0 text-base font-sans text-foreground"
           value={value}
           onChangeText={handleChange}
           placeholder={placeholder}
@@ -139,14 +139,14 @@ export default function LocationAutocomplete({
               </View>
               <View className="flex-1">
                 <Text
-                  className="text-sm font-inter-semibold text-foreground"
+                  className="text-sm font-sans-semibold text-foreground"
                   numberOfLines={1}
                 >
                   {item.mainText}
                 </Text>
                 {item.secondaryText ? (
                   <Text
-                    className="text-xs font-inter text-foreground-muted mt-0.5"
+                    className="text-xs font-sans text-foreground-muted mt-0.5"
                     numberOfLines={1}
                   >
                     {item.secondaryText}

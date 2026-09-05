@@ -1,4 +1,4 @@
-// src/screens/main/ActivityScreen.js
+// @/screens/main/ActivityScreen.js
 import React from "react";
 import {
   View,

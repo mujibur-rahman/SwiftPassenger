@@ -241,4 +241,3 @@ export default function AppModal({
 // >
 //   <Text className="text-foreground">Profile updated.</Text>
 // </AppModal>
-

@@ -77,7 +77,6 @@ export default function LoginScreen({ navigation }) {
               uppercase
               className="mb-4"
             />
-
             <Heading
               title="Welcome Back 👋"
               subtitle="Sign in to your account"

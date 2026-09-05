@@ -47,8 +47,12 @@ function AppNavigation() {
 }
 
 export default function App() {
+  // inside App component
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync("#060E1A");
+  }, []);
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#060E1A" }}>
       <Provider store={store}>
         <ThemeProvider>
           <SafeAreaProvider>

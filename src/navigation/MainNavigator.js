@@ -171,6 +171,45 @@ function TabNavigator() {
   );
 }
 
+// Scale + fade transition for RideBooking
+const scaleTransition = {
+  gestureDirection: "horizontal",
+  transitionSpec: {
+    open: {
+      animation: "timing",
+      config: { duration: 320, easing: Easing.out(Easing.poly(4)) },
+    },
+    close: {
+      animation: "timing",
+      config: { duration: 260, easing: Easing.in(Easing.poly(4)) },
+    },
+  },
+  cardStyleInterpolator: ({ current, next, layouts }) => {
+    return {
+      cardStyle: {
+        transform: [
+          {
+            scale: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0.88, 1],
+            }),
+          },
+        ],
+        opacity: current.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+        }),
+      },
+      overlayStyle: {
+        opacity: current.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 0.55],
+        }),
+      },
+    };
+  },
+};
+
 export default function MainNavigator() {
   const { colors } = useTheme();
   const bg = colors?.background ?? "#060E1A";

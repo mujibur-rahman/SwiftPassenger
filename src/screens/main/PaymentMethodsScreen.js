@@ -1,4 +1,4 @@
-// src/screens/main/PaymentMethodsScreen.js
+// @/screens/main/PaymentMethodsScreen.js
 import React from "react";
 import {
   View,

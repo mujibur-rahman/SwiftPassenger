@@ -77,8 +77,14 @@ export default function RootNavigator() {
   }
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {isAuthenticated ? (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        cardStyle: { backgroundColor: "#060E1A" },
+        contentStyle: { backgroundColor: "#060E1A" },
+      }}
+    >
+      {accessToken ? (
         <Stack.Screen name="Main" component={MainNavigator} />
       ) : (
         <Stack.Screen name="Auth" component={AuthNavigator} />
