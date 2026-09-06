@@ -4,17 +4,17 @@ import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
-import { useTheme } from "@/theme";
 import { useGetPaymentMethodsQuery } from "@/features/payment/paymentApi";
 import { selectCart, makeSelectTotals } from "@/features/food/cartSlice";
 
 const BRAND_ICONS = {
-  visa: { icon: "credit-card", tw: "bg-primary/15" },
-  mastercard: { icon: "credit-card", tw: "bg-primary/15" },
-  amex: { icon: "credit-card", tw: "bg-primary/15" },
-  default: { icon: "credit-card-outline", tw: "bg-primary/15" },
+  visa: { icon: "credit-card", tw: "bg-background-muted" },
+  mastercard: { icon: "credit-card", tw: "bg-background-muted" },
+  amex: { icon: "credit-card", tw: "bg-background-muted" },
+  default: { icon: "credit-card-outline", tw: "bg-background-muted" },
 };
 
 const MOCK_METHODS = [
@@ -34,6 +34,7 @@ export default function FoodPaymentScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
   const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
   const totals = useSelector(selectTotals);
 
   const { data: methods = [], isError } = useGetPaymentMethodsQuery();
@@ -74,7 +75,7 @@ export default function FoodPaymentScreen({ navigation }) {
                 isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
               }`}
             >
-              <View className={`h-10 w-10 items-center justify-center rounded-lg ${brand.tw}`}>
+              <View className={`h-10 w-10 items-center justify-center rounded-lg border border-border ${brand.tw}`}>
                 <Icon name={brand.icon} size={20} color={primary} />
               </View>
               <Text className="flex-1 font-inter-medium text-foreground">
@@ -83,7 +84,7 @@ export default function FoodPaymentScreen({ navigation }) {
               <Icon
                 name={isSelected ? "radiobox-marked" : "radiobox-blank"}
                 size={22}
-                color={isSelected ? "#38BDF8" : "#7DD3FC"}
+                color={isSelected ? primary : muted}
               />
             </TouchableOpacity>
           );
@@ -100,21 +101,21 @@ export default function FoodPaymentScreen({ navigation }) {
                 isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
               }`}
             >
-              <View className="h-10 w-10 items-center justify-center rounded-lg bg-primary/15">
-                <Icon name={m.icon} size={20} color="#38BDF8" />
+              <View className="h-10 w-10 items-center justify-center rounded-lg border border-border bg-background-muted">
+                <Icon name={m.icon} size={20} color={primary} />
               </View>
               <Text className="flex-1 font-inter-medium text-foreground">{m.label}</Text>
               <Icon
                 name={isSelected ? "radiobox-marked" : "radiobox-blank"}
                 size={22}
-                color={isSelected ? "#38BDF8" : "#7DD3FC"}
+                color={isSelected ? primary : muted}
               />
             </TouchableOpacity>
           );
         })}
 
         <TouchableOpacity className="mt-1 flex-row items-center gap-2 py-2">
-          <Icon name="plus" size={18} color="#38BDF8" />
+          <Icon name="plus" size={18} color={primary} />
           <Text className="font-inter-semibold text-primary">Add new card</Text>
         </TouchableOpacity>
       </ScrollView>

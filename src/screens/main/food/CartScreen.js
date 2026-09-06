@@ -5,6 +5,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonActions } from "@react-navigation/native";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import {
@@ -21,6 +22,11 @@ const selectTotals = makeSelectTotals();
 export default function CartScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
+  const { colors, isDark } = useTheme();
+  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const onPrimary = colors?.primaryForeground ?? (isDark ? "#060E1A" : "#FFFFFF");
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
+
   const cart = useSelector(selectCart);
   const totals = useSelector(selectTotals);
 
@@ -46,7 +52,7 @@ export default function CartScreen({ navigation }) {
 
       {cart.items.length === 0 ? (
         <View className="flex-1 items-center justify-center">
-          <Icon name="cart-outline" size={48} color="#7DD3FC" />
+          <Icon name="cart-outline" size={48} color={muted} />
           <Text className="mt-3 font-inter text-foreground-muted">Your cart is empty</Text>
         </View>
       ) : (
@@ -58,8 +64,8 @@ export default function CartScreen({ navigation }) {
             contentContainerStyle={{ paddingBottom: 12 }}
             renderItem={({ item }) => (
               <View className="mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3">
-                <View className="h-14 w-14 items-center justify-center rounded-xl bg-primary/15">
-                  <Icon name="food" size={22} color="#38BDF8" />
+                <View className="h-14 w-14 items-center justify-center rounded-xl border border-border bg-background-muted">
+                  <Icon name="food" size={22} color={primary} />
                 </View>
                 <View className="flex-1">
                   <Text className="text-sm font-inter-bold text-foreground" numberOfLines={1}>
@@ -74,18 +80,18 @@ export default function CartScreen({ navigation }) {
                     onPress={() => dispatch(decrementItem(item.menuItemId))}
                     className="h-8 w-8 items-center justify-center rounded-full border border-border"
                   >
-                    <Icon name="minus" size={16} color="#38BDF8" />
+                    <Icon name="minus" size={16} color={primary} />
                   </TouchableOpacity>
                   <Text className="text-sm font-inter-bold text-foreground">{item.qty}</Text>
                   <TouchableOpacity
                     onPress={() => dispatch(incrementItem(item.menuItemId))}
                     className="h-8 w-8 items-center justify-center rounded-full bg-primary"
                   >
-                    <Icon name="plus" size={16} color="#060E1A" />
+                    <Icon name="plus" size={16} color={onPrimary} />
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={() => dispatch(removeItem(item.menuItemId))} hitSlop={8}>
-                  <Icon name="close" size={18} color="#7DD3FC" />
+                  <Icon name="close" size={18} color={muted} />
                 </TouchableOpacity>
               </View>
             )}

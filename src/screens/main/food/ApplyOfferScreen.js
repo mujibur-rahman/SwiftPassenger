@@ -4,6 +4,7 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from "react
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import { useGetOffersQuery } from "@/features/food/foodApi";
@@ -17,6 +18,10 @@ const OFFER_ICONS = {
 
 export default function ApplyOfferScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
+  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
+
   const dispatch = useDispatch();
   const cart = useSelector(selectCart);
   const subtotal = useSelector(selectSubtotal);
@@ -33,7 +38,7 @@ export default function ApplyOfferScreen({ navigation }) {
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator color="#38BDF8" />
+        <ActivityIndicator color={primary} />
       </View>
     );
   }
@@ -59,8 +64,8 @@ export default function ApplyOfferScreen({ navigation }) {
                 isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
               } ${!eligible ? "opacity-50" : ""}`}
             >
-              <View className="h-11 w-11 items-center justify-center rounded-xl bg-primary/15">
-                <Icon name={OFFER_ICONS[item.type] || "tag-outline"} size={22} color="#38BDF8" />
+              <View className="h-11 w-11 items-center justify-center rounded-xl border border-border bg-background-muted">
+                <Icon name={OFFER_ICONS[item.type] || "tag-outline"} size={22} color={primary} />
               </View>
               <View className="flex-1">
                 <Text className="text-[15px] font-inter-bold text-foreground">{item.title}</Text>
@@ -70,7 +75,7 @@ export default function ApplyOfferScreen({ navigation }) {
               <Icon
                 name={isSelected ? "radiobox-marked" : "radiobox-blank"}
                 size={22}
-                color={isSelected ? "#38BDF8" : "#7DD3FC"}
+                color={isSelected ? primary : muted}
               />
             </TouchableOpacity>
           );

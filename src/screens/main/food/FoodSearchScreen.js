@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import SearchBar from "@/components/ui/SearchBar";
 import Badge from "@/components/ui/Badge";
@@ -19,6 +20,8 @@ const POPULAR_CATEGORIES = [
 
 export default function FoodSearchScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
+  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
   const [query, setQuery] = useState("");
 
   const runSearch = (q) => {
@@ -69,8 +72,8 @@ export default function FoodSearchScreen({ navigation }) {
               className="items-center gap-1.5"
               style={{ width: 68 }}
             >
-              <View className="h-14 w-14 items-center justify-center rounded-2xl bg-primary/15">
-                <Icon name={cat.icon} size={26} color="#38BDF8" />
+              <View className="h-14 w-14 items-center justify-center rounded-2xl border border-border bg-background-muted">
+                <Icon name={cat.icon} size={26} color={primary} />
               </View>
               <Text className="text-center text-[11px] font-inter-medium text-foreground-muted" numberOfLines={1}>
                 {cat.label}
@@ -82,9 +85,9 @@ export default function FoodSearchScreen({ navigation }) {
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() => navigation.navigate("FoodSearchResults", { query: "" })}
-          className="mb-8 overflow-hidden rounded-2xl bg-background-muted p-5"
+          className="mb-8 overflow-hidden rounded-2xl border border-border bg-background-muted p-5"
         >
-          <Badge label="Craving something delicious?" variant="primary" shape="pill" size="sm" className="mb-2" />
+          <Badge label="Craving something delicious?" variant="primary" shape="pill" size="sm" className="mb-2 self-start" />
           <Text className="text-lg font-inter-bold text-foreground">
             Find the best food near you
           </Text>

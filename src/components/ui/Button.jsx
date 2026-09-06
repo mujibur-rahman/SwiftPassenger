@@ -174,6 +174,15 @@ export default function Button({
   const isDisabled = disabled || loading;
   const isIconOnly = !!icon && children == null;
 
+  // JSX like `View Cart ({count})` compiles to an array of
+  // strings/numbers, not a single string — typeof children === "string"
+  // misses that case and lets raw text leak outside <Text>. Catch both.
+  const isPlainText =
+    typeof children === "string" ||
+    typeof children === "number" ||
+    (Array.isArray(children) &&
+      children.every((c) => typeof c === "string" || typeof c === "number"));
+
   const renderIcon = (nameOrNode, fallbackSize) => {
     if (!nameOrNode) return null;
     if (typeof nameOrNode === "string") {
@@ -211,7 +220,7 @@ export default function Button({
       ) : (
         <View className="flex-row items-center gap-2">
           {renderIcon(leftIcon, sizeConfig.icon - 2)}
-          {typeof children === "string" ? (
+          {isPlainText ? (
             <Text
               className={`
                 ${sizeConfig.text}

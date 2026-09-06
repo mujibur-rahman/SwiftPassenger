@@ -1,9 +1,10 @@
 // @/screens/main/food/FoodCheckoutScreen.js
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import ListRow from "@/components/ui/ListRow";
 import Button from "@/components/ui/Button";
@@ -18,6 +19,8 @@ const selectTotals = makeSelectTotals();
 
 export default function FoodCheckoutScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
   const cart = useSelector(selectCart);
   const totals = useSelector(selectTotals);
 
@@ -27,7 +30,7 @@ export default function FoodCheckoutScreen({ navigation }) {
     return (
       <View className="flex-1 items-center justify-center bg-background px-5" style={{ paddingTop: insets.top }}>
         <ScreenHeader title="Checkout" className="absolute top-0 left-5 right-5" />
-        <Icon name="cart-outline" size={48} color="#7DD3FC" />
+        <Icon name="cart-outline" size={48} color={muted} />
         <Text className="mt-3 font-inter text-foreground-muted">Your cart is empty</Text>
       </View>
     );

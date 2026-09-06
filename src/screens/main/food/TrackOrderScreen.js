@@ -5,6 +5,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Avatar from "@/components/ui/Avatar";
 import IconButton from "@/components/ui/IconButton";
@@ -22,9 +23,17 @@ const STATUS_MESSAGE = {
   delivered: "Order delivered!",
 };
 
-export default function TrackOrderScreen({ route, navigation }) {
+export default function TrackOrderScreen({ route }) {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
+  const { colors, isDark } = useTheme();
+  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const onPrimary = colors?.primaryForeground ?? (isDark ? "#060E1A" : "#FFFFFF");
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
+  const warning = colors?.warning ?? "#FBBF24";
+  const success = colors?.success ?? "#34D399";
+  const border = colors?.border ?? (isDark ? "#1E3A5F" : "#BAE6FD");
+
   const { currentOrder, orderStatus, rider } = useSelector((s) => s.foodOrder);
 
   const shouldPoll = ["confirmed", "preparing", "on_the_way"].includes(orderStatus);
@@ -45,10 +54,9 @@ export default function TrackOrderScreen({ route, navigation }) {
   const order = currentOrder || data?.order;
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
-      <ScreenHeader title="Track Order" className="px-5 pb-3" />
-
-      <View className="h-56 w-full">
+    <View className="flex-1 bg-background">
+      {/* Map with the header + "arriving" card floating on top, like the reference */}
+      <View style={{ height: 320 }}>
         <MapView
           style={{ flex: 1 }}
           provider={PROVIDER_GOOGLE}
@@ -63,33 +71,44 @@ export default function TrackOrderScreen({ route, navigation }) {
           {rider?.location && (
             <Marker coordinate={rider.location} title={rider.name}>
               <View className="h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <Icon name="bike-fast" size={18} color="#060E1A" />
+                <Icon name="bike-fast" size={18} color={onPrimary} />
               </View>
             </Marker>
           )}
         </MapView>
-      </View>
 
-      <View className="px-5 pt-4">
+        <View className="absolute left-0 right-0 px-5" style={{ top: insets.top + 4 }}>
+          <ScreenHeader title="Track Order" transparent className="pb-0" />
+        </View>
+
         {rider && (
-          <View className="mb-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3">
-            <Icon name="clock-fast" size={20} color="#38BDF8" />
-            <Text className="flex-1 font-inter-semibold text-foreground">
-              Arriving in {rider.etaMinutes ?? 12} min
-            </Text>
-            <Text className="text-xs font-inter text-foreground-muted">
-              {STATUS_MESSAGE[orderStatus]}
-            </Text>
+          <View
+            className="absolute left-5 right-5 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3.5"
+            style={{ bottom: 16 }}
+          >
+            <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/15">
+              <Icon name="clock-fast" size={20} color={primary} />
+            </View>
+            <View className="flex-1">
+              <Text className="font-inter-semibold text-foreground">
+                Arriving in {rider.etaMinutes ?? 12} min
+              </Text>
+              <Text className="text-xs font-inter text-foreground-muted">
+                {STATUS_MESSAGE[orderStatus]}
+              </Text>
+            </View>
           </View>
         )}
+      </View>
 
+      <View className="flex-1 px-5 pt-4">
         {rider && (
           <View className="mb-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3">
             <Avatar name={rider.name} size="md" />
             <View className="flex-1">
               <Text className="font-inter-bold text-foreground">{rider.name}</Text>
               <View className="mt-0.5 flex-row items-center gap-1">
-                <Icon name="star" size={12} color="#FBBF24" />
+                <Icon name="star" size={12} color={warning} />
                 <Text className="text-xs font-inter-medium text-foreground-secondary">
                   {rider.rating} ({(rider.ratingCount / 1000).toFixed(1)}k+)
                 </Text>
@@ -107,11 +126,12 @@ export default function TrackOrderScreen({ route, navigation }) {
                 <Icon
                   name={i <= currentStepIndex ? "check-circle" : "circle-outline"}
                   size={20}
-                  color={i <= currentStepIndex ? "#34D399" : "#7DD3FC"}
+                  color={i <= currentStepIndex ? success : muted}
                 />
                 <Text
-                  className={`mt-1 text-center text-[10px] font-inter-medium ${i <= currentStepIndex ? "text-foreground" : "text-foreground-muted"
-                    }`}
+                  className={`mt-1 text-center text-[10px] font-inter-medium ${
+                    i <= currentStepIndex ? "text-foreground" : "text-foreground-muted"
+                  }`}
                 >
                   {STEP_LABELS[step]}
                 </Text>
@@ -119,7 +139,7 @@ export default function TrackOrderScreen({ route, navigation }) {
               {i < STEPS.length - 1 && (
                 <View
                   className="-mt-3.5 h-0.5 flex-1"
-                  style={{ backgroundColor: i < currentStepIndex ? "#34D399" : "#1E3A5F" }}
+                  style={{ backgroundColor: i < currentStepIndex ? success : border }}
                 />
               )}
             </React.Fragment>

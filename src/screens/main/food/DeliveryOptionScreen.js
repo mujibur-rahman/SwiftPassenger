@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import { useGetDeliveryOptionsQuery } from "@/features/food/foodApi";
@@ -13,6 +14,10 @@ const OPTION_ICONS = { standard: "bike-fast", priority: "rocket-launch-outline" 
 
 export default function DeliveryOptionScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
+  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
+
   const dispatch = useDispatch();
   const cart = useSelector(selectCart);
 
@@ -27,7 +32,7 @@ export default function DeliveryOptionScreen({ navigation }) {
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator color="#38BDF8" />
+        <ActivityIndicator color={primary} />
       </View>
     );
   }
@@ -47,8 +52,8 @@ export default function DeliveryOptionScreen({ navigation }) {
               isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
             }`}
           >
-            <View className="h-11 w-11 items-center justify-center rounded-xl bg-primary/15">
-              <Icon name={OPTION_ICONS[opt.id] || "bike-fast"} size={22} color="#38BDF8" />
+            <View className="h-11 w-11 items-center justify-center rounded-xl border border-border bg-background-muted">
+              <Icon name={OPTION_ICONS[opt.id] || "bike-fast"} size={22} color={primary} />
             </View>
             <View className="flex-1">
               <Text className="text-[15px] font-inter-bold text-foreground">{opt.label}</Text>
@@ -58,14 +63,14 @@ export default function DeliveryOptionScreen({ navigation }) {
             <Icon
               name={isSelected ? "radiobox-marked" : "radiobox-blank"}
               size={22}
-              color={isSelected ? "#38BDF8" : "#7DD3FC"}
+              color={isSelected ? primary : muted}
             />
           </TouchableOpacity>
         );
       })}
 
-      <View className="mb-4 flex-row items-start gap-2 rounded-2xl bg-background-muted p-3">
-        <Icon name="information-outline" size={16} color="#7DD3FC" />
+      <View className="mb-4 flex-row items-start gap-2 rounded-2xl border border-border bg-background-muted p-3">
+        <Icon name="information-outline" size={16} color={muted} />
         <Text className="flex-1 text-xs font-inter text-foreground-muted">
           Delivery time is an estimate and may vary based on your location and order volume.
         </Text>

@@ -1,7 +1,6 @@
 // @/screens/main/food/ReviewOrderScreen.js
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, ScrollView, Alert } from "react-native";
-import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import ScreenHeader from "@/components/ui/ScreenHeader";
@@ -45,7 +44,15 @@ export default function ReviewOrderScreen({ route, navigation }) {
 
       navigation.replace("OrderPlaced", { orderId: order.id });
     } catch (e) {
-      Alert.alert("Order failed", "Something went wrong placing your order. Please try again.");
+      console.log("Place order failed:", JSON.stringify(e, null, 2));
+      const message =
+        e?.data?.message ||
+        (e?.status === "FETCH_ERROR"
+          ? "Can't reach the server. Check the BASE_URL in apiSlice.js and that auth-server.js is running with the /food routes."
+          : e?.status
+          ? `Server responded with ${e.status}.`
+          : "Something went wrong placing your order. Please try again.");
+      Alert.alert("Order failed", message);
     }
   };
 

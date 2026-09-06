@@ -3,10 +3,13 @@ import React from "react";
 import { View, Text } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 
 export default function OrderPlacedScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const success = colors?.success ?? "#34D399";
   const { orderId } = route.params;
 
   return (
@@ -15,7 +18,7 @@ export default function OrderPlacedScreen({ route, navigation }) {
       style={{ paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 24) }}
     >
       <View className="mb-6 h-24 w-24 items-center justify-center rounded-full bg-success/15">
-        <Icon name="check-circle" size={56} color="#34D399" />
+        <Icon name="check-circle" size={56} color={success} />
       </View>
 
       <Text className="mb-2 text-2xl font-inter-bold text-foreground">Order Placed!</Text>

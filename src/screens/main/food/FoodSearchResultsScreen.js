@@ -3,19 +3,20 @@ import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import SearchBar from "@/components/ui/SearchBar";
 import { useSearchRestaurantsQuery } from "@/features/food/foodApi";
 
-function RestaurantCard({ restaurant, onPress }) {
+function RestaurantCard({ restaurant, onPress, primary, muted, warning }) {
   return (
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={onPress}
       className="mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3"
     >
-      <View className="h-16 w-16 items-center justify-center rounded-xl bg-primary/15">
-        <Icon name="hamburger" size={28} color="#38BDF8" />
+      <View className="h-16 w-16 items-center justify-center rounded-xl border border-border bg-background-muted">
+        <Icon name="hamburger" size={28} color={primary} />
       </View>
       <View className="flex-1">
         <Text className="text-[15px] font-inter-bold text-foreground" numberOfLines={1}>
@@ -26,7 +27,7 @@ function RestaurantCard({ restaurant, onPress }) {
         </Text>
         <View className="mt-1.5 flex-row items-center gap-3">
           <View className="flex-row items-center gap-1">
-            <Icon name="star" size={13} color="#FBBF24" />
+            <Icon name="star" size={13} color={warning} />
             <Text className="text-xs font-inter-medium text-foreground-secondary">
               {restaurant.rating} ({(restaurant.ratingCount / 1000).toFixed(1)}k+)
             </Text>
@@ -36,13 +37,18 @@ function RestaurantCard({ restaurant, onPress }) {
           </Text>
         </View>
       </View>
-      <Icon name="chevron-right" size={18} color="#7DD3FC" />
+      <Icon name="chevron-right" size={18} color={muted} />
     </TouchableOpacity>
   );
 }
 
 export default function FoodSearchResultsScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
+  const { colors, isDark } = useTheme();
+  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
+  const warning = colors?.warning ?? "#FBBF24";
+
   const [query, setQuery] = useState(route.params?.query ?? "");
 
   const { data: restaurants = [], isFetching } = useSearchRestaurantsQuery(query);
@@ -59,7 +65,7 @@ export default function FoodSearchResultsScreen({ route, navigation }) {
       />
 
       {isFetching ? (
-        <ActivityIndicator color="#38BDF8" style={{ marginTop: 24 }} />
+        <ActivityIndicator color={primary} style={{ marginTop: 24 }} />
       ) : (
         <FlatList
           data={restaurants}
@@ -74,6 +80,9 @@ export default function FoodSearchResultsScreen({ route, navigation }) {
           renderItem={({ item }) => (
             <RestaurantCard
               restaurant={item}
+              primary={primary}
+              muted={muted}
+              warning={warning}
               onPress={() =>
                 navigation.navigate("RestaurantMenu", {
                   restaurantId: item.id,
