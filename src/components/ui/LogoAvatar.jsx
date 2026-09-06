@@ -2,12 +2,13 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 import Avatar from "@/components/ui/Avatar";
 import Greeting from "@/components/ui/Greeting";
 
 export default function LogoAvatar({
   appName = "ZyroApp",
-  name = "Driver",
+  name = "Passenger",
   subtitle,
   showGreeting = true,
   avatarUri,
@@ -20,6 +21,7 @@ export default function LogoAvatar({
   children,
 }) {
   const navigation = useNavigation();
+  const { user } = useSelector((s) => s.auth);
 
   const handleAvatarPress =
     onAvatarPress ??
@@ -41,11 +43,11 @@ export default function LogoAvatar({
         </Text>
 
         {rightContent ?? (
-          <Avatar name={name} uri={avatarUri} onPress={handleAvatarPress} />
+          <Avatar name={user?.name || name} uri={avatarUri} onPress={handleAvatarPress} />
         )}
       </View>
 
-      {showGreeting ? <Greeting name={name} subtitle={subtitle} /> : null}
+      {showGreeting ? <Greeting name={user?.name || name} subtitle={subtitle} /> : null}
 
       {children}
     </View>

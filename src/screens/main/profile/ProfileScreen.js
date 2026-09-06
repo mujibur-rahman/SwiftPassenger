@@ -17,6 +17,8 @@ import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 import ProfileHeader from "@/components/ui/ProfileHeader";
 import ScreenHeader from "@/components/ui/ScreenHeader";
+import StatRow from "@/components/ui/StatRow";
+import Heading from "@/components/ui/Heading";
 
 const MenuItem = ({
   icon,
@@ -164,7 +166,7 @@ export default function ProfileScreen({ navigation }) {
         />
 
         {/* ── Stats ── */}
-        <View className="mx-5 mt-5 flex-row items-center justify-around rounded-2xl border border-border bg-card py-4">
+        {/* <View className="mx-5 mt-5 flex-row items-center justify-around rounded-2xl border border-border bg-card py-4">
           {[
             { label: "Trips", value: history?.length || 0 },
             { label: "Rating", value: user?.rating || "5.0" },
@@ -182,7 +184,16 @@ export default function ProfileScreen({ navigation }) {
               </View>
             </React.Fragment>
           ))}
-        </View>
+        </View> */}
+
+        <StatRow
+          className="mx-5 mt-5 border border-border bg-card py-4"
+          items={[
+            { label: "Trips", value: user?.totalTrips ?? 0 },
+            { label: "Rating", value: user?.rating != null ? String(user.rating) : "5.0" },
+            { label: "Saved", value: user?.savedPlaces?.length || 0 },
+          ]}
+        />
 
         {/* ── Action buttons ── */}
         <View className="mx-5 mt-4 flex-row gap-3">
@@ -298,9 +309,7 @@ export default function ProfileScreen({ navigation }) {
             />
           </View>
         </View>
-        <Text className="mt-4 text-center text-xs font-inter text-foreground-muted">
-          SwiftRide Passenger v1.0.0
-        </Text>
+        <Heading subtitle="SwiftRide Passenger v1.0.0" size="sm" align="center" className="mt-2" />
       </ScrollView>
     </View>
   );
