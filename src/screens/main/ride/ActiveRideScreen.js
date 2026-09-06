@@ -205,7 +205,7 @@ export default function ActiveRideScreen({ navigation }) {
         )}
 
         <Text className="text-sm text-foreground-muted mb-3">
-          Fare est. ৳{currentRide?.estimatedFare ?? "—"}
+          Fare est. ${currentRide?.estimatedFare ?? "—"}
         </Text>
 
         {["searching", "accepted", "pickup"].includes(rideStatus) && (

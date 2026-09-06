@@ -11,7 +11,7 @@ import LogoAvatar from "@/components/ui/LogoAvatar";
 
 const JOBS = [
   { id: '1', title: 'Ride', icon: 'ride' },
-  { id: '2', title: 'Food delivery', icon: 'food' },
+  { id: '2', title: 'Order Food', icon: 'food' },
   { id: '3', title: 'Gig jobs', icon: 'gig' },
   { id: '4', title: 'Parcel delivery', icon: 'delivery' },
   { id: '5', title: 'Shop for me', icon: 'shoppingCart' },
