@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CARD_BRAND } from "@/constants/Colors";
+import { useTheme } from "@/theme";
 import {
   useGetPaymentMethodsQuery,
   useSetDefaultPaymentMethodMutation,
@@ -19,6 +19,13 @@ import {
 } from "@/features/payment/paymentApi";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import ListRow from "@/components/ui/ListRow";
+
+const BRAND_ICONS = {
+  visa: { icon: "credit-card", tw: "bg-primary/15" },
+  mastercard: { icon: "credit-card", tw: "bg-primary/15" },
+  amex: { icon: "credit-card", tw: "bg-primary/15" },
+  default: { icon: "credit-card-outline", tw: "bg-primary/15" },
+};
 
 const MOCK_METHODS = [
   {
@@ -89,7 +96,9 @@ export default function PaymentMethodsScreen({ navigation }) {
   };
 
   const CardItem = ({ item }) => {
-    const brand = CARD_BRAND[item.brand] || CARD_BRAND.default;
+    const { colors, isDark } = useTheme();
+    const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+    const brand = BRAND_ICONS[item.brand] || BRAND_ICONS.default;
 
     return (
       <View
@@ -99,7 +108,7 @@ export default function PaymentMethodsScreen({ navigation }) {
         <View
           className={`h-12 w-12 items-center justify-center rounded-xl ${brand.tw}`}
         >
-          <Icon name={brand.icon} size={24} color={brand.color} />
+          <Icon name={brand.icon} size={24} color={primary} />
         </View>
 
         <View className="flex-1 gap-1">

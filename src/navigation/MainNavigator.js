@@ -22,6 +22,18 @@ import NotificationsScreen from "@/screens/main/NotificationsScreen";
 import SavedPlacesScreen from "@/screens/main/SavedPlacesScreen";
 import HelpCenterScreen from "@/screens/main/HelpCenterScreen";
 
+import FoodSearchScreen from "@/screens/main/food/FoodSearchScreen";
+import FoodSearchResultsScreen from "@/screens/main/food/FoodSearchResultsScreen";
+import RestaurantMenuScreen from "@/screens/main/food/RestaurantMenuScreen";
+import CartScreen from "@/screens/main/food/CartScreen";
+import FoodCheckoutScreen from "@/screens/main/food/FoodCheckoutScreen";
+import ApplyOfferScreen from "@/screens/main/food/ApplyOfferScreen";
+import DeliveryOptionScreen from "@/screens/main/food/DeliveryOptionScreen";
+import FoodPaymentScreen from "@/screens/main/food/FoodPaymentScreen";
+import ReviewOrderScreen from "@/screens/main/food/ReviewOrderScreen";
+import OrderPlacedScreen from "@/screens/main/food/OrderPlacedScreen";
+import TrackOrderScreen from "@/screens/main/food/TrackOrderScreen";
+
 // stack examples:
 // import SomeModalScreen from "@/screens/main/SomeModalScreen";
 
@@ -191,6 +203,27 @@ export default function MainNavigator() {
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="SavedPlaces" component={SavedPlacesScreen} />
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+
+      {/* Order Food flow */}
+      <Stack.Screen name="FoodSearch" component={FoodSearchScreen} />
+      <Stack.Screen name="FoodSearchResults" component={FoodSearchResultsScreen} />
+      <Stack.Screen name="RestaurantMenu" component={RestaurantMenuScreen} />
+      <Stack.Screen name="FoodCart" component={CartScreen} />
+      <Stack.Screen name="FoodCheckout" component={FoodCheckoutScreen} />
+      <Stack.Screen
+        name="ApplyOffer"
+        component={ApplyOfferScreen}
+        options={{ presentation: "modal" }}
+      />
+      <Stack.Screen
+        name="DeliveryOption"
+        component={DeliveryOptionScreen}
+        options={{ presentation: "modal" }}
+      />
+      <Stack.Screen name="FoodPayment" component={FoodPaymentScreen} />
+      <Stack.Screen name="ReviewOrder" component={ReviewOrderScreen} />
+      <Stack.Screen name="OrderPlaced" component={OrderPlacedScreen} />
+      <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
 
       <Stack.Screen
         name="RideBooking"

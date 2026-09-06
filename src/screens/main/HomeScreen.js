@@ -1,11 +1,14 @@
 // src/screens/main/HomeScreen.js
 import React, { useEffect } from "react";
-import { View, Text, StatusBar, ScrollView } from "react-native";
-import { useDispatch } from "react-redux";
+import { View, Text, StatusBar, ScrollView, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from '@/theme';
 import { setCurrentLocation } from "@/features/location/locationSlice";
+import { selectCartCount } from "@/features/food/cartSlice";
 import ServiceCard from "@/components/ServiceCard";
 import LogoAvatar from "@/components/ui/LogoAvatar";
 
@@ -22,8 +25,10 @@ const JOBS = [
 
 export default function HomeScreen() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
+  const cartCount = useSelector(selectCartCount);
 
   useEffect(() => {
     (async () => {
@@ -79,6 +84,20 @@ export default function HomeScreen() {
           <ServiceCard key={job.id} job={job} />
         ))}
       </View>
+
+      {cartCount > 0 && (
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => navigation.navigate("FoodCheckout")}
+          className="absolute right-8 h-14 w-14 items-center justify-center rounded-full bg-primary"
+          style={{ bottom: insets.bottom + 100 }}
+        >
+          <Icon name="cart" size={24} color={isDark ? "#060E1A" : "#FFFFFF"} />
+          <View className="absolute -right-1 -top-1 h-5 w-5 items-center justify-center rounded-full bg-error">
+            <Text className="text-[10px] font-inter-bold text-white">{cartCount}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

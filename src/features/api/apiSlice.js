@@ -31,6 +31,17 @@ const baseQueryWithAuth = async (args, api, extraOptions) => {
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithAuth,
-  tagTypes: ["User", "Driver", "Ride", "ActiveRide", "PaymentMethods"],
+  tagTypes: [
+    "User",
+    "Driver",
+    "Ride",
+    "ActiveRide",
+    "PaymentMethods",
+    "Restaurant",
+    "Offer",
+    "DeliveryOption",
+    "ActiveOrder",
+    "FoodOrder",
+  ],
   endpoints: () => ({}), // empty – features will inject
 });

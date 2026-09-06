@@ -438,12 +438,15 @@ export default function RideBookingScreen() {
               </View>
             </Button>
 
-            <Button
-              variant="outline"
+            {/* Edit destination */}
+            <TouchableOpacity
               onPress={() => setStage("search")}
+              className="items-center py-1"
             >
-              Edit destination
-            </Button>
+              <Text className="text-sm font-inter-medium text-foreground-muted">
+                Edit destination
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </Animated.View>

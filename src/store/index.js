@@ -6,6 +6,8 @@ import authReducer from "@/features/auth/authSlice";
 import rideReducer from "@/features/ride/rideSlice";
 import locationReducer from "@/features/location/locationSlice";
 import driverReducer from "@/features/driver/driverSlice";
+import cartReducer from "@/features/food/cartSlice";
+import foodOrderReducer from "@/features/food/foodOrderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     ride: rideReducer,
     location: locationReducer,
     driver: driverReducer,
+    cart: cartReducer,
+    foodOrder: foodOrderReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
