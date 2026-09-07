@@ -19,7 +19,7 @@ const ServiceCard = ({ job, onPress, iconSize = 28, className = "" }) => {
     if (job.id === "1" || job.title === "Ride") {
       navigation.navigate("RideBooking");
     } else if (job.title === "Order Food") {
-      navigation.navigate("FoodSearch");
+      navigation.navigate("FoodTabs");
     } else {
       // অন্য সার্ভিস পরে
       Alert.alert("Coming soon", `${job.title} is coming soon`);

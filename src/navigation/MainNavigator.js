@@ -22,7 +22,8 @@ import NotificationsScreen from "@/screens/main/NotificationsScreen";
 import SavedPlacesScreen from "@/screens/main/SavedPlacesScreen";
 import HelpCenterScreen from "@/screens/main/HelpCenterScreen";
 
-import FoodSearchScreen from "@/screens/main/food/FoodSearchScreen";
+import FoodTabNavigator from "@/navigation/FoodTabNavigator";
+// import FoodSearchScreen from "@/screens/main/food/FoodSearchScreen";
 import FoodSearchResultsScreen from "@/screens/main/food/FoodSearchResultsScreen";
 import RestaurantMenuScreen from "@/screens/main/food/RestaurantMenuScreen";
 import CartScreen from "@/screens/main/food/CartScreen";
@@ -205,7 +206,8 @@ export default function MainNavigator() {
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
 
       {/* Order Food flow */}
-      <Stack.Screen name="FoodSearch" component={FoodSearchScreen} />
+      <Stack.Screen name="FoodTabs" component={FoodTabNavigator} />
+      <Stack.Screen name="FoodSearch" component={FoodTabNavigator} />
       <Stack.Screen name="FoodSearchResults" component={FoodSearchResultsScreen} />
       <Stack.Screen name="RestaurantMenu" component={RestaurantMenuScreen} />
       <Stack.Screen name="FoodCart" component={CartScreen} />
