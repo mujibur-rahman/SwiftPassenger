@@ -1,166 +1,201 @@
 // @/screens/main/food/TrackOrderScreen.js
-import React, { useEffect } from "react";
-import { View, Text, Linking } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  Linking,
+} from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
-import ScreenHeader from "@/components/ui/ScreenHeader";
-import Avatar from "@/components/ui/Avatar";
-import IconButton from "@/components/ui/IconButton";
-import { DARK_MAP_STYLE } from "@/utils/mapStyles";
-import { useGetActiveOrderQuery } from "@/features/food/foodApi";
-import { setCurrentOrder, updateOrderStatus, setRider } from "@/features/food/foodOrderSlice";
+import {
+  setCurrentOrder,
+  updateOrderStatus,
+  setRider,
+} from "@/features/food/foodOrderSlice";
 
 const STEPS = ["confirmed", "preparing", "on_the_way", "delivered"];
-const STEP_LABELS = { confirmed: "Confirmed", preparing: "Preparing", on_the_way: "On the way", delivered: "Delivered" };
-
-const STATUS_MESSAGE = {
-  confirmed: "Restaurant is reviewing your order",
-  preparing: "Your food is being prepared",
-  on_the_way: "Rider is on the way",
-  delivered: "Order delivered!",
+const STEP_LABELS = {
+  confirmed: "Confirmed",
+  preparing: "Preparing",
+  on_the_way: "On the way",
+  delivered: "Delivered",
 };
 
-export default function TrackOrderScreen({ route }) {
+const FALLBACK_FOOD = require("@assets/images/products/chicken-burger.jpg");
+
+export default function TrackOrderScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
   const { colors, isDark } = useTheme();
   const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
-  const onPrimary = colors?.primaryForeground ?? (isDark ? "#060E1A" : "#FFFFFF");
   const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
   const warning = colors?.warning ?? "#FBBF24";
-  const success = colors?.success ?? "#34D399";
-  const border = colors?.border ?? (isDark ? "#1E3A5F" : "#BAE6FD");
 
-  const { currentOrder, orderStatus, rider } = useSelector((s) => s.foodOrder);
+  const order = useSelector((s) => s.foodOrder?.currentOrder);
+  const status = useSelector((s) => s.foodOrder?.orderStatus) || "confirmed";
+  const rider = useSelector((s) => s.foodOrder?.rider);
 
-  const shouldPoll = ["confirmed", "preparing", "on_the_way"].includes(orderStatus);
-
-  const { data } = useGetActiveOrderQuery(undefined, {
-    pollingInterval: shouldPoll ? 2000 : 0,
-    skip: !route.params?.orderId,
-  });
+  const [stepIndex, setStepIndex] = useState(Math.max(0, STEPS.indexOf(status)));
 
   useEffect(() => {
-    if (!data?.order) return;
-    dispatch(setCurrentOrder(data.order));
-    dispatch(updateOrderStatus(data.order.status));
-    if (data.order.rider) dispatch(setRider(data.order.rider));
-  }, [data, dispatch]);
+    if (!order) {
+      dispatch(
+        setCurrentOrder({
+          id: route.params?.orderId || "ORD-DEMO",
+          restaurantName: "Burger King",
+          items: [{ name: "Chicken Burger", price: 5.99, qty: 1, image: FALLBACK_FOOD }],
+          address: "123 Main St, Natore",
+        })
+      );
+      dispatch(updateOrderStatus("preparing"));
+      dispatch(
+        setRider({
+          name: "Rahim Ahmed",
+          rating: 4.8,
+          ratingCount: 1200,
+          phone: "+8801700000000",
+          etaMinutes: 12,
+        })
+      );
+    }
+  }, [order, dispatch, route.params?.orderId]);
 
-  const currentStepIndex = STEPS.indexOf(orderStatus);
-  const order = currentOrder || data?.order;
+  useEffect(() => {
+    const idx = STEPS.indexOf(status);
+    if (idx >= 0) setStepIndex(idx);
+  }, [status]);
+
+  useEffect(() => {
+    if (stepIndex >= 2) return;
+    const t = setTimeout(() => {
+      const next = STEPS[Math.min(stepIndex + 1, STEPS.length - 1)];
+      dispatch(updateOrderStatus(next));
+    }, 8000);
+    return () => clearTimeout(t);
+  }, [stepIndex, dispatch]);
+
+  const eta = rider?.etaMinutes ?? 12;
+  const displayRider = rider || {
+    name: "Rahim Ahmed",
+    rating: 4.8,
+    ratingCount: 1200,
+    phone: "+8801700000000",
+  };
+
+  const items = order?.items || [
+    { name: "Chicken Burger", price: 5.99, qty: 1, image: FALLBACK_FOOD },
+  ];
 
   return (
     <View className="flex-1 bg-background">
-      {/* Map with the header + "arriving" card floating on top, like the reference */}
-      <View style={{ height: 320 }}>
-        <MapView
-          style={{ flex: 1 }}
-          provider={PROVIDER_GOOGLE}
-          customMapStyle={DARK_MAP_STYLE}
-          initialRegion={{
-            latitude: rider?.location?.latitude || 23.8103,
-            longitude: rider?.location?.longitude || 90.4125,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
-          }}
-        >
-          {rider?.location && (
-            <Marker coordinate={rider.location} title={rider.name}>
-              <View className="h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <Icon name="bike-fast" size={18} color={onPrimary} />
-              </View>
-            </Marker>
-          )}
-        </MapView>
+      <StatusBar barStyle="dark-content" />
 
-        <View className="absolute left-0 right-0 px-5" style={{ top: insets.top + 4 }}>
-          <ScreenHeader title="Track Order" transparent className="pb-0" />
+      <View style={{ height: 280, backgroundColor: isDark ? "#0D1E32" : "#E0F2FE" }}>
+        <View className="flex-1 items-center justify-center">
+          <Icon name="map" size={64} color={primary} style={{ opacity: 0.4 }} />
+          <Text className="mt-2 text-xs font-inter text-foreground-muted">Live map</Text>
         </View>
 
-        {rider && (
-          <View
-            className="absolute left-5 right-5 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3.5"
-            style={{ bottom: 16 }}
-          >
-            <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/15">
-              <Icon name="clock-fast" size={20} color={primary} />
-            </View>
-            <View className="flex-1">
-              <Text className="font-inter-semibold text-foreground">
-                Arriving in {rider.etaMinutes ?? 12} min
-              </Text>
-              <Text className="text-xs font-inter text-foreground-muted">
-                {STATUS_MESSAGE[orderStatus]}
-              </Text>
-            </View>
+        <View
+          className="absolute left-4 right-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3"
+          style={{ top: insets.top + 12 }}
+        >
+          <View className="h-11 w-11 items-center justify-center rounded-full bg-primary/15">
+            <Icon name="motorbike" size={22} color={primary} />
           </View>
-        )}
+          <View className="flex-1">
+            <Text className="text-[15px] font-inter-bold text-foreground">Arriving in {eta} min</Text>
+            <Text className="text-xs font-inter text-foreground-muted">Your rider is on the way</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("FoodTabs")}
+          className="absolute left-4 h-10 w-10 items-center justify-center rounded-full border border-border bg-card"
+          style={{ top: insets.top + 72 }}
+        >
+          <Icon name="arrow-left" size={20} color={colors?.foreground} />
+        </TouchableOpacity>
       </View>
 
-      <View className="flex-1 px-5 pt-4">
-        {rider && (
-          <View className="mb-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3">
-            <Avatar name={rider.name} size="md" />
-            <View className="flex-1">
-              <Text className="font-inter-bold text-foreground">{rider.name}</Text>
-              <View className="mt-0.5 flex-row items-center gap-1">
-                <Icon name="star" size={12} color={warning} />
-                <Text className="text-xs font-inter-medium text-foreground-secondary">
-                  {rider.rating} ({(rider.ratingCount / 1000).toFixed(1)}k+)
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 24) }}
+        className="-mt-6 rounded-t-3xl bg-background"
+      >
+        <View className="mx-5 mt-2 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
+          <View className="h-12 w-12 items-center justify-center rounded-full bg-primary/20">
+            <Icon name="account" size={28} color={primary} />
+          </View>
+          <View className="flex-1">
+            <Text className="text-xs font-inter text-foreground-muted">Rider</Text>
+            <Text className="text-[15px] font-inter-bold text-foreground">{displayRider.name}</Text>
+            <View className="mt-0.5 flex-row items-center gap-1">
+              <Icon name="star" size={12} color={warning} />
+              <Text className="text-xs font-inter-medium text-foreground-secondary">
+                {displayRider.rating} ({((displayRider.ratingCount || 0) / 1000).toFixed(1)}k+)
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => displayRider.phone && Linking.openURL(`tel:${displayRider.phone}`)}
+            className="h-10 w-10 items-center justify-center rounded-full bg-primary/15"
+          >
+            <Icon name="phone" size={18} color={primary} />
+          </TouchableOpacity>
+          <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full bg-primary/15">
+            <Icon name="message-text-outline" size={18} color={primary} />
+          </TouchableOpacity>
+        </View>
+
+        <View className="mx-5 mt-5 mb-2">
+          <View className="mb-2 flex-row items-center justify-between px-1">
+            {STEPS.map((step, i) => {
+              const done = i <= stepIndex;
+              const active = i === stepIndex;
+              return (
+                <View key={step} className="items-center" style={{ width: "22%" }}>
+                  <View className={`h-7 w-7 items-center justify-center rounded-full ${done ? "bg-primary" : "border border-border bg-background-muted"}`}>
+                    {done ? (
+                      <Icon name="check" size={14} color={colors?.primaryForeground || "#fff"} />
+                    ) : (
+                      <Text className="text-[10px] font-inter-bold text-foreground-muted">{i + 1}</Text>
+                    )}
+                  </View>
+                  <Text className={`mt-1.5 text-center text-[10px] font-inter-medium ${active ? "text-foreground" : "text-foreground-muted"}`} numberOfLines={1}>
+                    {STEP_LABELS[step]}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+          <View className="mx-3 h-1 overflow-hidden rounded-full bg-background-muted">
+            <View className="h-full rounded-full bg-primary" style={{ width: `${(stepIndex / (STEPS.length - 1)) * 100}%` }} />
+          </View>
+        </View>
+
+        <View className="mx-5 mt-4 rounded-2xl border border-border bg-card p-3">
+          {items.map((item, idx) => (
+            <View key={idx} className={`flex-row items-center gap-3 ${idx > 0 ? "mt-3 border-t border-border pt-3" : ""}`}>
+              <View className="h-14 w-14 overflow-hidden rounded-xl">
+                <Image source={item.image || FALLBACK_FOOD} style={{ width: 56, height: 56 }} resizeMode="cover" />
+              </View>
+              <View className="flex-1">
+                <Text className="text-[14px] font-inter-bold text-foreground">{item.name}</Text>
+                <Text className="text-xs font-inter text-foreground-muted">
+                  ${Number(item.price).toFixed(2)} · Qty: {item.qty}
                 </Text>
               </View>
             </View>
-            <IconButton icon="phone" variant="outline" onPress={() => Linking.openURL(`tel:${rider.phone}`)} />
-            <IconButton icon="message-text-outline" variant="outline" />
-          </View>
-        )}
-
-        <View className="mb-4 flex-row items-center justify-between rounded-2xl border border-border bg-card p-4">
-          {STEPS.map((step, i) => (
-            <React.Fragment key={step}>
-              <View className="items-center" style={{ width: 64 }}>
-                <Icon
-                  name={i <= currentStepIndex ? "check-circle" : "circle-outline"}
-                  size={20}
-                  color={i <= currentStepIndex ? success : muted}
-                />
-                <Text
-                  className={`mt-1 text-center text-[10px] font-inter-medium ${
-                    i <= currentStepIndex ? "text-foreground" : "text-foreground-muted"
-                  }`}
-                >
-                  {STEP_LABELS[step]}
-                </Text>
-              </View>
-              {i < STEPS.length - 1 && (
-                <View
-                  className="-mt-3.5 h-0.5 flex-1"
-                  style={{ backgroundColor: i < currentStepIndex ? success : border }}
-                />
-              )}
-            </React.Fragment>
           ))}
         </View>
-
-        {order?.items?.length > 0 && (
-          <View className="rounded-2xl border border-border bg-card p-4">
-            {order.items.map((item) => (
-              <View key={`${item.menuItemId}-${item.note}`} className="mb-1 flex-row justify-between">
-                <Text className="flex-1 font-inter-medium text-foreground" numberOfLines={1}>
-                  {item.name}
-                </Text>
-                <Text className="font-inter text-foreground-muted">
-                  ${item.price.toFixed(2)} · Qty: {item.qty}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
-      </View>
+      </ScrollView>
     </View>
   );
 }

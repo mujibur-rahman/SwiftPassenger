@@ -1,21 +1,19 @@
 // @/screens/main/food/FoodPaymentScreen.js
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { useTheme } from "@/theme";
-import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import { useGetPaymentMethodsQuery } from "@/features/payment/paymentApi";
-import { selectCart, makeSelectTotals } from "@/features/food/cartSlice";
-
-const BRAND_ICONS = {
-  visa: { icon: "credit-card", tw: "bg-background-muted" },
-  mastercard: { icon: "credit-card", tw: "bg-background-muted" },
-  amex: { icon: "credit-card", tw: "bg-background-muted" },
-  default: { icon: "credit-card-outline", tw: "bg-background-muted" },
-};
+import { makeSelectTotals } from "@/features/food/cartSlice";
 
 const MOCK_METHODS = [
   { id: "1", type: "card", brand: "visa", lastFour: "4242", isDefault: true, label: "Visa" },
@@ -28,6 +26,7 @@ const EXTRA_METHODS = [
   { id: "cash", label: "Cash on Delivery", icon: "cash" },
 ];
 
+const BRAND_COLORS = { visa: "#1A1F71", mastercard: "#EB001B" };
 const selectTotals = makeSelectTotals();
 
 export default function FoodPaymentScreen({ navigation }) {
@@ -41,51 +40,46 @@ export default function FoodPaymentScreen({ navigation }) {
   const cardMethods = !isError && methods.length ? methods : MOCK_METHODS;
 
   const [selected, setSelected] = useState(
-    cardMethods.find((m) => m.isDefault)?.id || cardMethods[0]?.id
+    cardMethods.find((m) => m.isDefault)?.id || cardMethods[0]?.id || "cash"
   );
 
   const next = () => {
     const cardMatch = cardMethods.find((m) => m.id === selected);
     const extraMatch = EXTRA_METHODS.find((m) => m.id === selected);
     const paymentMethod = cardMatch
-      ? { type: "card", label: `${cardMatch.label} •••• ${cardMatch.lastFour}` }
+      ? { type: "card", label: `${cardMatch.label} ···· ${cardMatch.lastFour}` }
       : { type: extraMatch?.id, label: extraMatch?.label };
-
     navigation.navigate("ReviewOrder", { paymentMethod });
   };
 
   return (
-    <View className="flex-1 bg-background px-5" style={{ paddingTop: insets.top }}>
-      <ScreenHeader title="Payment" className="pb-3" />
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 12 }}>
-        <Text className="mb-3 text-sm font-inter-semibold text-foreground-secondary">
-          Payment Method
-        </Text>
+      <View className="mb-2 flex-row items-center px-5 pt-2 pb-3">
+        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} className="mr-3 h-10 w-10 items-center justify-center">
+          <Icon name="arrow-left" size={22} color={colors?.foreground} />
+        </TouchableOpacity>
+        <Text className="text-lg font-inter-bold text-foreground">Payment</Text>
+      </View>
+
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+        <Text className="mb-3 text-[14px] font-inter-semibold text-foreground-secondary">Payment Method</Text>
 
         {cardMethods.map((m) => {
-          const brand = BRAND_ICONS[m.brand] || BRAND_ICONS.default;
           const isSelected = selected === m.id;
           return (
             <TouchableOpacity
               key={m.id}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
               onPress={() => setSelected(m.id)}
-              className={`mb-2.5 flex-row items-center gap-3 rounded-2xl border p-4 ${
-                isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
-              }`}
+              className={`mb-2.5 flex-row items-center gap-3 rounded-2xl border p-4 ${isSelected ? "border-primary bg-primary/10" : "border-border bg-card"}`}
             >
-              <View className={`h-10 w-10 items-center justify-center rounded-lg border border-border ${brand.tw}`}>
-                <Icon name={brand.icon} size={20} color={primary} />
+              <View className="h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: BRAND_COLORS[m.brand] || "#334155" }}>
+                <Text className="text-[10px] font-inter-bold text-white uppercase">{m.brand?.slice(0, 4) || "CARD"}</Text>
               </View>
-              <Text className="flex-1 font-inter-medium text-foreground">
-                {m.label} •••• {m.lastFour}
-              </Text>
-              <Icon
-                name={isSelected ? "radiobox-marked" : "radiobox-blank"}
-                size={22}
-                color={isSelected ? primary : muted}
-              />
+              <Text className="flex-1 text-[15px] font-inter-semibold text-foreground">{m.label} ···· {m.lastFour}</Text>
+              <Icon name={isSelected ? "radiobox-marked" : "radiobox-blank"} size={22} color={isSelected ? primary : muted} />
             </TouchableOpacity>
           );
         })}
@@ -95,39 +89,40 @@ export default function FoodPaymentScreen({ navigation }) {
           return (
             <TouchableOpacity
               key={m.id}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
               onPress={() => setSelected(m.id)}
-              className={`mb-2.5 flex-row items-center gap-3 rounded-2xl border p-4 ${
-                isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
-              }`}
+              className={`mb-2.5 flex-row items-center gap-3 rounded-2xl border p-4 ${isSelected ? "border-primary bg-primary/10" : "border-border bg-card"}`}
             >
-              <View className="h-10 w-10 items-center justify-center rounded-lg border border-border bg-background-muted">
+              <View className="h-10 w-10 items-center justify-center rounded-lg bg-background-muted">
                 <Icon name={m.icon} size={20} color={primary} />
               </View>
-              <Text className="flex-1 font-inter-medium text-foreground">{m.label}</Text>
-              <Icon
-                name={isSelected ? "radiobox-marked" : "radiobox-blank"}
-                size={22}
-                color={isSelected ? primary : muted}
-              />
+              <Text className="flex-1 text-[15px] font-inter-semibold text-foreground">{m.label}</Text>
+              <Icon name={isSelected ? "radiobox-marked" : "radiobox-blank"} size={22} color={isSelected ? primary : muted} />
             </TouchableOpacity>
           );
         })}
 
-        <TouchableOpacity className="mt-1 flex-row items-center gap-2 py-2">
-          <Icon name="plus" size={18} color={primary} />
-          <Text className="font-inter-semibold text-primary">Add new card</Text>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => navigation.navigate("PaymentMethods")}
+          className="mt-2 flex-row items-center gap-3 rounded-2xl border border-dashed border-border bg-card p-4"
+        >
+          <Icon name="plus" size={22} color={primary} />
+          <Text className="flex-1 text-[14px] font-inter-semibold text-foreground">Add new card</Text>
+          <Icon name="chevron-right" size={18} color={muted} />
         </TouchableOpacity>
       </ScrollView>
 
-      <View style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
+      <View className="border-t border-border px-5 pt-3" style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
         <View className="mb-3 flex-row items-center justify-between">
-          <Text className="font-inter-medium text-foreground-muted">Total</Text>
-          <Text className="text-base font-inter-bold text-foreground">${totals.total.toFixed(2)}</Text>
+          <Text className="text-[15px] font-inter-bold text-foreground">Total</Text>
+          <Text className="text-[17px] font-inter-bold text-foreground">${totals.total.toFixed(2)}</Text>
         </View>
-        <Button onPress={next} disabled={!selected}>
-          Next
-        </Button>
+        <View className="mb-3 flex-row items-center gap-1.5">
+          <Icon name="lock-outline" size={14} color={muted} />
+          <Text className="text-xs font-inter text-foreground-muted">Your payment information is secure</Text>
+        </View>
+        <Button onPress={next}>Next</Button>
       </View>
     </View>
   );

@@ -1,89 +1,94 @@
 // @/screens/main/food/ApplyOfferScreen.js
 import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  StatusBar,
+} from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
-import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import { useGetOffersQuery } from "@/features/food/foodApi";
-import { selectCart, selectSubtotal, setOffer } from "@/features/food/cartSlice";
+import { setOffer, selectCart } from "@/features/food/cartSlice";
 
-const OFFER_ICONS = {
-  percent: "sale",
-  flat: "cash-minus",
-  free_delivery: "bike-fast",
-};
+const MOCK_OFFERS = [
+  { id: "1", code: "EATS10", title: "10% OFF", subtitle: "Up to $5 · Min. spend $15", type: "percent", value: 10, maxDiscount: 5, minSpend: 15 },
+  { id: "2", code: "FOOD3", title: "$3 OFF", subtitle: "Min. spend $12", type: "flat", value: 3, minSpend: 12 },
+  { id: "3", code: "DELIVERY", title: "Free Delivery", subtitle: "Min. spend $10", type: "free_delivery", value: 0, minSpend: 10 },
+  { id: "4", code: "EATS15", title: "15% OFF", subtitle: "Min. spend $20", type: "percent", value: 15, maxDiscount: 8, minSpend: 20 },
+];
 
 export default function ApplyOfferScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const dispatch = useDispatch();
   const { colors, isDark } = useTheme();
   const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
   const muted = colors?.foregroundMuted ?? (isDark ? "#7DD3FC" : "#64748B");
-
-  const dispatch = useDispatch();
   const cart = useSelector(selectCart);
-  const subtotal = useSelector(selectSubtotal);
 
-  const { data: offers = [], isLoading } = useGetOffersQuery();
-  const [selected, setSelected] = useState(cart.offer?.code ?? null);
+  const { data: apiOffers, isLoading } = useGetOffersQuery();
+  const offers = apiOffers?.length ? apiOffers : MOCK_OFFERS;
+  const [selected, setSelected] = useState(cart.offer?.code || null);
 
   const apply = () => {
-    const offer = offers.find((o) => o.code === selected) || null;
-    dispatch(setOffer(offer));
+    const offer = offers.find((o) => o.code === selected || o.id === selected);
+    dispatch(setOffer(offer || null));
     navigation.goBack();
   };
 
-  if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator color={primary} />
-      </View>
-    );
-  }
-
   return (
-    <View className="flex-1 bg-background px-5" style={{ paddingTop: insets.top }}>
-      <ScreenHeader title="Select Offer" className="pb-3" />
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <FlatList
-        data={offers}
-        keyExtractor={(item) => item.code}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 12 }}
-        renderItem={({ item }) => {
-          const eligible = subtotal >= (item.minSpend || 0);
-          const isSelected = selected === item.code;
-          return (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              disabled={!eligible}
-              onPress={() => setSelected(isSelected ? null : item.code)}
-              className={`mb-3 flex-row items-center gap-3 rounded-2xl border p-4 ${
-                isSelected ? "border-primary bg-primary/10" : "border-border bg-card"
-              } ${!eligible ? "opacity-50" : ""}`}
-            >
-              <View className="h-11 w-11 items-center justify-center rounded-xl border border-border bg-background-muted">
-                <Icon name={OFFER_ICONS[item.type] || "tag-outline"} size={22} color={primary} />
-              </View>
-              <View className="flex-1">
-                <Text className="text-[15px] font-inter-bold text-foreground">{item.title}</Text>
-                <Text className="mt-0.5 text-xs font-inter text-foreground-muted">{item.subtitle}</Text>
-                <Text className="mt-1 text-[11px] font-inter-medium text-primary">{item.code}</Text>
-              </View>
-              <Icon
-                name={isSelected ? "radiobox-marked" : "radiobox-blank"}
-                size={22}
-                color={isSelected ? primary : muted}
-              />
-            </TouchableOpacity>
-          );
-        }}
-      />
+      <View className="mb-2 flex-row items-center px-5 pt-2 pb-3">
+        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} className="mr-3 h-10 w-10 items-center justify-center">
+          <Icon name="arrow-left" size={22} color={colors?.foreground} />
+        </TouchableOpacity>
+        <Text className="text-lg font-inter-bold text-foreground">Select Offer</Text>
+      </View>
 
-      <View style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
-        <Button onPress={apply}>Apply</Button>
+      {isLoading ? (
+        <ActivityIndicator color={primary} style={{ marginTop: 40 }} />
+      ) : (
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+          {offers.map((offer) => {
+            const key = offer.code || offer.id;
+            const isSelected = selected === key;
+            return (
+              <TouchableOpacity
+                key={key}
+                activeOpacity={0.85}
+                onPress={() => setSelected(key)}
+                className={`mb-3 rounded-2xl border p-4 ${isSelected ? "border-primary bg-primary/10" : "border-border bg-card"}`}
+              >
+                <View className="flex-row items-start gap-3">
+                  <View className={`mt-0.5 h-10 w-10 items-center justify-center rounded-full ${isSelected ? "bg-primary" : "bg-background-muted"}`}>
+                    <Icon name="tag" size={18} color={isSelected ? (colors?.primaryForeground || "#fff") : primary} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[15px] font-inter-bold text-foreground">{offer.title}</Text>
+                    <Text className="mt-0.5 text-xs font-inter text-foreground-muted">
+                      {offer.subtitle || (offer.minSpend ? `Min. spend $${offer.minSpend}` : "")}
+                    </Text>
+                    <View className="mt-2 self-start rounded-md border border-border bg-background-muted px-2 py-1">
+                      <Text className="text-[11px] font-inter-semibold text-foreground-secondary">{offer.code}</Text>
+                    </View>
+                  </View>
+                  <Icon name={isSelected ? "radiobox-marked" : "radiobox-blank"} size={22} color={isSelected ? primary : muted} />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      )}
+
+      <View className="border-t border-border px-5 pt-3" style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
+        <Button onPress={apply} disabled={!selected}>Apply</Button>
       </View>
     </View>
   );

@@ -141,6 +141,7 @@ export default function RestaurantMenuScreen({ route }) {
         price: selectedItem.price,
         qty,
         note: "",
+        image: selectedItem.image || null,
       })
     );
     setSelectedItem(null);

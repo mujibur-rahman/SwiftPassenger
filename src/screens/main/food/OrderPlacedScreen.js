@@ -1,46 +1,47 @@
 // @/screens/main/food/OrderPlacedScreen.js
 import React from "react";
-import { View, Text } from "react-native";
-import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+import { View, Text, Image, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 
 export default function OrderPlacedScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
-  const { colors } = useTheme();
-  const success = colors?.success ?? "#34D399";
-  const { orderId } = route.params;
+  const { isDark } = useTheme();
+  const orderId = route.params?.orderId;
 
   return (
     <View
       className="flex-1 items-center justify-center bg-background px-8"
-      style={{ paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 24) }}
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
-      <View className="mb-6 h-24 w-24 items-center justify-center rounded-full bg-success/15">
-        <Icon name="check-circle" size={56} color={success} />
-      </View>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <Text className="mb-2 text-2xl font-inter-bold text-foreground">Order Placed!</Text>
-      <Text className="mb-1 text-center font-inter text-foreground-muted">
-        Your food is on the way. You'll receive updates in real time.
+      <Image
+        source={require("@assets/images/illustrations/order-success.png")}
+        style={{ width: 220, height: 220, marginBottom: 24 }}
+        resizeMode="contain"
+      />
+
+      <Text className="mb-2 text-center text-2xl font-inter-bold text-foreground">Order Placed!</Text>
+      <Text className="mb-1 text-center text-[14px] font-inter text-foreground-muted">
+        Your food is being prepared
       </Text>
-      <Text className="mb-10 font-inter-semibold text-primary">Order #{orderId}</Text>
+      {orderId ? (
+        <Text className="mb-8 text-center text-xs font-inter text-foreground-muted">Order ID: {orderId}</Text>
+      ) : (
+        <View className="mb-8" />
+      )}
 
       <View className="w-full gap-3">
-        <Button onPress={() => navigation.replace("TrackOrder", { orderId })} leftIcon="map-marker-path">
+        <Button onPress={() => navigation.replace("TrackOrder", { orderId })}>
           Track Order
         </Button>
         <Button
           variant="outline"
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Tabs" }],
-            })
-          }
+          onPress={() => navigation.reset({ index: 0, routes: [{ name: "FoodTabs" }] })}
         >
-          View Order Details
+          Back to Home
         </Button>
       </View>
     </View>

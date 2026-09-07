@@ -3,7 +3,7 @@ import { createSlice, createSelector } from "@reduxjs/toolkit";
 const initialState = {
   restaurantId: null,
   restaurantName: null,
-  items: [], // { menuItemId, name, price, qty, note }
+  items: [], // { menuItemId, name, price, qty, note, image }
   offer: null, // { code, title, type, value, maxDiscount, minSpend }
   deliveryOptionId: "standard",
 };
@@ -12,10 +12,17 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    // অন্য রেস্টুরেন্ট থেকে অ্যাড করলে আগের কার্ট ক্লিয়ার হয়ে নতুন করে শুরু হয়
     addItem: (state, action) => {
-      const { restaurantId, restaurantName, menuItemId, name, price, qty = 1, note = "" } =
-        action.payload;
+      const {
+        restaurantId,
+        restaurantName,
+        menuItemId,
+        name,
+        price,
+        qty = 1,
+        note = "",
+        image = null,
+      } = action.payload;
 
       if (state.restaurantId && state.restaurantId !== restaurantId) {
         state.items = [];
@@ -30,8 +37,9 @@ const cartSlice = createSlice({
       );
       if (existing) {
         existing.qty += qty;
+        if (image && !existing.image) existing.image = image;
       } else {
-        state.items.push({ menuItemId, name, price, qty, note });
+        state.items.push({ menuItemId, name, price, qty, note, image });
       }
     },
 
@@ -54,7 +62,7 @@ const cartSlice = createSlice({
     },
 
     setOffer: (state, action) => {
-      state.offer = action.payload; // pass null to clear
+      state.offer = action.payload;
     },
 
     setDeliveryOption: (state, action) => {
@@ -83,7 +91,6 @@ export const {
 
 export default cartSlice.reducer;
 
-// ---------- Selectors ----------
 export const selectCart = (state) => state.cart;
 
 export const selectCartCount = createSelector(selectCart, (cart) =>
@@ -105,7 +112,7 @@ export const selectDiscount = createSelector(
       return offer.maxDiscount ? Math.min(raw, offer.maxDiscount) : raw;
     }
     if (offer.type === "flat") return offer.value;
-    return 0; // free_delivery handled via deliveryFee below
+    return 0;
   }
 );
 
@@ -115,9 +122,14 @@ export const makeSelectTotals = (deliveryFee = 2.0, serviceFee = 0.99) =>
     selectSubtotal,
     selectDiscount,
     (cart, subtotal, discount) => {
-      const freeDelivery = cart.offer?.type === "free_delivery" && subtotal >= (cart.offer.minSpend || 0);
+      const freeDelivery =
+        cart.offer?.type === "free_delivery" &&
+        subtotal >= (cart.offer.minSpend || 0);
       const effectiveDeliveryFee = freeDelivery ? 0 : deliveryFee;
-      const total = Math.max(0, subtotal - discount + effectiveDeliveryFee + serviceFee);
+      const total = Math.max(
+        0,
+        subtotal - discount + effectiveDeliveryFee + serviceFee
+      );
       return {
         subtotal,
         discount,
