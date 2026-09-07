@@ -27,6 +27,7 @@ const VARIANT_CLASSES = {
   warning: "border border-warning/40 bg-warning/15",
   info: "border border-info/40 bg-info/15",
   muted: "border border-border bg-card",
+  custom: "",
 };
 
 export default function IconButton({
@@ -53,6 +54,7 @@ export default function IconButton({
       warning: isDark ? "#FBBF24" : "#D97706",
       info: isDark ? "#60A5FA" : "#2563EB",
       muted: isDark ? "#7DD3FC" : "#64748B",
+      custom: "",
     }),
     [colors?.primary, isDark],
   );

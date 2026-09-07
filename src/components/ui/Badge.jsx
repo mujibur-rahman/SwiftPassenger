@@ -49,20 +49,43 @@ const VARIANTS = {
     text: "text-foreground-muted",
     icon: "#7DD3FC",
   },
+  card: {
+    wrap: "bg-card border-border",
+    text: "text-foreground",
+    icon: "#7DD3FC",
+  },
 };
 
 const SIZES = {
-  sm: {
+  xs: {
     pad: "px-2 py-0.5",
-    text: "text-[11px]",
+    text: "text-xs",
+    icon: 12,
+    gap: "gap-1",
+  },
+  sm: {
+    pad: "px-2.5 py-1",
+    text: "text-sm",
     icon: 12,
     gap: "gap-1",
   },
   md: {
-    pad: "px-2.5 py-1",
-    text: "text-[10px]",
+    pad: "px-3 py-1.5",
+    text: "text-md",
     icon: 12,
     gap: "gap-1",
+  },
+  lg: {
+    pad: "px-3.5 py-2",
+    text: "text-md",
+    icon: 14,
+    gap: "gap-1.5",
+  },
+  xl: {
+    pad: "px-4 py-2.5",
+    text: "text-md",
+    icon: 16,
+    gap: "gap-2",
   },
 };
 
@@ -101,10 +124,10 @@ export default function Badge({
       {typeof content === "string" ? (
         <Text
           className={`
-            font-inter-bold
+            font-inter-semibold
             ${s.text}
             ${v.text}
-            ${uppercase ? "tracking-[1.5px]" : "font-inter-semibold"}
+            ${uppercase ? "tracking-[1.5px]" : "font-inter-medium"}
             ${textClassName}
           `}
         >

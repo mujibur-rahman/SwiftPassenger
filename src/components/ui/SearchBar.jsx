@@ -140,3 +140,23 @@ const SearchBar = forwardRef(function SearchBar(
 });
 
 export default SearchBar;
+
+// Examples 
+
+{/* <SearchBar
+  value={query}
+  onChangeText={setQuery}
+  onSubmit={runSearch}
+  placeholder="Search restaurants or food..."
+  autoFocus
+  rightIcon="map-marker"
+  className="mb-6"
+/> */}
+
+{/* <SearchBar
+  label="Location"
+  placeholder="123 Example Street, Auckland"
+  value={location}
+  onChangeText={setLocation}
+  rightIcon="map-marker"
+/> */}

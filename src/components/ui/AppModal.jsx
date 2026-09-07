@@ -119,7 +119,9 @@ export default function AppModal({
             {/* Handle */}
             {showHandle && (
               <View className="mb-3 items-center">
-                <View className="h-1 w-10 rounded-full bg-border" />
+                <TouchableOpacity onPress={onClose}>
+                  <View className="h-1 w-12 rounded-full bg-border" />
+                </TouchableOpacity>
               </View>
             )}
 

@@ -21,7 +21,8 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // location object এর জন্য দরকার
+      serializableCheck: false, // location object এর জন্য দরকার      
+      immutableCheck: false, // stop warning 
     }).concat(apiSlice.middleware),
 });
 
