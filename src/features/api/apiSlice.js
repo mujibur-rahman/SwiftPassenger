@@ -42,6 +42,9 @@ export const apiSlice = createApi({
     "DeliveryOption",
     "ActiveOrder",
     "FoodOrder",
+    "GigJob",
+    "Quote",
+    "Booking",
   ],
   endpoints: () => ({}), // empty – features will inject
 });

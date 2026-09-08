@@ -8,6 +8,7 @@ import locationReducer from "@/features/location/locationSlice";
 import driverReducer from "@/features/driver/driverSlice";
 import cartReducer from "@/features/food/cartSlice";
 import foodOrderReducer from "@/features/food/foodOrderSlice";
+import gigReducer from "@/features/gig/gigSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     driver: driverReducer,
     cart: cartReducer,
     foodOrder: foodOrderReducer,
+    gig: gigReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
