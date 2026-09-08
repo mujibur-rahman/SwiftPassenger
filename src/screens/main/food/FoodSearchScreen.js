@@ -42,7 +42,7 @@ export default function FoodSearchScreen({ navigation }) {
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       <View className="px-5">
-        <ScreenHeader title="Food Search" rightContent={<TouchableOpacity
+        <ScreenHeader title="Food Search" onBack={() => navigation.navigate("Tabs", { screen: "Home" })} rightContent={<TouchableOpacity
           onPress={() => navigation.navigate("FoodOrders")}
           hitSlop={8}
           className="h-10 w-10 items-center justify-center rounded-full border border-border bg-card"
