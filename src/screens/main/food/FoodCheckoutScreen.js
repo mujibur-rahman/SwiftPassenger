@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 import { selectCart, makeSelectTotals } from "@/features/food/cartSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
 
 const DELIVERY_LABELS = {
   standard: { label: "Standard Delivery", eta: "20–30 min", fee: 2.0 },
@@ -21,7 +22,7 @@ const DELIVERY_LABELS = {
 };
 
 const selectTotals = makeSelectTotals();
-const FALLBACK = require("../../../../assets/images/products/chicken-burger.jpg");
+const FALLBACK = require("@assets/images/products/chicken-burger.jpg");
 
 export default function FoodCheckoutScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -42,14 +43,11 @@ export default function FoodCheckoutScreen({ navigation }) {
   }
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <View className="mb-1 flex-row items-center px-5 pt-2 pb-3">
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} className="mr-3 h-10 w-10 items-center justify-center">
-          <Icon name="arrow-left" size={22} color={colors?.foreground} />
-        </TouchableOpacity>
-        <Text className="text-lg font-inter-bold text-foreground">Checkout</Text>
+      <View className="px-5 pt-2 pb-1">
+        <ScreenHeader title="Checkout" />
       </View>
 
       <ScrollView
@@ -72,7 +70,7 @@ export default function FoodCheckoutScreen({ navigation }) {
         <View className="mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
           <View className="h-10 w-10 overflow-hidden rounded-full border border-border">
             <Image
-              source={require("../../../../assets/images/restaurants/burger-king.jpg")}
+              source={require("@assets/images/restaurants/burger-king.jpg")}
               style={{ width: 40, height: 40 }}
               resizeMode="cover"
             />
@@ -108,19 +106,10 @@ export default function FoodCheckoutScreen({ navigation }) {
           </View>
         ))}
 
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("RestaurantMenu", {
-              restaurantId: cart.restaurantId,
-              restaurantName: cart.restaurantName,
-            })
-          }
-          className="mb-4 mt-1"
-        >
-          <Text className="text-[13px] font-inter-semibold" style={{ color: primary }}>
-            + Add more items
-          </Text>
-        </TouchableOpacity>
+        <Button variant="link" size="sm" className="h-auto px-0! mb-4 mt-2" fullWidth={false} onPress={() => navigation.navigate("RestaurantMenu", {
+          restaurantId: cart.restaurantId,
+          restaurantName: cart.restaurantName,
+        })}>+ Add more items</Button>
 
         <TouchableOpacity
           activeOpacity={0.85}

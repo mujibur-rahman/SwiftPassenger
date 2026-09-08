@@ -14,6 +14,7 @@ import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 import { useGetPaymentMethodsQuery } from "@/features/payment/paymentApi";
 import { makeSelectTotals } from "@/features/food/cartSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
 
 const MOCK_METHODS = [
   { id: "1", type: "card", brand: "visa", lastFour: "4242", isDefault: true, label: "Visa" },
@@ -53,14 +54,11 @@ export default function FoodPaymentScreen({ navigation }) {
   };
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <View className="mb-2 flex-row items-center px-5 pt-2 pb-3">
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} className="mr-3 h-10 w-10 items-center justify-center">
-          <Icon name="arrow-left" size={22} color={colors?.foreground} />
-        </TouchableOpacity>
-        <Text className="text-lg font-inter-bold text-foreground">Payment</Text>
+      <View className="px-5 pt-2 pb-1">
+        <ScreenHeader title="Payment" />
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>

@@ -18,6 +18,7 @@ import {
   updateOrderStatus,
   setRider,
 } from "@/features/food/foodOrderSlice";
+import IconButton from "@/components/ui/IconButton";
 
 const STEPS = ["confirmed", "preparing", "on_the_way", "delivered"];
 const STEP_LABELS = {
@@ -94,7 +95,7 @@ export default function TrackOrderScreen({ route, navigation }) {
 
   return (
     <View className="flex-1 bg-background">
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       <View style={{ height: 280, backgroundColor: isDark ? "#0D1E32" : "#E0F2FE" }}>
         <View className="flex-1 items-center justify-center">
@@ -104,7 +105,7 @@ export default function TrackOrderScreen({ route, navigation }) {
 
         <View
           className="absolute left-4 right-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3"
-          style={{ top: insets.top + 12 }}
+          style={{ top: insets.top + 4 }}
         >
           <View className="h-11 w-11 items-center justify-center rounded-full bg-primary/15">
             <Icon name="motorbike" size={22} color={primary} />
@@ -115,13 +116,10 @@ export default function TrackOrderScreen({ route, navigation }) {
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("FoodTabs")}
-          className="absolute left-4 h-10 w-10 items-center justify-center rounded-full border border-border bg-card"
-          style={{ top: insets.top + 72 }}
-        >
-          <Icon name="arrow-left" size={20} color={colors?.foreground} />
-        </TouchableOpacity>
+        <IconButton
+          variant='muted'
+          icon="arrow-left" className='absolute left-4 z-10'
+          style={{ top: insets.top + 72 }} onPress={() => navigation.navigate("FoodSearch")} />
       </View>
 
       <ScrollView
@@ -129,7 +127,7 @@ export default function TrackOrderScreen({ route, navigation }) {
         contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 24) }}
         className="-mt-6 rounded-t-3xl bg-background"
       >
-        <View className="mx-5 mt-2 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
+        <View className="mx-5 mt-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
           <View className="h-12 w-12 items-center justify-center rounded-full bg-primary/20">
             <Icon name="account" size={28} color={primary} />
           </View>
@@ -143,15 +141,14 @@ export default function TrackOrderScreen({ route, navigation }) {
               </Text>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={() => displayRider.phone && Linking.openURL(`tel:${displayRider.phone}`)}
-            className="h-10 w-10 items-center justify-center rounded-full bg-primary/15"
-          >
-            <Icon name="phone" size={18} color={primary} />
-          </TouchableOpacity>
-          <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full bg-primary/15">
-            <Icon name="message-text-outline" size={18} color={primary} />
-          </TouchableOpacity>
+
+          <IconButton
+            variant='ghost'
+            icon="phone"
+            onPress={() => displayRider.phone && Linking.openURL(`tel:${displayRider.phone}`)} />
+          <IconButton
+            variant='ghost'
+            icon="message-text-outline" />
         </View>
 
         <View className="mx-5 mt-5 mb-2">

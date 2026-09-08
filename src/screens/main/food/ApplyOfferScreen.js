@@ -15,6 +15,7 @@ import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 import { useGetOffersQuery } from "@/features/food/foodApi";
 import { setOffer, selectCart } from "@/features/food/cartSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
 
 const MOCK_OFFERS = [
   { id: "1", code: "EATS10", title: "10% OFF", subtitle: "Up to $5 · Min. spend $15", type: "percent", value: 10, maxDiscount: 5, minSpend: 15 },
@@ -42,14 +43,11 @@ export default function ApplyOfferScreen({ navigation }) {
   };
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <View className="mb-2 flex-row items-center px-5 pt-2 pb-3">
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} className="mr-3 h-10 w-10 items-center justify-center">
-          <Icon name="arrow-left" size={22} color={colors?.foreground} />
-        </TouchableOpacity>
-        <Text className="text-lg font-inter-bold text-foreground">Select Offer</Text>
+      <View className="px-5 pt-2 pb-1">
+        <ScreenHeader title="Select Offer" />
       </View>
 
       {isLoading ? (

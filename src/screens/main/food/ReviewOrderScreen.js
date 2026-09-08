@@ -21,6 +21,7 @@ import {
 } from "@/features/food/cartSlice";
 import { usePlaceOrderMutation } from "@/features/food/foodApi";
 import { setCurrentOrder, updateOrderStatus } from "@/features/food/foodOrderSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
 
 const DELIVERY_LABELS = {
   standard: "Standard Delivery 20–30 min",
@@ -76,14 +77,11 @@ export default function ReviewOrderScreen({ route, navigation }) {
   };
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <View className="mb-2 flex-row items-center px-5 pt-2 pb-3">
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={8} className="mr-3 h-10 w-10 items-center justify-center">
-          <Icon name="arrow-left" size={22} color={colors?.foreground} />
-        </TouchableOpacity>
-        <Text className="text-lg font-inter-bold text-foreground">Review & Pay</Text>
+      <View className="px-5 pt-2 pb-1">
+        <ScreenHeader title="Review & Pay" />
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>

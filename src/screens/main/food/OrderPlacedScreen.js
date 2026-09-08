@@ -39,7 +39,7 @@ export default function OrderPlacedScreen({ route, navigation }) {
         </Button>
         <Button
           variant="outline"
-          onPress={() => navigation.reset({ index: 0, routes: [{ name: "FoodTabs" }] })}
+          onPress={() => navigation.reset({ index: 0, routes: [{ name: "FoodSearch" }] })}
         >
           Back to Home
         </Button>

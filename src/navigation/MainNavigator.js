@@ -22,8 +22,9 @@ import NotificationsScreen from "@/screens/main/NotificationsScreen";
 import SavedPlacesScreen from "@/screens/main/SavedPlacesScreen";
 import HelpCenterScreen from "@/screens/main/HelpCenterScreen";
 
-import FoodTabNavigator from "@/navigation/FoodTabNavigator";
-// import FoodSearchScreen from "@/screens/main/food/FoodSearchScreen";
+import FoodSearchScreen from "@/screens/main/food/FoodSearchScreen";
+import FoodBrowseScreen from "@/screens/main/food/FoodBrowseScreen";
+import FoodOrdersScreen from "@/screens/main/food/FoodOrdersScreen";
 import FoodSearchResultsScreen from "@/screens/main/food/FoodSearchResultsScreen";
 import RestaurantMenuScreen from "@/screens/main/food/RestaurantMenuScreen";
 import CartScreen from "@/screens/main/food/CartScreen";
@@ -205,23 +206,16 @@ export default function MainNavigator() {
       <Stack.Screen name="SavedPlaces" component={SavedPlacesScreen} />
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
 
-      {/* Order Food flow */}
-      <Stack.Screen name="FoodTabs" component={FoodTabNavigator} />
-      <Stack.Screen name="FoodSearch" component={FoodTabNavigator} />
+      {/* Order Food flow — all stack screens under Main Navigator */}
+      <Stack.Screen name="FoodSearch" component={FoodSearchScreen} />
+      <Stack.Screen name="FoodBrowse" component={FoodBrowseScreen} />
+      <Stack.Screen name="FoodOrders" component={FoodOrdersScreen} />
       <Stack.Screen name="FoodSearchResults" component={FoodSearchResultsScreen} />
       <Stack.Screen name="RestaurantMenu" component={RestaurantMenuScreen} />
       <Stack.Screen name="FoodCart" component={CartScreen} />
       <Stack.Screen name="FoodCheckout" component={FoodCheckoutScreen} />
-      <Stack.Screen
-        name="ApplyOffer"
-        component={ApplyOfferScreen}
-        options={{ presentation: "modal" }}
-      />
-      <Stack.Screen
-        name="DeliveryOption"
-        component={DeliveryOptionScreen}
-        options={{ presentation: "modal" }}
-      />
+      <Stack.Screen name="ApplyOffer" component={ApplyOfferScreen} options={{ presentation: "modal" }} />
+      <Stack.Screen name="DeliveryOption" component={DeliveryOptionScreen} options={{ presentation: "modal" }} />
       <Stack.Screen name="FoodPayment" component={FoodPaymentScreen} />
       <Stack.Screen name="ReviewOrder" component={ReviewOrderScreen} />
       <Stack.Screen name="OrderPlaced" component={OrderPlacedScreen} />

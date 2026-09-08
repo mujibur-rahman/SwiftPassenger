@@ -21,6 +21,9 @@ import {
   clearCart,
   makeSelectTotals,
 } from "@/features/food/cartSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import EmptyCart from "@/components/food/EmptyCart";
+import IconButton from "@/components/ui/IconButton";
 
 const selectTotals = makeSelectTotals();
 
@@ -58,43 +61,33 @@ export default function CartScreen({ navigation }) {
   const totals = useSelector(selectTotals);
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background">
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <View className="mb-2 flex-row items-center justify-between px-5 pt-2 pb-3">
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          hitSlop={8}
-          className="h-10 w-10 items-center justify-center"
-        >
-          <Icon name="arrow-left" size={22} color={colors?.foreground} />
-        </TouchableOpacity>
-        <Text className="text-lg font-inter-bold text-foreground">Your Cart</Text>
-        <TouchableOpacity
-          onPress={() => dispatch(clearCart())}
-          disabled={cart.items.length === 0}
-          hitSlop={8}
-        >
-          <Text
-            className="text-[13px] font-inter-semibold"
-            style={{ color: cart.items.length ? primary : muted }}
-          >
-            Clear all
-          </Text>
-        </TouchableOpacity>
+      <View className="px-5 pt-2 pb-1">
+        <ScreenHeader
+          title="Your Cart"
+          onBack={() => navigation.goBack()}
+          rightContent={
+            <TouchableOpacity
+              onPress={() => dispatch(clearCart())}
+              disabled={cart.items.length === 0}
+              hitSlop={8}
+            >
+              <Text
+                className="text-sm font-inter-semibold"
+                style={{ color: cart.items.length ? primary : muted }}
+              >
+                Clear all
+              </Text>
+            </TouchableOpacity>
+          }
+        />
       </View>
 
+
       {cart.items.length === 0 ? (
-        <View className="flex-1 items-center justify-center px-5">
-          <Icon name="cart-outline" size={56} color={muted} style={{ opacity: 0.5 }} />
-          <Text className="mt-3 font-inter text-foreground-muted">Your cart is empty</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("FoodTabs")}
-            className="mt-4 rounded-full bg-primary px-6 py-3"
-          >
-            <Text className="font-inter-semibold text-primary-foreground">Browse food</Text>
-          </TouchableOpacity>
-        </View>
+        <EmptyCart navigation={navigation} />
       ) : (
         <>
           <FlatList
@@ -103,7 +96,7 @@ export default function CartScreen({ navigation }) {
             contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16 }}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
-              <View className="mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3">
+              <View className="mb-3 flex-row items-center gap-4 rounded-2xl border border-border bg-card p-3">
                 <View className="h-16 w-16 overflow-hidden rounded-xl">
                   <Image
                     source={resolveImage(item)}
@@ -120,30 +113,27 @@ export default function CartScreen({ navigation }) {
                     ${item.price.toFixed(2)}
                   </Text>
 
-                  <View className="mt-2 flex-row items-center gap-3">
-                    <TouchableOpacity
+                  <View className="flex-row items-center gap-4 mt-2">
+                    <IconButton
+                      icon="minus"
+                      size={24}
                       onPress={() => dispatch(decrementItem(item.menuItemId))}
-                      className="h-7 w-7 items-center justify-center rounded-full border border-border"
-                    >
-                      <Icon name="minus" size={14} color={primary} />
-                    </TouchableOpacity>
-                    <Text className="text-sm font-inter-bold text-foreground">{item.qty}</Text>
-                    <TouchableOpacity
+                      variant="muted"
+                    />
+                    <Text className="text-base font-inter-bold text-foreground">{item.qty}</Text>
+                    <IconButton
+                      icon="plus"
+                      size={24}
                       onPress={() => dispatch(incrementItem(item.menuItemId))}
-                      className="h-7 w-7 items-center justify-center rounded-full bg-primary"
-                    >
-                      <Icon name="plus" size={14} color={onPrimary} />
-                    </TouchableOpacity>
+                    />
                   </View>
                 </View>
 
-                <TouchableOpacity
+                <IconButton
+                  icon="trash-can-outline"
+                  color={muted}
                   onPress={() => dispatch(removeItem(item.menuItemId))}
-                  hitSlop={10}
-                  className="h-8 w-8 items-center justify-center"
-                >
-                  <Icon name="trash-can-outline" size={18} color={muted} />
-                </TouchableOpacity>
+                />
               </View>
             )}
           />

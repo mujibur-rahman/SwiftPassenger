@@ -8,9 +8,10 @@ import {
     Image,
     StatusBar,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/theme";
 import SearchBar from "@/components/ui/SearchBar";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import Badge from "@/components/ui/Badge";
 
 const CATEGORIES = [
     { id: "burgers", label: "Burgers", image: require("@assets/images/categories/burgers.jpg") },
@@ -28,7 +29,6 @@ const QUICK_LINKS = [
 ];
 
 export default function FoodBrowseScreen({ navigation }) {
-    const insets = useSafeAreaInsets();
     const { isDark } = useTheme();
     const [query, setQuery] = useState("");
 
@@ -38,11 +38,15 @@ export default function FoodBrowseScreen({ navigation }) {
     };
 
     return (
-        <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+        <View className="flex-1 bg-background">
             <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
             <View className="px-5 pt-2 pb-1">
-                <Text className="mb-3 text-xl font-inter-bold text-foreground">Browse</Text>
+                <ScreenHeader
+                    title="Browse"
+                    onBack={() => navigation.goBack()}
+                />
+
                 <SearchBar
                     value={query}
                     onChangeText={setQuery}
@@ -56,9 +60,9 @@ export default function FoodBrowseScreen({ navigation }) {
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}
+                contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
             >
-                <Text className="mb-3 text-[15px] font-inter-semibold text-foreground">
+                <Text className="mb-3 text-lg font-inter-semibold text-foreground">
                     Categories
                 </Text>
                 <View className="mb-6 flex-row flex-wrap" style={{ gap: 12 }}>
@@ -77,26 +81,24 @@ export default function FoodBrowseScreen({ navigation }) {
                             />
                             <View className="absolute inset-0" style={{ backgroundColor: "rgba(0,0,0,0.35)" }} />
                             <View className="flex-1 items-center justify-center">
-                                <Text className="text-[15px] font-inter-bold text-white">{cat.label}</Text>
+                                <Text className="text-lg font-inter-bold text-white">{cat.label}</Text>
                             </View>
                         </TouchableOpacity>
                     ))}
                 </View>
 
-                <Text className="mb-3 text-[15px] font-inter-semibold text-foreground">
+                <Text className="mb-3 text-lg font-inter-semibold text-foreground">
                     Quick filters
                 </Text>
                 <View className="flex-row flex-wrap gap-2">
                     {QUICK_LINKS.map((item) => (
-                        <TouchableOpacity
-                            key={item.id}
-                            activeOpacity={0.8}
-                            onPress={() => goSearch(item.label)}
-                            className="rounded-full border border-border bg-card px-4 py-2.5"
-                        >
-                            <Text className="text-[13px] font-inter-medium text-foreground">
-                                {item.label}
-                            </Text>
+                        <TouchableOpacity key={item.id} onPress={() => goSearch(item.label)}>
+                            <Badge
+                                label={item.label}
+                                variant="primary"
+                                size="lg"
+                                shape="pill"
+                            />
                         </TouchableOpacity>
                     ))}
                 </View>

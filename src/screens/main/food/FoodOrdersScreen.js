@@ -4,13 +4,13 @@ import {
     View,
     Text,
     FlatList,
-    TouchableOpacity,
-    Image,
     StatusBar,
+    TouchableOpacity,
 } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/theme";
+import OrderCard from "@/components/food/OrderCard";
+import ScreenHeader from "@/components/ui/ScreenHeader";
 
 const TABS = ["Active", "Past"];
 
@@ -47,77 +47,42 @@ const MOCK_PAST = [
     },
 ];
 
-function OrderCard({ order, isActive, onPress, primary }) {
-    return (
-        <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={onPress}
-            className="mb-3 flex-row gap-3 rounded-2xl border border-border bg-card p-3"
-        >
-            <View className="h-16 w-16 overflow-hidden rounded-xl">
-                <Image source={order.image} style={{ width: 64, height: 64 }} resizeMode="cover" />
-            </View>
-            <View className="flex-1">
-                <View className="flex-row items-center justify-between">
-                    <Text className="text-[15px] font-inter-bold text-foreground" numberOfLines={1}>
-                        {order.restaurant}
-                    </Text>
-                    {isActive ? (
-                        <View className="rounded-full bg-primary/15 px-2 py-0.5">
-                            <Text className="text-[11px] font-inter-semibold text-primary">{order.eta}</Text>
-                        </View>
-                    ) : (
-                        <Text className="text-[11px] font-inter text-foreground-muted">{order.date}</Text>
-                    )}
-                </View>
-                <Text className="mt-0.5 text-xs font-inter text-foreground-muted" numberOfLines={1}>
-                    {order.items}
-                </Text>
-                <View className="mt-1.5 flex-row items-center justify-between">
-                    <View className="flex-row items-center gap-1">
-                        <Icon name={isActive ? "bike" : "check-circle"} size={13} color={isActive ? primary : "#34D399"} />
-                        <Text className="text-xs font-inter-medium" style={{ color: isActive ? primary : "#34D399" }}>
-                            {order.status}
-                        </Text>
-                    </View>
-                    <Text className="text-[13px] font-inter-bold text-foreground">
-                        ${order.total.toFixed(2)}
-                    </Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-}
-
 export default function FoodOrdersScreen({ navigation }) {
-    const insets = useSafeAreaInsets();
     const { colors, isDark } = useTheme();
     const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
     const [tab, setTab] = useState("Active");
     const data = tab === "Active" ? MOCK_ACTIVE : MOCK_PAST;
 
     return (
-        <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+        <View className="flex-1 bg-background">
             <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
             <View className="px-5 pt-2 pb-3">
-                <Text className="mb-4 text-xl font-inter-bold text-foreground">Orders</Text>
-                <View className="flex-row gap-2">
-                    {TABS.map((t) => {
-                        const active = tab === t;
-                        return (
-                            <TouchableOpacity
-                                key={t}
-                                onPress={() => setTab(t)}
-                                activeOpacity={0.8}
-                                className={`rounded-full px-5 py-2 ${active ? "bg-primary" : "border border-border bg-card"}`}
+                <ScreenHeader
+                    title="Orders"
+                    titleClassName="text-xl"
+                    onBack={() => navigation.goBack()}
+                />
+
+                <View className="mt-4 flex-row gap-3 border-b border-border">
+                    {TABS.map((t) => (
+                        <TouchableOpacity
+                            key={t}
+                            onPress={() => setTab(t)}
+                            className="flex-1 items-center py-1"
+                            style={{
+                                borderBottomWidth: t === tab ? 2 : 0,
+                                borderBottomColor: primary,
+                            }}
+                        >
+                            <Text
+                                className={`text-sm font-inter-semibold ${tab === t ? "text-foreground" : "text-foreground-muted"
+                                    }`}
                             >
-                                <Text className={`text-[13px] font-inter-semibold ${active ? "text-primary-foreground" : "text-foreground-secondary"}`}>
-                                    {t}
-                                </Text>
-                            </TouchableOpacity>
-                        );
-                    })}
+                                {t}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
                 </View>
             </View>
 
