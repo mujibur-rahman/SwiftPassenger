@@ -23,7 +23,7 @@ const SIZES = {
   },
   md: {
     title: "text-2xl font-inter-bold",
-    subtitle: "text-[15px]",
+    subtitle: "text-base",
     gap: "mt-1.5",
   },
   lg: {
@@ -33,7 +33,7 @@ const SIZES = {
   },
   xl: {
     title: "text-[36px] font-inter-extrabold leading-[44px]",
-    subtitle: "text-[15px]",
+    subtitle: "text-base",
     gap: "mt-2",
   },
 };

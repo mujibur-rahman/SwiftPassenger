@@ -132,7 +132,7 @@ export default function LoginScreen({ navigation }) {
             className="mt-8"
             onPress={() => navigation.navigate("Register")}
           >
-            <Text className="text-center text-[15px] font-inter text-foreground-muted">
+            <Text className="text-center text-base font-inter text-foreground-muted">
               Don't have an account?{" "}
               <Text className="font-inter-semibold text-primary">Sign Up</Text>
             </Text>

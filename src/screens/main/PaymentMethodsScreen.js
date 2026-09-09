@@ -112,7 +112,7 @@ export default function PaymentMethodsScreen({ navigation }) {
         </View>
 
         <View className="flex-1 gap-1">
-          <Text className="text-[15px] font-inter-medium text-foreground">
+          <Text className="text-base font-inter-medium text-foreground">
             {item.label} •••• {item.lastFour}
           </Text>
           {item.isDefault && (
@@ -207,7 +207,7 @@ export default function PaymentMethodsScreen({ navigation }) {
         ) : list.length === 0 ? (
           <View className="items-center gap-3 py-10">
             <Icon name="credit-card-off-outline" size={48} color="#1E3A5F" />
-            <Text className="text-[15px] font-inter text-foreground-muted">
+            <Text className="text-base font-inter text-foreground-muted">
               No payment methods saved
             </Text>
           </View>

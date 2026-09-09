@@ -20,7 +20,7 @@ const RestaurantCard = ({ restaurant, onPress, warning }) => {
             {/* Info */}
             <View className="flex-1">
                 <Text
-                    className="text-[15px] font-inter-bold text-foreground"
+                    className="text-base font-inter-bold text-foreground"
                     numberOfLines={1}
                 >
                     {restaurant.name}

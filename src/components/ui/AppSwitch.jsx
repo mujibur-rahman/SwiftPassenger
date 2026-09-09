@@ -66,7 +66,7 @@ export default function AppSwitch({
       let label = "text-sm";
       if (scale < 0.85) label = "text-xs";
       else if (scale >= 1.25) label = "text-base";
-      else if (scale >= 1.1) label = "text-[15px]";
+      else if (scale >= 1.1) label = "text-base";
       return {
         scale,
         label,

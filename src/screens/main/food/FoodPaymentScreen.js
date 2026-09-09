@@ -76,7 +76,7 @@ export default function FoodPaymentScreen({ navigation }) {
               <View className="h-10 w-10 items-center justify-center rounded-lg" style={{ backgroundColor: BRAND_COLORS[m.brand] || "#334155" }}>
                 <Text className="text-[10px] font-inter-bold text-white uppercase">{m.brand?.slice(0, 4) || "CARD"}</Text>
               </View>
-              <Text className="flex-1 text-[15px] font-inter-semibold text-foreground">{m.label} ···· {m.lastFour}</Text>
+              <Text className="flex-1 text-base font-inter-semibold text-foreground">{m.label} ···· {m.lastFour}</Text>
               <Icon name={isSelected ? "radiobox-marked" : "radiobox-blank"} size={22} color={isSelected ? primary : muted} />
             </TouchableOpacity>
           );
@@ -94,7 +94,7 @@ export default function FoodPaymentScreen({ navigation }) {
               <View className="h-10 w-10 items-center justify-center rounded-lg bg-background-muted">
                 <Icon name={m.icon} size={20} color={primary} />
               </View>
-              <Text className="flex-1 text-[15px] font-inter-semibold text-foreground">{m.label}</Text>
+              <Text className="flex-1 text-base font-inter-semibold text-foreground">{m.label}</Text>
               <Icon name={isSelected ? "radiobox-marked" : "radiobox-blank"} size={22} color={isSelected ? primary : muted} />
             </TouchableOpacity>
           );
@@ -113,7 +113,7 @@ export default function FoodPaymentScreen({ navigation }) {
 
       <View className="border-t border-border px-5 pt-3" style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
         <View className="mb-3 flex-row items-center justify-between">
-          <Text className="text-[15px] font-inter-bold text-foreground">Total</Text>
+          <Text className="text-base font-inter-bold text-foreground">Total</Text>
           <Text className="text-[17px] font-inter-bold text-foreground">${totals.total.toFixed(2)}</Text>
         </View>
         <View className="mb-3 flex-row items-center gap-1.5">

@@ -311,7 +311,7 @@ export default function RestaurantMenuScreen({ route }) {
 
         {tab === "Info" && (
           <View>
-            <Text className="mb-2 text-[15px] font-inter-semibold text-foreground">
+            <Text className="mb-2 text-base font-inter-semibold text-foreground">
               Delivery info
             </Text>
             <Text className="font-inter text-foreground-muted">

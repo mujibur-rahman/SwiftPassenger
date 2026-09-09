@@ -34,7 +34,7 @@ export default function SwitchRow({
     >
       <View className="flex-1">
         <Text
-          className={`text-[15px] font-inter-medium ${disabled ? "text-foreground-muted" : "text-foreground"
+          className={`text-base font-inter-medium ${disabled ? "text-foreground-muted" : "text-foreground"
             }`}
         >
           {label}

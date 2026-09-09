@@ -71,7 +71,7 @@ export default function DeliveryOptionScreen({ navigation }) {
                 <Icon name={OPTION_ICONS[opt.id] || "bike-fast"} size={22} color={primary} />
               </View>
               <View className="flex-1">
-                <Text className="text-[15px] font-inter-bold text-foreground">{opt.label}</Text>
+                <Text className="text-base font-inter-bold text-foreground">{opt.label}</Text>
                 <Text className="mt-0.5 text-xs font-inter text-foreground-muted">{opt.etaMinutes}</Text>
               </View>
               <Text className="mr-2 font-inter-bold text-foreground">${Number(opt.fee).toFixed(2)}</Text>

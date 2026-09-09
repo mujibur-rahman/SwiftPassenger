@@ -44,7 +44,7 @@ const MenuItem = ({
     </View>
 
     <Text
-      className={`flex-1 text-[15px] font-inter-medium ${error ? "text-error" : "text-foreground"
+      className={`flex-1 text-base font-inter-medium ${error ? "text-error" : "text-foreground"
         }`}
     >
       {label}

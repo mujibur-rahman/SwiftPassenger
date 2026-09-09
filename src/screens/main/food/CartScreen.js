@@ -106,7 +106,7 @@ export default function CartScreen({ navigation }) {
                 </View>
 
                 <View className="flex-1">
-                  <Text className="text-[15px] font-inter-bold text-foreground" numberOfLines={1}>
+                  <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
                     {item.name}
                   </Text>
                   <Text className="mt-0.5 text-[13px] font-inter-medium text-foreground-secondary">

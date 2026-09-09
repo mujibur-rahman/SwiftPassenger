@@ -14,7 +14,7 @@ const OrderCard = ({ order, isActive, onPress, primary }) => {
             </View>
             <View className="flex-1">
                 <View className="flex-row items-center justify-between">
-                    <Text className="text-[15px] font-inter-bold text-foreground" numberOfLines={1}>
+                    <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
                         {order.restaurant}
                     </Text>
                     {isActive ? (

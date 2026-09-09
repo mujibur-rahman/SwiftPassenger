@@ -32,7 +32,7 @@ export default function OptionCard({
     >
       <View className="flex-1 pr-3">
         <Text
-          className={`text-[15px] font-inter-semibold ${selected ? "text-primary" : "text-foreground"}`}
+          className={`text-base font-inter-semibold ${selected ? "text-primary" : "text-foreground"}`}
         >
           {label}
         </Text>

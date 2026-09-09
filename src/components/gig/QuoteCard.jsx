@@ -33,7 +33,7 @@ export default function QuoteCard({
       <View className="flex-row items-center gap-3">
         <Avatar name={providerName} uri={providerPhoto} size={48} />
         <View className="flex-1">
-          <Text className="text-[15px] font-inter-bold text-foreground" numberOfLines={1}>
+          <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
             {providerName}
           </Text>
           <View className="mt-0.5 flex-row items-center gap-1">

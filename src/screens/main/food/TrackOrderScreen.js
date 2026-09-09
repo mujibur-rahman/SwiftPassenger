@@ -111,7 +111,7 @@ export default function TrackOrderScreen({ route, navigation }) {
             <Icon name="motorbike" size={22} color={primary} />
           </View>
           <View className="flex-1">
-            <Text className="text-[15px] font-inter-bold text-foreground">Arriving in {eta} min</Text>
+            <Text className="text-base font-inter-bold text-foreground">Arriving in {eta} min</Text>
             <Text className="text-xs font-inter text-foreground-muted">Your rider is on the way</Text>
           </View>
         </View>
@@ -133,7 +133,7 @@ export default function TrackOrderScreen({ route, navigation }) {
           </View>
           <View className="flex-1">
             <Text className="text-xs font-inter text-foreground-muted">Rider</Text>
-            <Text className="text-[15px] font-inter-bold text-foreground">{displayRider.name}</Text>
+            <Text className="text-base font-inter-bold text-foreground">{displayRider.name}</Text>
             <View className="mt-0.5 flex-row items-center gap-1">
               <Icon name="star" size={12} color={warning} />
               <Text className="text-xs font-inter-medium text-foreground-secondary">

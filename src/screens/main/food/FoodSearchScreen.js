@@ -84,7 +84,7 @@ export default function FoodSearchScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
       >
-        <Text className="mb-3 text-[15px] font-inter-semibold text-foreground">
+        <Text className="mb-3 text-base font-inter-semibold text-foreground">
           Recent Searches
         </Text>
         <View className="mb-7 flex-row flex-wrap gap-2.5">
@@ -95,7 +95,7 @@ export default function FoodSearchScreen({ navigation }) {
           ))}
         </View>
 
-        <Text className="mb-4 text-[15px] font-inter-semibold text-foreground">
+        <Text className="mb-4 text-base font-inter-semibold text-foreground">
           Popular Near You
         </Text>
 

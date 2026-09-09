@@ -96,7 +96,7 @@ const SearchBar = forwardRef(function SearchBar(
       <TextInput
         ref={ref}
         className={`
-          flex-1 p-0 text-[15px] font-inter text-foreground
+          flex-1 p-0 text-base font-inter text-foreground
           ${inputClassName}
         `}
         value={value}

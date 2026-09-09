@@ -201,7 +201,7 @@ export default function HelpCenterScreen({ navigation }) {
               </View>
             ))}
             {filtered.length === 0 && (
-              <Text className="py-8 text-center text-[15px] font-inter text-foreground-muted">
+              <Text className="py-8 text-center text-base font-inter text-foreground-muted">
                 No results found
               </Text>
             )}

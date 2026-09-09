@@ -216,7 +216,7 @@ export default function AppModal({
 //   onPrimary={handleLogout}
 //   secondaryLabel="Cancel"
 // >
-//   <Text className="text-[15px] font-inter text-foreground-muted">
+//   <Text className="text-base font-inter text-foreground-muted">
 //     Are you sure you want to sign out?
 //   </Text>
 // </AppModal>

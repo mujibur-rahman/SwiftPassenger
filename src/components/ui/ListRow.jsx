@@ -99,7 +99,7 @@ export default function ListRow({
       {/* Center */}
       <View className="flex-1">
         <Text
-          className={`text-[15px] font-inter-medium ${v.label} ${labelClassName}`}
+          className={`text-base font-inter-medium ${v.label} ${labelClassName}`}
           numberOfLines={1}
         >
           {label}

@@ -69,7 +69,7 @@ export default function ApplyOfferScreen({ navigation }) {
                     <Icon name="tag" size={18} color={isSelected ? (colors?.primaryForeground || "#fff") : primary} />
                   </View>
                   <View className="flex-1">
-                    <Text className="text-[15px] font-inter-bold text-foreground">{offer.title}</Text>
+                    <Text className="text-base font-inter-bold text-foreground">{offer.title}</Text>
                     <Text className="mt-0.5 text-xs font-inter text-foreground-muted">
                       {offer.subtitle || (offer.minSpend ? `Min. spend $${offer.minSpend}` : "")}
                     </Text>

@@ -127,7 +127,7 @@ export default function RegisterScreen({ navigation }) {
               className="mt-6"
               onPress={() => navigation.navigate("Login")}
             >
-              <Text className="text-center text-[15px] font-inter text-foreground-muted">
+              <Text className="text-center text-base font-inter text-foreground-muted">
                 Already have an account?{" "}
                 <Text className="font-inter-semibold text-primary">Sign In</Text>
               </Text>
