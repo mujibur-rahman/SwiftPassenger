@@ -18,8 +18,10 @@ const ServiceCard = ({ job, onPress, iconSize = 28, className = "" }) => {
     }
     if (job.id === "1" || job.title === "Ride") {
       navigation.navigate("RideBooking");
-    } else if (job.title === "Order Food") {
+    } else if (job.id === "2" || job.title === "Order Food") {
       navigation.navigate("FoodSearch");
+    } else if (job.id === "3" || job.title === "Gig jobs") {
+      navigation.navigate("GigCategories")
     } else {
       // অন্য সার্ভিস পরে
       Alert.alert("Coming soon", `${job.title} is coming soon`);

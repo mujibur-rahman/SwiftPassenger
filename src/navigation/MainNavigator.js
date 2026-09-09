@@ -36,8 +36,21 @@ import ReviewOrderScreen from "@/screens/main/food/ReviewOrderScreen";
 import OrderPlacedScreen from "@/screens/main/food/OrderPlacedScreen";
 import TrackOrderScreen from "@/screens/main/food/TrackOrderScreen";
 
-// stack examples:
-// import SomeModalScreen from "@/screens/main/SomeModalScreen";
+import GigCategoriesScreen from "@/screens/main/gig/GigCategoriesScreen";
+import GigQuestionScreen from "@/screens/main/gig/GigQuestionScreen";
+import JobSummaryScreen from "@/screens/main/gig/JobSummaryScreen";
+import ContactDetailsScreen from "@/screens/main/gig/ContactDetailsScreen";
+import ReviewJobScreen from "@/screens/main/gig/ReviewJobScreen";
+import JobPostedScreen from "@/screens/main/gig/JobPostedScreen";
+import WaitingForQuotesScreen from "@/screens/main/gig/WaitingForQuotesScreen";
+import QuotesReceivedScreen from "@/screens/main/gig/QuotesReceivedScreen";
+import CompareQuotesScreen from "@/screens/main/gig/CompareQuotesScreen";
+import ProviderProfileScreen from "@/screens/main/gig/ProviderProfileScreen";
+import ConfirmBookingScreen from "@/screens/main/gig/ConfirmBookingScreen";
+import BookingScheduledScreen from "@/screens/main/gig/BookingScheduledScreen";
+import JobTrackingScreen from "@/screens/main/gig/JobTrackingScreen";
+import JobCompletedScreen from "@/screens/main/gig/JobCompletedScreen";
+import RateReviewScreen from "@/screens/main/gig/RateReviewScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -221,6 +234,31 @@ export default function MainNavigator() {
       <Stack.Screen name="OrderPlaced" component={OrderPlacedScreen} />
       <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
 
+      {/* Gig Jobs flow — all stack screens under Main Navigator */}
+      <Stack.Screen name="GigCategories" component={GigCategoriesScreen} />
+      <Stack.Screen name="GigQuestion" component={GigQuestionScreen} />
+      <Stack.Screen name="JobSummary" component={JobSummaryScreen} />
+      <Stack.Screen name="ContactDetails" component={ContactDetailsScreen} />
+      <Stack.Screen name="ReviewJob" component={ReviewJobScreen} />
+      <Stack.Screen name="JobPosted" component={JobPostedScreen} />
+      <Stack.Screen name="WaitingForQuotes" component={WaitingForQuotesScreen} />
+      <Stack.Screen name="QuotesReceived" component={QuotesReceivedScreen} />
+      <Stack.Screen name="CompareQuotes" component={CompareQuotesScreen} />
+      <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
+      <Stack.Screen
+        name="ConfirmBooking"
+        component={ConfirmBookingScreen}
+        options={{
+          presentation: "transparentModal",
+          cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
+      />
+      <Stack.Screen name="BookingScheduled" component={BookingScheduledScreen} />
+      <Stack.Screen name="JobTracking" component={JobTrackingScreen} />
+      <Stack.Screen name="JobCompleted" component={JobCompletedScreen} />
+      <Stack.Screen name="RateReview" component={RateReviewScreen} />
+
       <Stack.Screen
         name="RideBooking"
         component={RideBookingScreen}
@@ -230,19 +268,6 @@ export default function MainNavigator() {
           cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
         }}
       />
-
-      {/* 3) Optional modal */}
-      {/*
-      <Stack.Screen
-        name="IncomingModal"
-        component={SomeModalScreen}
-        options={{
-          presentation: "transparentModal",
-          cardStyle: { backgroundColor: "transparent" },
-          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
-        }}
-      />
-      */}
     </Stack.Navigator>
   );
 }

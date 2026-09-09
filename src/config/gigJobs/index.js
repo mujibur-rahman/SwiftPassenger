@@ -4,7 +4,6 @@
 // GigCategoriesScreen / GigCategoryCard / GigQuestionScreen all read from here —
 // none of them should ever import a service config directly.
 
-// import lawnMowing from "./lawnMowing";
 import lawnMowing from "@/config/gigJobs/lawnMowing";
 
 // icon = MaterialCommunityIcons name (these render via the shared Icon component
