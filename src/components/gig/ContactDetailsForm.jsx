@@ -16,8 +16,8 @@ const FIELDS = [
   { key: "mobile", label: "Mobile Number", required: true, keyboardType: "phone-pad" },
   { key: "email", label: "Email Address", required: true, keyboardType: "email-address" },
   { key: "address", label: "Property Address", required: true },
-  { key: "suburb", label: "Suburb", required: true },
-  { key: "postcode", label: "Postcode", required: true, keyboardType: "number-pad" },
+  // { key: "suburb", label: "Suburb", required: true },
+  // { key: "postcode", label: "Postcode", required: true, keyboardType: "number-pad" },
 ];
 
 export default function ContactDetailsForm({
@@ -81,28 +81,49 @@ export default function ContactDetailsForm({
       />
 
       <Text className="mb-1.5 text-sm font-inter-semibold tracking-wide text-foreground-secondary">
-        Upload lawn photos
+        Upload lawn photos (Optional)
       </Text>
-      <View className="flex-row flex-wrap gap-3">
-        {photos.map((uri) => (
-          <View key={uri} className="relative">
-            <Image source={{ uri }} style={{ width: 72, height: 72, borderRadius: 12 }} />
-            <TouchableOpacity
-              onPress={() => removePhoto(uri)}
-              className="absolute -right-1.5 -top-1.5 h-5 w-5 items-center justify-center rounded-full bg-error"
-            >
-              <Icon name="close" size={12} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        ))}
 
+      {photos.length === 0 ? (
         <TouchableOpacity
           onPress={pickPhoto}
-          className="h-[72px] w-[72px] items-center justify-center rounded-xl border border-dashed border-primary/40 bg-card"
+          className="flex-row items-center gap-3 rounded-2xl border border-dashed border-primary/40 bg-card p-4"
         >
-          <Icon name="camera-plus-outline" size={22} color={primary} />
+          <View
+            className="h-11 w-11 items-center justify-center rounded-full"
+            style={{ backgroundColor: `${primary}1F` }}
+          >
+            <Icon name="camera-plus-outline" size={20} color={primary} />
+          </View>
+          <View>
+            <Text className="text-sm font-inter-semibold text-foreground">
+              Upload lawn photos
+            </Text>
+            <Text className="text-xs font-inter text-foreground-muted">Tap to add photos</Text>
+          </View>
         </TouchableOpacity>
-      </View>
+      ) : (
+        <View className="flex-row flex-wrap gap-3">
+          {photos.map((uri) => (
+            <View key={uri} className="relative">
+              <Image source={{ uri }} style={{ width: 96, height: 96, borderRadius: 16 }} />
+              <TouchableOpacity
+                onPress={() => removePhoto(uri)}
+                className="absolute -right-1.5 -top-1.5 h-5 w-5 items-center justify-center rounded-full bg-error"
+              >
+                <Icon name="close" size={12} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          ))}
+
+          <TouchableOpacity
+            onPress={pickPhoto}
+            className="h-24 w-24 items-center justify-center rounded-2xl border border-dashed border-primary/40 bg-card"
+          >
+            <Icon name="plus" size={22} color={primary} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

@@ -1,55 +1,55 @@
 // @/screens/main/gig/WaitingForQuotesScreen.js
 import React, { useEffect } from "react";
-import { View, Text, StatusBar, ActivityIndicator } from "react-native";
+import { View, Text, Image, StatusBar } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import { receiveQuotes, setWaitingForQuotes, selectGig } from "@/features/gig/gigSlice";
 
 // Demo/mock quotes — same role as TrackOrderScreen's setTimeout status-advance:
-// stands in until /gig/jobs/:id/quotes is live (see gigApi.getQuotes).
+// stands in until /gig/jobs/:id/quotes is live (see gigApi.getQuotes). Provider
+// names/photos match the avatar assets actually in assets/providers/.
 const MOCK_QUOTES = [
   {
     id: "q1",
     providerName: "John's Gardening",
-    providerPhoto: null,
+    providerPhoto: require("@assets/images/gigs/lawn_mowing/providers/avatar-john.png"),
     rating: 4.9,
     reviews: 127,
     price: 55,
     availability: "Available today · 2:00 PM",
-    distance: "1.2 km away",
+    distance: "0.9 km away",
     message: "Happy to help, I mow this street every week!",
     services: ["Lawn mowing", "Edging", "Garden clean-up"],
   },
   {
     id: "q2",
-    providerName: "GreenCut Services",
-    providerPhoto: null,
-    rating: 4.7,
-    reviews: 84,
-    price: 48,
-    availability: "Available tomorrow · 9:00 AM",
-    distance: "2.8 km away",
+    providerName: "Mike's Lawn Care",
+    providerPhoto: require("@assets/images/gigs/lawn_mowing/providers/avatar-mike.png"),
+    rating: 4.8,
+    reviews: 86,
+    price: 45,
+    availability: "Available today · 4:30 PM",
+    distance: "3.2 km away",
     message: "Can do a same-week booking, fully insured.",
     services: ["Lawn mowing", "Hedge trimming"],
   },
   {
     id: "q3",
-    providerName: "Sarah M. Lawn Care",
-    providerPhoto: null,
+    providerName: "GreenLeaf Services",
+    providerPhoto: require("@assets/images/gigs/lawn_mowing/providers/avatar-greenleaf.png"),
     rating: 5.0,
-    reviews: 46,
-    price: 62,
-    availability: "Available today · 4:30 PM",
-    distance: "0.6 km away",
+    reviews: 34,
+    price: 60,
+    availability: "Available tomorrow · 9:00 AM",
+    distance: "4.8 km away",
     message: "Quick turnaround, clippings taken away included.",
     services: ["Lawn mowing", "Clippings removal", "Weeding"],
   },
 ];
 
 export default function WaitingForQuotesScreen({ navigation }) {
-  const { isDark, colors } = useTheme();
-  const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
+  const { isDark } = useTheme();
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
 
@@ -80,7 +80,11 @@ export default function WaitingForQuotesScreen({ navigation }) {
       </View>
 
       <View className="flex-1 items-center justify-center px-8">
-        <ActivityIndicator size="large" color={primary} style={{ marginBottom: 20 }} />
+        <Image
+          source={require("@assets/images/gigs/lawn_mowing/status/waiting-quotes.png")}
+          style={{ width: 180, height: 180, marginBottom: 12 }}
+          resizeMode="contain"
+        />
         <Text className="mb-2 text-center text-xl font-inter-bold text-foreground">
           Finding the right provider
         </Text>

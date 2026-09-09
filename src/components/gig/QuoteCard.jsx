@@ -1,10 +1,28 @@
 // @/components/gig/QuoteCard.jsx
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
 import Avatar from "@/components/ui/Avatar";
 import Button from "@/components/ui/Button";
+
+// Avatar's `uri` prop wraps the value as `{ uri }`, which only works for
+// remote/string URIs — a local require()'d avatar (a number, not a string)
+// needs to be passed straight to <Image source={...}>. This wrapper picks
+// the right path and falls back to Avatar's name-initial circle when there's
+// no photo at all, so QuoteCard/ProviderCard don't need Avatar.jsx touched.
+export function ProviderAvatar({ photo, name, size = 48 }) {
+  if (photo) {
+    return (
+      <Image
+        source={photo}
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        resizeMode="cover"
+      />
+    );
+  }
+  return <Avatar name={name} size={size} />;
+}
 
 export default function QuoteCard({
   quote,
@@ -31,7 +49,7 @@ export default function QuoteCard({
   return (
     <View className={`rounded-2xl border border-border bg-card p-4 ${className}`}>
       <View className="flex-row items-center gap-3">
-        <Avatar name={providerName} uri={providerPhoto} size={48} />
+        <ProviderAvatar photo={providerPhoto} name={providerName} size={48} />
         <View className="flex-1">
           <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
             {providerName}

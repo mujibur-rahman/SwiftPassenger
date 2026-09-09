@@ -48,9 +48,18 @@ export default function JobPostedScreen({ navigation }) {
       </Text>
 
       <View className="mb-8 w-full rounded-2xl border border-border bg-card p-4">
-        <Text className="mb-2 text-xs font-inter-semibold uppercase tracking-wide text-foreground-muted">
-          Job Status: Posted
-        </Text>
+        <View className="mb-2 flex-row items-center gap-3">
+          {service?.thumbnail ? (
+            <Image
+              source={service.thumbnail}
+              style={{ width: 40, height: 40, borderRadius: 10 }}
+              resizeMode="cover"
+            />
+          ) : null}
+          <Text className="text-xs font-inter-semibold uppercase tracking-wide text-foreground-muted">
+            Job Status: Posted
+          </Text>
+        </View>
         {detailLines.map((line) => (
           <Text key={line} className="text-sm font-inter text-foreground-secondary">
             {line}

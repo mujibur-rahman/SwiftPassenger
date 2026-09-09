@@ -14,6 +14,11 @@ export default function CompareQuotesScreen({ navigation }) {
   const quotes = useSelector(selectGigQuotes);
   const selectedQuoteId = useSelector((s) => s.gig.selectedQuoteId);
 
+  const bestValueId =
+    quotes.length > 0
+      ? quotes.reduce((cheapest, q) => (q.price < cheapest.price ? q : cheapest), quotes[0]).id
+      : null;
+
   const handleChoose = () => {
     if (!selectedQuoteId) return;
     // Always route through the profile so the customer sees full provider
@@ -43,6 +48,7 @@ export default function CompareQuotesScreen({ navigation }) {
             key={quote.id}
             quote={quote}
             selected={selectedQuoteId === quote.id}
+            isBestValue={quote.id === bestValueId}
             onSelect={(q) => dispatch(selectQuote(q.id))}
           />
         ))}

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import JobStatusStepper from "@/components/gig/JobStatusStepper";
+import { ProviderAvatar } from "@/components/gig/QuoteCard";
 import { selectGig, selectSelectedQuote, updateBookingStatus } from "@/features/gig/gigSlice";
 
 const STEPS = ["confirmed", "on_the_way", "arrived", "started", "completed"];
@@ -52,11 +53,23 @@ export default function JobTrackingScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
       >
-        <View className="mb-6 rounded-2xl border border-border bg-card p-4">
-          <Text className="mb-1 text-xs font-inter-medium text-foreground-muted">Provider</Text>
-          <Text className="text-base font-inter-bold text-foreground">
-            {gig.booking?.provider || selectedQuote?.providerName}
-          </Text>
+        <View className="mb-6 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
+          <ProviderAvatar
+            photo={selectedQuote?.providerPhoto}
+            name={gig.booking?.provider || selectedQuote?.providerName}
+            size={48}
+          />
+          <View className="flex-1">
+            <Text className="text-xs font-inter-medium text-foreground-muted">Provider</Text>
+            <Text className="text-base font-inter-bold text-foreground">
+              {gig.booking?.provider || selectedQuote?.providerName}
+            </Text>
+            {gig.booking?.location ? (
+              <Text className="mt-0.5 text-xs font-inter text-foreground-muted" numberOfLines={1}>
+                {gig.booking.location}
+              </Text>
+            ) : null}
+          </View>
         </View>
 
         <JobStatusStepper steps={STEPS} labels={STEP_LABELS} currentIndex={currentIndex} className="mb-2" />

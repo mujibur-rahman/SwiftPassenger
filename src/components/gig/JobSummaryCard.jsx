@@ -3,7 +3,7 @@
 // Looks up question/option labels from the gigJobs config (read-only, no Redux inside).
 // Exports SummaryRow so BookingSummaryCard can reuse the exact same row style.
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 import { getGigService } from "@/config/gigJobs";
 
 // lawnSize -> "Lawn Size", frequency -> "Frequency"
@@ -42,9 +42,18 @@ export default function JobSummaryCard({
 
   return (
     <View className={`rounded-2xl border border-border bg-card p-4 ${className}`}>
-      <Text className="mb-2 text-lg font-inter-bold text-foreground">
-        {title || service?.title || "Job Summary"}
-      </Text>
+      <View className="mb-2 flex-row items-center gap-3">
+        {service?.thumbnail ? (
+          <Image
+            source={service.thumbnail}
+            style={{ width: 48, height: 48, borderRadius: 12 }}
+            resizeMode="cover"
+          />
+        ) : null}
+        <Text className="flex-1 text-lg font-inter-bold text-foreground">
+          {title || service?.title || "Job Summary"}
+        </Text>
+      </View>
       {rows.map((row, i) => (
         <SummaryRow
           key={row.label}

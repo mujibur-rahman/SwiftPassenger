@@ -1,6 +1,6 @@
 // @/screens/main/gig/ReviewJobScreen.js
 import React from "react";
-import { View, Text, ScrollView, StatusBar, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, StatusBar, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
@@ -70,7 +70,16 @@ export default function ReviewJobScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
       >
-        <Text className="mb-2 text-xl font-inter-bold text-foreground">{service?.title}</Text>
+        <View className="mb-2 flex-row items-center gap-3">
+          {service?.thumbnail ? (
+            <Image
+              source={service.thumbnail}
+              style={{ width: 40, height: 40, borderRadius: 10 }}
+              resizeMode="cover"
+            />
+          ) : null}
+          <Text className="text-xl font-inter-bold text-foreground">{service?.title}</Text>
+        </View>
 
         <View className="mb-4 rounded-2xl border border-border bg-card px-4">
           {answerRows.map((row, i) => (
@@ -78,14 +87,41 @@ export default function ReviewJobScreen({ route, navigation }) {
           ))}
         </View>
 
-        <View className="rounded-2xl border border-border bg-card px-4">
+        <View className="mb-4 rounded-2xl border border-border bg-card px-4">
           <ReviewRow
             label="Location"
             value={location}
             onPress={() => navigation.navigate("ContactDetails", { serviceId })}
+          />
+          <ReviewRow
+            label="Additional notes"
+            value={contact.notes}
+            onPress={() => navigation.navigate("ContactDetails", { serviceId })}
             isLast
           />
         </View>
+
+        {contact.photos?.length ? (
+          <View className="mb-4">
+            <View className="mb-2 flex-row items-center justify-between">
+              <Text className="text-sm font-inter-semibold text-foreground">Uploaded Photos</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("ContactDetails", { serviceId })}>
+                <Text className="text-xs font-inter-semibold text-primary">Edit</Text>
+              </TouchableOpacity>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View className="flex-row gap-3">
+                {contact.photos.map((uri) => (
+                  <Image
+                    key={uri}
+                    source={{ uri }}
+                    style={{ width: 88, height: 88, borderRadius: 14 }}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        ) : null}
       </ScrollView>
 
       <View className="px-5 pb-5">

@@ -17,6 +17,9 @@ export default function QuotesReceivedScreen({ navigation }) {
 
       <View className="px-5 pt-2">
         <ScreenHeader title="Quotes for your job" onBack={() => navigation.goBack()} />
+        <Text className="mb-1 text-xs font-inter-medium text-foreground-muted">
+          {quotes.length} {quotes.length === 1 ? "quote" : "quotes"} received
+        </Text>
       </View>
 
       <FlatList

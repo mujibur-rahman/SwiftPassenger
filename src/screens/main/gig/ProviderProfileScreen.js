@@ -1,14 +1,22 @@
 // @/screens/main/gig/ProviderProfileScreen.js
 import React from "react";
-import { View, Text, ScrollView, StatusBar } from "react-native";
+import { View, Text, Image, ScrollView, StatusBar } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
-import Avatar from "@/components/ui/Avatar";
 import Badge from "@/components/ui/Badge";
+import { ProviderAvatar } from "@/components/gig/QuoteCard";
 import { selectGigQuotes, selectQuote } from "@/features/gig/gigSlice";
+
+// Same portfolio set shown for every provider today — swap for per-provider
+// data once the backend supplies it.
+const PORTFOLIO_IMAGES = [
+  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-1.png"),
+  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-2.png"),
+  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-3.png"),
+];
 
 export default function ProviderProfileScreen({ route, navigation }) {
   const { isDark, colors } = useTheme();
@@ -45,7 +53,9 @@ export default function ProviderProfileScreen({ route, navigation }) {
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
       >
         <View className="mb-5 items-center">
-          <Avatar name={quote.providerName} uri={quote.providerPhoto} size={84} className="mb-3" />
+          <View className="mb-3">
+            <ProviderAvatar photo={quote.providerPhoto} name={quote.providerName} size={84} />
+          </View>
           <Text className="text-lg font-inter-bold text-foreground">{quote.providerName}</Text>
           <View className="mt-1 flex-row items-center gap-1">
             <Icon name="star" size={14} color={warning} />
@@ -79,6 +89,14 @@ export default function ProviderProfileScreen({ route, navigation }) {
           </View>
         ) : null}
 
+        <View className="mb-4">
+          <Text className="mb-2 text-sm font-inter-semibold text-foreground">About</Text>
+          <Text className="text-sm font-inter leading-5 text-foreground-secondary">
+            {quote.about ||
+              `Professional and reliable service provider. ${quote.message || ""} We take pride in our work and customer satisfaction.`}
+          </Text>
+        </View>
+
         {quote.services?.length ? (
           <View className="mb-4">
             <Text className="mb-2 text-sm font-inter-semibold text-foreground">Services offered</Text>
@@ -89,6 +107,20 @@ export default function ProviderProfileScreen({ route, navigation }) {
             </View>
           </View>
         ) : null}
+
+        <View className="mb-4">
+          <Text className="mb-2 text-sm font-inter-semibold text-foreground">Previous Work</Text>
+          <View className="flex-row gap-3">
+            {PORTFOLIO_IMAGES.map((src, i) => (
+              <Image
+                key={i}
+                source={src}
+                style={{ flex: 1, aspectRatio: 1, borderRadius: 14 }}
+                resizeMode="cover"
+              />
+            ))}
+          </View>
+        </View>
       </ScrollView>
 
       <View className="px-5 pb-5">

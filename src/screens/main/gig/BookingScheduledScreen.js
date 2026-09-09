@@ -8,7 +8,17 @@ import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import Badge from "@/components/ui/Badge";
+import JobStatusStepper from "@/components/gig/JobStatusStepper";
 import { selectGig, selectSelectedQuote } from "@/features/gig/gigSlice";
+
+const BOOKING_STEPS = ["confirmed", "on_the_way", "arrived", "started", "completed"];
+const BOOKING_STEP_LABELS = {
+  confirmed: "Confirmed",
+  on_the_way: "On the way",
+  arrived: "Arrived",
+  started: "Started",
+  completed: "Completed",
+};
 
 // Quotes don't carry a phone number yet — same demo-fallback pattern as
 // TrackOrderScreen's default rider phone until the provider API is wired up.
@@ -73,6 +83,13 @@ export default function BookingScheduledScreen({ navigation }) {
         </View>
 
         <Badge label="Booking Confirmed" variant="success" shape="pill" className="self-center" />
+
+        <JobStatusStepper
+          steps={BOOKING_STEPS}
+          labels={BOOKING_STEP_LABELS}
+          currentIndex={0}
+          className="mt-5"
+        />
 
         <View className="mt-6 flex-row justify-center gap-4">
           <IconButton

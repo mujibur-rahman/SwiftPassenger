@@ -1,17 +1,19 @@
 // @/screens/main/gig/RateReviewScreen.js
 import React, { useState } from "react";
-import { View, ScrollView, StatusBar } from "react-native";
+import { View, Text, ScrollView, StatusBar } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import RatingReview from "@/components/gig/RatingReview";
-import { submitReview, resetGigJob, selectSelectedQuote } from "@/features/gig/gigSlice";
+import { ProviderAvatar } from "@/components/gig/QuoteCard";
+import { submitReview, resetGigJob, selectGig, selectSelectedQuote } from "@/features/gig/gigSlice";
 // import { useSubmitGigReviewMutation } from "@/features/gig/gigApi"; // wire in once backend is ready
 
 export default function RateReviewScreen({ navigation }) {
   const { isDark } = useTheme();
   const dispatch = useDispatch();
+  const gig = useSelector(selectGig);
   const selectedQuote = useSelector(selectSelectedQuote);
   // const [submitGigReview] = useSubmitGigReviewMutation();
 
@@ -45,6 +47,19 @@ export default function RateReviewScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}
       >
+        <View className="mb-5 items-center">
+          <View className="mb-2">
+            <ProviderAvatar
+              photo={selectedQuote?.providerPhoto}
+              name={gig.booking?.provider || selectedQuote?.providerName}
+              size={64}
+            />
+          </View>
+          <Text className="text-base font-inter-bold text-foreground">
+            {gig.booking?.provider || selectedQuote?.providerName}
+          </Text>
+        </View>
+
         <RatingReview
           rating={rating}
           onRatingChange={setRating}

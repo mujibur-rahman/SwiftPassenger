@@ -8,7 +8,8 @@ import Button from "@/components/ui/Button";
 import ContactDetailsForm from "@/components/gig/ContactDetailsForm";
 import { setContact, selectGig } from "@/features/gig/gigSlice";
 
-const REQUIRED_FIELDS = ["fullName", "mobile", "email", "address", "suburb", "postcode"];
+// const REQUIRED_FIELDS = ["fullName", "mobile", "email", "address", "suburb", "postcode"];
+const REQUIRED_FIELDS = ["fullName", "mobile", "email", "address"];
 
 export default function ContactDetailsScreen({ route, navigation }) {
   const { isDark } = useTheme();

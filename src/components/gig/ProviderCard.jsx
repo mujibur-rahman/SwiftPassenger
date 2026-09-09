@@ -5,11 +5,12 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
-import Avatar from "@/components/ui/Avatar";
+import { ProviderAvatar } from "@/components/gig/QuoteCard";
 
 export default function ProviderCard({
   quote,
   selected = false,
+  isBestValue = false,
   onSelect,
   className = "",
 }) {
@@ -30,12 +31,19 @@ export default function ProviderCard({
         ${className}
       `}
     >
-      <Avatar name={providerName} uri={providerPhoto} size={44} />
+      <ProviderAvatar photo={providerPhoto} name={providerName} size={44} />
 
       <View className="flex-1">
-        <Text className="text-sm font-inter-bold text-foreground" numberOfLines={1}>
-          {providerName}
-        </Text>
+        <View className="flex-row items-center gap-1.5">
+          <Text className="text-sm font-inter-bold text-foreground" numberOfLines={1}>
+            {providerName}
+          </Text>
+          {isBestValue ? (
+            <View className="rounded-full bg-success/15 px-1.5 py-0.5">
+              <Text className="text-[9px] font-inter-bold uppercase text-success">Best value</Text>
+            </View>
+          ) : null}
+        </View>
         <View className="mt-0.5 flex-row items-center gap-2">
           <View className="flex-row items-center gap-1">
             <Icon name="star" size={12} color={warning} />

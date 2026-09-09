@@ -60,6 +60,9 @@ export default function ConfirmBookingScreen({ navigation }) {
             <Button onPress={handleConfirm} disabled={!selectedQuote}>
               Confirm Booking
             </Button>
+            <Button variant="ghost" className="mt-2" onPress={() => navigation.goBack()}>
+              Cancel
+            </Button>
           </View>
         </TouchableWithoutFeedback>
       </View>
