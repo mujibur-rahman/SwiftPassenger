@@ -1,6 +1,6 @@
 // @/screens/main/gig/JobTrackingScreen.js
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, StatusBar, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, StatusBar, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
@@ -31,13 +31,18 @@ export default function JobTrackingScreen({ navigation }) {
   const gig = useSelector(selectGig);
   const selectedQuote = useSelector(selectSelectedQuote);
   const bookingId = useSelector(selectGigBookingId);
-  const { socket } = useSocket() || {};
+  const { socket, connected } = useSocket() || {};
 
-  // Polling fallback
-  const { data: bookingFromApi } = useGetGigBookingQuery(bookingId, {
+  // Polling only as fallback when socket is down
+  const {
+    data: bookingFromApi,
+    isFetching,
+    isError,
+    refetch,
+  } = useGetGigBookingQuery(bookingId, {
     skip: !bookingId,
-    pollingInterval: 4000,
-    refetchOnMountOrArgChange: true,
+    pollingInterval: connected ? 0 : 4000,
+    refetchOnMountOrArgChange: !connected,
   });
 
   // Sync from polling
@@ -111,12 +116,26 @@ export default function JobTrackingScreen({ navigation }) {
         <JobStatusStepper steps={STEPS} labels={STEP_LABELS} currentIndex={currentIndex} className="mb-2" />
 
         <View className="mt-4 items-center">
-          {currentIndex < STEPS.length - 1 && (
-            <ActivityIndicator size="small" color="#7DD3FC" style={{ marginBottom: 8 }} />
+          {isError ? (
+            <View className="items-center">
+              <Text className="mb-2 text-sm font-inter text-error text-center">
+                Connection problem. Status may be outdated.
+              </Text>
+              <TouchableOpacity onPress={() => refetch()} className="px-4 py-2 rounded-xl bg-primary/10">
+                <Text className="text-sm font-inter-semibold text-primary">Retry</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <>
+              {currentIndex < STEPS.length - 1 && isFetching && (
+                <ActivityIndicator size="small" color="#7DD3FC" style={{ marginBottom: 8 }} />
+              )}
+              <Text className="text-center text-sm font-inter text-foreground-muted">
+                {STEP_LABELS[STEPS[currentIndex]]} — status updates automatically
+                {connected ? " via live connection" : " (checking…)"}.
+              </Text>
+            </>
           )}
-          <Text className="text-center text-sm font-inter text-foreground-muted">
-            {STEP_LABELS[STEPS[currentIndex]]} — status updates automatically via live connection.
-          </Text>
         </View>
       </ScrollView>
     </View>

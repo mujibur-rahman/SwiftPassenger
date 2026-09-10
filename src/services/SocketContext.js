@@ -4,7 +4,6 @@ import React, {
   useContext,
   useRef,
   useState,
-  useEffect,
 } from "react";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,12 +23,14 @@ import {
   updateBookingStatus,
   setBookingFromSocket,
 } from "@/features/gig/gigSlice";
+import { gigApi } from "@/features/gig/gigApi";
 
 const SocketContext = createContext(null);
 
-// Android emulator: 10.0.2.2 | Real device: your local IP
-// const SOCKET_URL = "http://10.0.2.2:8000";
-const SOCKET_URL = "http://192.168.0.101:8000"; // for mobile
+// CRITICAL: Must be the same host/port as the API (auth-server + Socket.IO on 3000)
+// Android emulator: http://10.0.2.2:3000
+// Physical device: http://YOUR_LAN_IP:3000
+const SOCKET_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.101:3000";
 
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
@@ -50,7 +51,7 @@ export const SocketProvider = ({ children }) => {
 
     socketRef.current.on("connect", () => {
       setConnected(true);
-      console.log("[Socket] Connected:", socketRef.current.id);
+      console.log("[Socket] Connected:", socketRef.current.id, "→", SOCKET_URL);
     });
 
     socketRef.current.on("connect_error", (err) => {
@@ -87,12 +88,27 @@ export const SocketProvider = ({ children }) => {
       dispatch(updateRideStatus("no_drivers"));
     });
 
-    // ========== GIG events (new) ==========
+    // ========== GIG events ==========
     socketRef.current.on("gig:quotes_ready", (payload) => {
       console.log("[Socket] gig:quotes_ready", payload?.jobId);
       if (payload?.quotes?.length) {
-        // Screens also listen & enrich photos, but we can dispatch raw here
+        // 1. Update client flow state
         dispatch(receiveQuotes(payload.quotes));
+
+        // 2. Keep RTK Query cache in sync (authoritative)
+        if (payload.jobId) {
+          dispatch(
+            gigApi.util.updateQueryData("getQuotes", payload.jobId, () => payload.quotes)
+          );
+          dispatch(
+            gigApi.util.updateQueryData("getGigJob", payload.jobId, (draft) => {
+              if (draft) {
+                draft.quotes = payload.quotes;
+                draft.status = "quotes_ready";
+              }
+            })
+          );
+        }
       }
     });
 
@@ -103,6 +119,16 @@ export const SocketProvider = ({ children }) => {
       }
       if (payload?.booking) {
         dispatch(setBookingFromSocket(payload.booking));
+      }
+      // Keep RTK Query cache in sync
+      if (payload?.bookingId && payload?.booking) {
+        dispatch(
+          gigApi.util.updateQueryData(
+            "getGigBooking",
+            payload.bookingId,
+            () => payload.booking
+          )
+        );
       }
     });
   };
@@ -125,4 +151,3 @@ export const SocketProvider = ({ children }) => {
 };
 
 export const useSocket = () => useContext(SocketContext);
-

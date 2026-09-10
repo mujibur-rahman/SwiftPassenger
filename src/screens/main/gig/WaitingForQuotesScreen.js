@@ -11,7 +11,7 @@ import {
   selectGigJobId,
 } from "@/features/gig/gigSlice";
 import { useGetQuotesQuery } from "@/features/gig/gigApi";
-import { useSocket } from "@/services/SocketContext"; // or relative path if needed
+import { useSocket } from "@/services/SocketContext";
 
 // Map server quote ids to local avatar assets (server doesn't send photos)
 const PROVIDER_PHOTOS = {
@@ -32,13 +32,13 @@ export default function WaitingForQuotesScreen({ navigation }) {
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
   const jobId = useSelector(selectGigJobId);
-  const { socket } = useSocket() || {};
+  const { socket, connected } = useSocket() || {};
 
-  // Real API polling (fallback + primary)
-  const { data: apiQuotes, isFetching } = useGetQuotesQuery(jobId, {
+  // Polling only when socket is not connected (fallback)
+  const { data: apiQuotes, isFetching, isError, refetch } = useGetQuotesQuery(jobId, {
     skip: !jobId,
-    pollingInterval: 2500,
-    refetchOnMountOrArgChange: true,
+    pollingInterval: connected ? 0 : 3000,
+    refetchOnMountOrArgChange: !connected,
   });
 
   useEffect(() => {
@@ -99,12 +99,27 @@ export default function WaitingForQuotesScreen({ navigation }) {
         </Text>
 
         <View className="rounded-2xl border border-border bg-card px-5 py-3 items-center">
-          {isFetching || gig.quotes.length === 0 ? (
+          {(isFetching || gig.quotes.length === 0) && !isError ? (
             <ActivityIndicator size="small" color="#7DD3FC" style={{ marginBottom: 8 }} />
           ) : null}
-          <Text className="text-sm font-inter-semibold text-foreground">
-            Quotes received: {gig.quotes.length}
-          </Text>
+
+          {isError ? (
+            <>
+              <Text className="mb-2 text-sm font-inter text-error text-center">
+                Couldn't reach the server
+              </Text>
+              <Text
+                className="text-sm font-inter-semibold text-primary"
+                onPress={() => refetch()}
+              >
+                Tap to retry
+              </Text>
+            </>
+          ) : (
+            <Text className="text-sm font-inter-semibold text-foreground">
+              Quotes received: {gig.quotes.length}
+            </Text>
+          )}
         </View>
       </View>
     </View>
