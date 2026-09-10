@@ -8,8 +8,8 @@ import React from "react";
 import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import AppTextInput from "@/components/ui/AppTextInput";
 import { useTheme } from "@/theme";
+import AppTextInput from "@/components/ui/AppTextInput";
 
 const FIELDS = [
   { key: "fullName", label: "Full Name", required: true },

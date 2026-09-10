@@ -1,12 +1,20 @@
 // @/screens/main/gig/JobTrackingScreen.js
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, StatusBar } from "react-native";
+import { View, Text, ScrollView, StatusBar, ActivityIndicator } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import JobStatusStepper from "@/components/gig/JobStatusStepper";
 import { ProviderAvatar } from "@/components/gig/QuoteCard";
-import { selectGig, selectSelectedQuote, updateBookingStatus } from "@/features/gig/gigSlice";
+import {
+  selectGig,
+  selectSelectedQuote,
+  updateBookingStatus,
+  setBookingFromSocket,
+  selectGigBookingId,
+} from "@/features/gig/gigSlice";
+import { useGetGigBookingQuery } from "@/features/gig/gigApi";
+import { useSocket } from "@/services/SocketContext";
 
 const STEPS = ["confirmed", "on_the_way", "arrived", "started", "completed"];
 const STEP_LABELS = {
@@ -22,18 +30,46 @@ export default function JobTrackingScreen({ navigation }) {
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
   const selectedQuote = useSelector(selectSelectedQuote);
+  const bookingId = useSelector(selectGigBookingId);
+  const { socket } = useSocket() || {};
+
+  // Polling fallback
+  const { data: bookingFromApi } = useGetGigBookingQuery(bookingId, {
+    skip: !bookingId,
+    pollingInterval: 4000,
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Sync from polling
+  useEffect(() => {
+    if (bookingFromApi?.status && bookingFromApi.status !== gig.bookingStatus) {
+      dispatch(updateBookingStatus(bookingFromApi.status));
+      if (bookingFromApi.id) {
+        dispatch(setBookingFromSocket(bookingFromApi));
+      }
+    }
+  }, [bookingFromApi, gig.bookingStatus, dispatch]);
+
+  // Socket real-time
+  useEffect(() => {
+    if (!socket?.current || !bookingId) return;
+
+    const handler = (payload) => {
+      if (payload?.bookingId === bookingId && payload?.status) {
+        dispatch(updateBookingStatus(payload.status));
+        if (payload.booking) {
+          dispatch(setBookingFromSocket(payload.booking));
+        }
+      }
+    };
+
+    socket.current.on("gig:booking_status", handler);
+    return () => {
+      socket.current?.off("gig:booking_status", handler);
+    };
+  }, [socket, bookingId, dispatch]);
 
   const currentIndex = Math.max(0, STEPS.indexOf(gig.bookingStatus));
-
-  // Simulate the provider progressing through the job, same pattern as
-  // TrackOrderScreen's setTimeout status-advance.
-  useEffect(() => {
-    if (currentIndex >= STEPS.length - 1) return;
-    const timer = setTimeout(() => {
-      dispatch(updateBookingStatus(STEPS[currentIndex + 1]));
-    }, 6000);
-    return () => clearTimeout(timer);
-  }, [currentIndex, dispatch]);
 
   useEffect(() => {
     if (gig.bookingStatus === "completed") {
@@ -74,9 +110,14 @@ export default function JobTrackingScreen({ navigation }) {
 
         <JobStatusStepper steps={STEPS} labels={STEP_LABELS} currentIndex={currentIndex} className="mb-2" />
 
-        <Text className="mt-4 text-center text-sm font-inter text-foreground-muted">
-          {STEP_LABELS[STEPS[currentIndex]]} — we'll update this automatically as the job progresses.
-        </Text>
+        <View className="mt-4 items-center">
+          {currentIndex < STEPS.length - 1 && (
+            <ActivityIndicator size="small" color="#7DD3FC" style={{ marginBottom: 8 }} />
+          )}
+          <Text className="text-center text-sm font-inter text-foreground-muted">
+            {STEP_LABELS[STEPS[currentIndex]]} — status updates automatically via live connection.
+          </Text>
+        </View>
       </ScrollView>
     </View>
   );

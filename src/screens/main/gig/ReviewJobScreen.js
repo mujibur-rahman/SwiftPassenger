@@ -1,6 +1,6 @@
 // @/screens/main/gig/ReviewJobScreen.js
 import React from "react";
-import { View, Text, Image, ScrollView, StatusBar, TouchableOpacity } from "react-native";
+import { View, Text, Image, ScrollView, StatusBar, TouchableOpacity, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
@@ -8,7 +8,7 @@ import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import { getGigService } from "@/config/gigJobs";
 import { postJob, selectGig } from "@/features/gig/gigSlice";
-// import { usePostGigJobMutation } from "@/features/gig/gigApi"; // wire in once backend is ready
+import { usePostGigJobMutation } from "@/features/gig/gigApi";
 
 function humanizeId(id = "") {
   const withSpaces = id.replace(/([a-z0-9])([A-Z])/g, "$1 $2");
@@ -37,7 +37,6 @@ export default function ReviewJobScreen({ route, navigation }) {
   const gig = useSelector(selectGig);
   const serviceId = route.params?.serviceId || gig.serviceId;
   const service = getGigService(serviceId);
-  // const [postGigJob] = usePostGigJobMutation();
 
   const answerRows = (service?.questions || []).map((question, index) => {
     const optionId = gig.answers[question.id];
@@ -49,13 +48,19 @@ export default function ReviewJobScreen({ route, navigation }) {
     };
   });
 
+  const [postGigJob, { isLoading: isPosting }] = usePostGigJobMutation();
+
   const contact = gig.contact || {};
   const location = [contact.address, contact.suburb, contact.postcode].filter(Boolean).join(", ");
 
-  const handlePost = () => {
-    dispatch(postJob());
-    // postGigJob(gig.job) — enable once /gig/jobs is live
-    navigation.navigate("JobPosted");
+  const handlePost = async () => {
+    try {
+      const job = await postGigJob({ serviceId, answers: gig.answers, contact: gig.contact }).unwrap();
+      dispatch(postJob(job));
+      navigation.navigate("JobPosted");
+    } catch (err) {
+      Alert.alert("Couldn't post job", "Please check your connection and try again.");
+    }
   };
 
   return (
@@ -125,7 +130,9 @@ export default function ReviewJobScreen({ route, navigation }) {
       </ScrollView>
 
       <View className="px-5 pb-5">
-        <Button onPress={handlePost}>Post My Job</Button>
+        <Button onPress={handlePost} loading={isPosting}>
+          Post My Job
+        </Button>
       </View>
     </View>
   );

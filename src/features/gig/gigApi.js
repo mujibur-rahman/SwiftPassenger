@@ -1,12 +1,8 @@
 import { apiSlice } from "@/features/api/apiSlice";
 
-// এখনও ব্যাকএন্ড এন্ডপয়েন্ট রেডি নেই — কিন্তু endpoints এখানে scaffold করা আছে
-// যাতে backend তৈরি হলে শুধু query/url বদলালেই কাজ হয়ে যায়। এখন screens এই hooks
-// call না করে gigSlice-এর mock/demo reducers (postJob, receiveQuotes, confirmBooking,
-// submitReview) দিয়েই ফ্লো চালাবে — pattern টা TrackOrderScreen-এর demo effect এর মতো।
 export const gigApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        // জব পোস্ট
+        // ========== POST JOB ==========
         postGigJob: builder.mutation({
             query: (jobData) => ({
                 url: "/gig/jobs",
@@ -16,23 +12,35 @@ export const gigApi = apiSlice.injectEndpoints({
             invalidatesTags: ["GigJob"],
         }),
 
-        // পোস্ট করা জবের জন্য কোট লিস্ট
-        getQuotes: builder.query({
-            query: (jobId) => `/gig/jobs/${jobId}/quotes`,
-            providesTags: ["Quote"],
+        // ========== GET SINGLE JOB (status + quotes) ==========
+        getGigJob: builder.query({
+            query: (jobId) => `/gig/jobs/${jobId}`,
+            providesTags: (result, error, id) => [{ type: "GigJob", id }],
         }),
 
-        // বুকিং কনফার্ম
+        // ========== GET QUOTES FOR A JOB ==========
+        getQuotes: builder.query({
+            query: (jobId) => `/gig/jobs/${jobId}/quotes`,
+            providesTags: (result, error, id) => [{ type: "Quote", id }],
+        }),
+
+        // ========== CONFIRM BOOKING ==========
         confirmGigBooking: builder.mutation({
             query: (bookingData) => ({
                 url: "/gig/bookings",
                 method: "POST",
                 body: bookingData,
             }),
-            invalidatesTags: ["Booking"],
+            invalidatesTags: ["Booking", "GigJob"],
         }),
 
-        // রেটিং/রিভিউ সাবমিট
+        // ========== GET BOOKING (for tracking) ==========
+        getGigBooking: builder.query({
+            query: (bookingId) => `/gig/bookings/${bookingId}`,
+            providesTags: (result, error, id) => [{ type: "Booking", id }],
+        }),
+
+        // ========== SUBMIT REVIEW ==========
         submitGigReview: builder.mutation({
             query: (reviewData) => ({
                 url: "/gig/reviews",
@@ -46,7 +54,9 @@ export const gigApi = apiSlice.injectEndpoints({
 
 export const {
     usePostGigJobMutation,
+    useGetGigJobQuery,
     useGetQuotesQuery,
     useConfirmGigBookingMutation,
+    useGetGigBookingQuery,
     useSubmitGigReviewMutation,
 } = gigApi;

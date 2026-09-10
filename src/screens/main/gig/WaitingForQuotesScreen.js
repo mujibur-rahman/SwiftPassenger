@@ -1,70 +1,76 @@
 // @/screens/main/gig/WaitingForQuotesScreen.js
 import React, { useEffect } from "react";
-import { View, Text, Image, StatusBar } from "react-native";
+import { View, Text, Image, StatusBar, ActivityIndicator } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
-import { receiveQuotes, setWaitingForQuotes, selectGig } from "@/features/gig/gigSlice";
+import {
+  receiveQuotes,
+  setWaitingForQuotes,
+  selectGig,
+  selectGigJobId,
+} from "@/features/gig/gigSlice";
+import { useGetQuotesQuery } from "@/features/gig/gigApi";
+import { useSocket } from "@/services/SocketContext"; // or relative path if needed
 
-// Demo/mock quotes — same role as TrackOrderScreen's setTimeout status-advance:
-// stands in until /gig/jobs/:id/quotes is live (see gigApi.getQuotes). Provider
-// names/photos match the avatar assets actually in assets/providers/.
-const MOCK_QUOTES = [
-  {
-    id: "q1",
-    providerName: "John's Gardening",
-    providerPhoto: require("@assets/images/gigs/lawn_mowing/providers/avatar-john.png"),
-    rating: 4.9,
-    reviews: 127,
-    price: 55,
-    availability: "Available today · 2:00 PM",
-    distance: "0.9 km away",
-    message: "Happy to help, I mow this street every week!",
-    services: ["Lawn mowing", "Edging", "Garden clean-up"],
-  },
-  {
-    id: "q2",
-    providerName: "Mike's Lawn Care",
-    providerPhoto: require("@assets/images/gigs/lawn_mowing/providers/avatar-mike.png"),
-    rating: 4.8,
-    reviews: 86,
-    price: 45,
-    availability: "Available today · 4:30 PM",
-    distance: "3.2 km away",
-    message: "Can do a same-week booking, fully insured.",
-    services: ["Lawn mowing", "Hedge trimming"],
-  },
-  {
-    id: "q3",
-    providerName: "GreenLeaf Services",
-    providerPhoto: require("@assets/images/gigs/lawn_mowing/providers/avatar-greenleaf.png"),
-    rating: 5.0,
-    reviews: 34,
-    price: 60,
-    availability: "Available tomorrow · 9:00 AM",
-    distance: "4.8 km away",
-    message: "Quick turnaround, clippings taken away included.",
-    services: ["Lawn mowing", "Clippings removal", "Weeding"],
-  },
-];
+// Map server quote ids to local avatar assets (server doesn't send photos)
+const PROVIDER_PHOTOS = {
+  q1: require("@assets/images/gigs/lawn_mowing/providers/avatar-john.png"),
+  q2: require("@assets/images/gigs/lawn_mowing/providers/avatar-mike.png"),
+  q3: require("@assets/images/gigs/lawn_mowing/providers/avatar-greenleaf.png"),
+};
+
+function enrichQuotes(quotes = []) {
+  return quotes.map((q) => ({
+    ...q,
+    providerPhoto: q.providerPhoto || PROVIDER_PHOTOS[q.id] || null,
+  }));
+}
 
 export default function WaitingForQuotesScreen({ navigation }) {
   const { isDark } = useTheme();
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
+  const jobId = useSelector(selectGigJobId);
+  const { socket } = useSocket() || {};
+
+  // Real API polling (fallback + primary)
+  const { data: apiQuotes, isFetching } = useGetQuotesQuery(jobId, {
+    skip: !jobId,
+    pollingInterval: 2500,
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
     dispatch(setWaitingForQuotes());
   }, [dispatch]);
 
+  // When polling returns quotes
   useEffect(() => {
-    if (gig.quotes.length > 0) return;
-    const timer = setTimeout(() => {
-      dispatch(receiveQuotes(MOCK_QUOTES));
-    }, 4000 + Math.random() * 2000); // staggered ~4-6s, mirrors TrackOrderScreen's demo delay
-    return () => clearTimeout(timer);
-  }, [gig.quotes.length, dispatch]);
+    if (apiQuotes && apiQuotes.length > 0 && gig.quotes.length === 0) {
+      const enriched = enrichQuotes(apiQuotes);
+      dispatch(receiveQuotes(enriched));
+    }
+  }, [apiQuotes, gig.quotes.length, dispatch]);
 
+  // Socket real-time (preferred)
+  useEffect(() => {
+    if (!socket?.current || !jobId) return;
+
+    const handler = (payload) => {
+      if (payload?.jobId === jobId && payload?.quotes?.length > 0) {
+        const enriched = enrichQuotes(payload.quotes);
+        dispatch(receiveQuotes(enriched));
+      }
+    };
+
+    socket.current.on("gig:quotes_ready", handler);
+    return () => {
+      socket.current?.off("gig:quotes_ready", handler);
+    };
+  }, [socket, jobId, dispatch]);
+
+  // Navigate when we have quotes
   useEffect(() => {
     if (gig.quotes.length > 0) {
       navigation.replace("QuotesReceived");
@@ -92,7 +98,10 @@ export default function WaitingForQuotesScreen({ navigation }) {
           Your job is live. We're waiting for service providers to send you their quotes.
         </Text>
 
-        <View className="rounded-2xl border border-border bg-card px-5 py-3">
+        <View className="rounded-2xl border border-border bg-card px-5 py-3 items-center">
+          {isFetching || gig.quotes.length === 0 ? (
+            <ActivityIndicator size="small" color="#7DD3FC" style={{ marginBottom: 8 }} />
+          ) : null}
           <Text className="text-sm font-inter-semibold text-foreground">
             Quotes received: {gig.quotes.length}
           </Text>

@@ -1,38 +1,39 @@
 // @/screens/main/gig/ConfirmBookingScreen.js
-// Intended navigator options (set in Batch 5, alongside RideBooking):
-//   { presentation: "transparentModal", cardStyle: { backgroundColor: "transparent" },
-//     cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter }
-// Renders as a dimmed backdrop + centered card, not a full screen — that's why
-// bg-background isn't used at the root here.
 import React from "react";
-import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, TouchableOpacity, TouchableWithoutFeedback, Alert, ActivityIndicator } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import Button from "@/components/ui/Button";
 import BookingSummaryCard from "@/components/gig/BookingSummaryCard";
 import { confirmBooking, selectGig, selectSelectedQuote } from "@/features/gig/gigSlice";
-// import { useConfirmGigBookingMutation } from "@/features/gig/gigApi"; // wire in once backend is ready
+import { useConfirmGigBookingMutation } from "@/features/gig/gigApi";
 
 export default function ConfirmBookingScreen({ navigation }) {
   const { isDark } = useTheme();
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
   const selectedQuote = useSelector(selectSelectedQuote);
-  // const [confirmGigBooking] = useConfirmGigBookingMutation();
+  const [confirmGigBooking, { isLoading }] = useConfirmGigBookingMutation();
 
-  const handleConfirm = () => {
-    dispatch(
-      confirmBooking({
-        quoteId: selectedQuote?.id,
-        provider: selectedQuote?.providerName,
-        price: selectedQuote?.price,
-        location: gig.contact?.address,
-        scheduledAt: new Date().toISOString(),
-      }),
-    );
-    // confirmGigBooking({...}) — enable once /gig/bookings is live
-    navigation.replace("BookingScheduled");
+  const handleConfirm = async () => {
+    if (!selectedQuote) return;
+
+    try {
+      const booking = await confirmGigBooking({
+        jobId: gig.job?.id,
+        quoteId: selectedQuote.id,
+        provider: selectedQuote.providerName,
+        price: selectedQuote.price,
+        location: gig.contact?.address || null,
+      }).unwrap();
+
+      dispatch(confirmBooking(booking));
+      navigation.replace("BookingScheduled");
+    } catch (err) {
+      console.warn("Confirm booking error:", err);
+      Alert.alert("Booking failed", "Please check your connection and try again.");
+    }
   };
 
   return (
@@ -57,10 +58,14 @@ export default function ConfirmBookingScreen({ navigation }) {
               className="mb-5 border-0 p-0"
             />
 
-            <Button onPress={handleConfirm} disabled={!selectedQuote}>
-              Confirm Booking
+            <Button onPress={handleConfirm} disabled={!selectedQuote || isLoading}>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                "Confirm Booking"
+              )}
             </Button>
-            <Button variant="ghost" className="mt-2" onPress={() => navigation.goBack()}>
+            <Button variant="ghost" className="mt-2" onPress={() => navigation.goBack()} disabled={isLoading}>
               Cancel
             </Button>
           </View>

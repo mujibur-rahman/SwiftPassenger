@@ -1,23 +1,8 @@
 const express = require("express");
-const http = require("http");
 const jwt = require("jsonwebtoken");
-const { Server } = require("socket.io");
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] },
-});
-
 app.use(express.json());
-
-// Socket connection log
-io.on("connection", (socket) => {
-  console.log("[Socket] Client connected:", socket.id);
-  socket.on("disconnect", () => {
-    console.log("[Socket] Client disconnected:", socket.id);
-  });
-});
 
 const JWT_SECRET = "development-secret-change-this";
 const REFRESH_SECRET = "refresh-secret-change-this";
@@ -495,11 +480,11 @@ app.get("/food/restaurants", (req, res) => {
   const results = !q
     ? RESTAURANTS
     : RESTAURANTS.filter(
-      (r) =>
-        r.name.toLowerCase().includes(q) ||
-        r.category.toLowerCase().includes(q) ||
-        r.menu.some((m) => m.name.toLowerCase().includes(q))
-    );
+        (r) =>
+          r.name.toLowerCase().includes(q) ||
+          r.category.toLowerCase().includes(q) ||
+          r.menu.some((m) => m.name.toLowerCase().includes(q))
+      );
 
   // strip menu for list view
   return res.json(results.map(({ menu, ...r }) => r));
@@ -618,204 +603,6 @@ app.get("/food/orders/:id", (req, res) => {
   return res.json(order);
 });
 
-// ========== GIG JOBS MOCK ==========
-// Same pattern as the RIDE and FOOD mocks above: in-memory arrays +
-// setTimeout progression (assignDriverLater / progressOrder), just for the
-// Gig Jobs → Lawn Mowing customer flow. Matches the endpoints already
-// scaffolded in src/features/gig/gigApi.js (postGigJob, getQuotes,
-// confirmGigBooking, submitGigReview) exactly, so wiring the client to call
-// these hooks instead of the local mock reducers is a drop-in swap.
-let gigJobs = [];
-let gigJobIdCounter = 1;
-let gigBookings = [];
-let gigBookingIdCounter = 1;
-let gigReviews = [];
-let gigReviewIdCounter = 1;
-
-const FAKE_GIG_PROVIDERS = [
-  {
-    id: "q1",
-    providerName: "John's Gardening",
-    rating: 4.9,
-    reviews: 127,
-    price: 55,
-    availability: "Available today · 2:00 PM",
-    distance: "0.9 km away",
-    message: "Happy to help, I mow this street every week!",
-    services: ["Lawn mowing", "Edging", "Garden clean-up"],
-  },
-  {
-    id: "q2",
-    providerName: "Mike's Lawn Care",
-    rating: 4.8,
-    reviews: 86,
-    price: 45,
-    availability: "Available today · 4:30 PM",
-    distance: "3.2 km away",
-    message: "Can do a same-week booking, fully insured.",
-    services: ["Lawn mowing", "Hedge trimming"],
-  },
-  {
-    id: "q3",
-    providerName: "GreenLeaf Services",
-    rating: 5.0,
-    reviews: 34,
-    price: 60,
-    availability: "Available tomorrow · 9:00 AM",
-    distance: "4.8 km away",
-    message: "Quick turnaround, clippings taken away included.",
-    services: ["Lawn mowing", "Clippings removal", "Weeding"],
-  },
-];
-
-/** After delay, attach quotes to the job — same shape as assignDriverLater */
-function attachGigQuotesLater(jobId, delayMs = 5000) {
-  setTimeout(() => {
-    const job = gigJobs.find((j) => j.id === jobId);
-    if (!job || job.status !== "posted") return;
-
-    job.status = "quotes_ready";
-    job.quotes = FAKE_GIG_PROVIDERS.map((p) => ({ ...p }));
-    console.log(`Quotes ready for gig job #${jobId}`);
-
-    // Real-time emit
-    io.emit("gig:quotes_ready", {
-      jobId: job.id,
-      quotes: job.quotes,
-    });
-  }, delayMs);
-}
-
-/** Simulate the provider progressing through the job, same shape as progressOrder */
-function progressGigBooking(bookingId) {
-  const STEPS = ["confirmed", "on_the_way", "arrived", "started", "completed"];
-
-  STEPS.slice(1).forEach((status, i) => {
-    setTimeout(
-      () => {
-        const booking = gigBookings.find((b) => b.id === bookingId);
-        if (!booking) return;
-
-        const prevStatus = STEPS[STEPS.indexOf(status) - 1];
-        if (booking.status !== prevStatus) return;
-
-        booking.status = status;
-        console.log(`Gig booking #${bookingId} → ${status}`);
-
-        // Real-time emit
-        io.emit("gig:booking_status", {
-          bookingId: booking.id,
-          status: booking.status,
-          booking: booking,
-        });
-      },
-      (i + 1) * 6000,
-    );
-  });
-}
-
-// ========== POST GIG JOB (+ schedule fake quotes) ==========
-app.post("/gig/jobs", (req, res) => {
-  const { serviceId, answers, contact } = req.body || {};
-
-  if (!serviceId || !answers) {
-    return res.status(400).json({ message: "serviceId and answers are required" });
-  }
-
-  const job = {
-    id: gigJobIdCounter++,
-    serviceId,
-    answers,
-    contact: contact || null,
-    status: "posted", // posted → quotes_ready
-    quotes: [],
-    createdAt: new Date().toISOString(),
-  };
-
-  gigJobs.push(job);
-  attachGigQuotesLater(job.id, 5000);
-
-  console.log("Gig job posted →", job.id, serviceId, "(quotes in ~5s)");
-
-  return res.status(201).json(job);
-});
-
-// ========== GET GIG JOB (status + quotes) ==========
-app.get("/gig/jobs/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const job = gigJobs.find((j) => j.id === id);
-  if (!job) return res.status(404).json({ message: "Gig job not found" });
-  return res.json(job);
-});
-
-// ========== GET QUOTES FOR A JOB ==========
-app.get("/gig/jobs/:id/quotes", (req, res) => {
-  const id = Number(req.params.id);
-  const job = gigJobs.find((j) => j.id === id);
-  if (!job) return res.status(404).json({ message: "Gig job not found" });
-  return res.json(job.quotes);
-});
-
-// ========== CONFIRM BOOKING (+ schedule fake status progression) ==========
-app.post("/gig/bookings", (req, res) => {
-  const { jobId, quoteId, provider, price, location } = req.body || {};
-
-  if (!quoteId) {
-    return res.status(400).json({ message: "quoteId is required" });
-  }
-
-  const booking = {
-    id: gigBookingIdCounter++,
-    jobId: jobId || null,
-    quoteId,
-    provider: provider || null,
-    price: price || 0,
-    location: location || null,
-    scheduledAt: new Date().toISOString(),
-    status: "confirmed", // confirmed → on_the_way → arrived → started → completed
-  };
-
-  gigBookings.push(booking);
-  progressGigBooking(booking.id);
-
-  console.log("Gig booking confirmed →", booking.id, booking.provider);
-
-  return res.status(201).json(booking);
-});
-
-// ========== GET BOOKING (status) ==========
-app.get("/gig/bookings/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const booking = gigBookings.find((b) => b.id === id);
-  if (!booking) return res.status(404).json({ message: "Booking not found" });
-  return res.json(booking);
-});
-
-// ========== SUBMIT REVIEW ==========
-app.post("/gig/reviews", (req, res) => {
-  const { quoteId, bookingId, rating, text, tags } = req.body || {};
-
-  if (!rating) {
-    return res.status(400).json({ message: "rating is required" });
-  }
-
-  const review = {
-    id: gigReviewIdCounter++,
-    quoteId: quoteId || null,
-    bookingId: bookingId || null,
-    rating,
-    text: text || "",
-    tags: tags || [],
-    createdAt: new Date().toISOString(),
-  };
-
-  gigReviews.push(review);
-
-  console.log("Gig review submitted →", review.id, "rating:", review.rating);
-
-  return res.status(201).json(review);
-});
-
-server.listen(3000, "0.0.0.0", () => {
-  console.log("✅ Auth server + Socket.IO running on http://0.0.0.0:3000");
+app.listen(3000, "0.0.0.0", () => {
+  console.log("✅ Auth server running on http://0.0.0.0:3000");
 });

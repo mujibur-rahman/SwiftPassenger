@@ -18,6 +18,13 @@ import {
   resetRide,
 } from "@/features/ride/rideSlice";
 
+// Gig events
+import {
+  receiveQuotes,
+  updateBookingStatus,
+  setBookingFromSocket,
+} from "@/features/gig/gigSlice";
+
 const SocketContext = createContext(null);
 
 // Android emulator: 10.0.2.2 | Real device: your local IP
@@ -31,127 +38,86 @@ export const SocketProvider = ({ children }) => {
 
   const connect = async () => {
     const token = await AsyncStorage.getItem("token");
-    if (!token) {
-      console.warn("[Socket] No token – skip connect");
-      return;
-    }
-    if (socketRef.current?.connected) return;
-
-    // clean old instance
-    if (socketRef.current) {
-      socketRef.current.removeAllListeners();
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
+    if (!token || socketRef.current?.connected) return;
 
     socketRef.current = io(SOCKET_URL, {
-      auth: { token, role: "passenger" },
-      transports: ["websocket", "polling"],
+      auth: { token },
+      transports: ["websocket"],
       reconnection: true,
       reconnectionDelay: 2000,
-      reconnectionDelayMax: 10000,
-      reconnectionAttempts: 30,
-      timeout: 20000,
-      forceNew: true,
+      reconnectionAttempts: 8,
     });
 
-    const s = socketRef.current;
-
-    s.on("connect", () => {
+    socketRef.current.on("connect", () => {
       setConnected(true);
-      console.log("[Socket] Passenger connected:", s.id);
+      console.log("[Socket] Connected:", socketRef.current.id);
     });
 
-    s.on("connect_error", (err) => {
-      setConnected(false);
-      console.warn("[RubelSocket] Passenger connect_error:", err.message);
+    socketRef.current.on("connect_error", (err) => {
+      console.warn("[Socket] Connection error:", err.message);
     });
 
-    s.on("disconnect", (reason) => {
+    socketRef.current.on("disconnect", (reason) => {
       setConnected(false);
-      console.log("[Socket] Passenger disconnected:", reason);
-      if (reason === "io server disconnect") {
-        s.connect();
+      console.log("[Socket] Disconnected:", reason);
+    });
+
+    // ========== RIDE events (existing) ==========
+    socketRef.current.on("ride:driver_found", (data) => {
+      dispatch(setDriver(data.driver));
+      dispatch(updateRideStatus("accepted"));
+    });
+    socketRef.current.on("ride:driver_location", (data) => {
+      dispatch(updateDriverLocation(data.location));
+      dispatch(updateETA(data.eta));
+    });
+    socketRef.current.on("ride:driver_arrived", () => {
+      dispatch(updateRideStatus("pickup"));
+    });
+    socketRef.current.on("ride:started", () => {
+      dispatch(updateRideStatus("ongoing"));
+    });
+    socketRef.current.on("ride:completed", () => {
+      dispatch(updateRideStatus("completed"));
+    });
+    socketRef.current.on("ride:passenger_cancelled", () => {
+      dispatch(updateRideStatus("cancelled"));
+    });
+    socketRef.current.on("ride:no_drivers", () => {
+      dispatch(updateRideStatus("no_drivers"));
+    });
+
+    // ========== GIG events (new) ==========
+    socketRef.current.on("gig:quotes_ready", (payload) => {
+      console.log("[Socket] gig:quotes_ready", payload?.jobId);
+      if (payload?.quotes?.length) {
+        // Screens also listen & enrich photos, but we can dispatch raw here
+        dispatch(receiveQuotes(payload.quotes));
       }
     });
 
-    // ───── Ride lifecycle ─────
-    s.on("ride:driver_found", (data) => {
-      console.log("[Socket] driver_found", data);
-      if (data?.driver) dispatch(setDriver(data.driver));
-      if (data?.ride) dispatch(setCurrentRide(data.ride));
-      dispatch(updateRideStatus("accepted"));
-    });
-
-    s.on("ride:driver_location", (data) => {
-      if (data?.location) dispatch(updateDriverLocation(data.location));
-      if (data?.eta != null) dispatch(updateETA(data.eta));
-    });
-
-    s.on("ride:driver_arrived", (data) => {
-      console.log("[Socket] driver_arrived");
-      if (data?.ride) dispatch(setCurrentRide(data.ride));
-      dispatch(updateRideStatus("pickup"));
-    });
-
-    s.on("ride:started", (data) => {
-      console.log("[Socket] ride started");
-      if (data?.ride) dispatch(setCurrentRide(data.ride));
-      dispatch(updateRideStatus("ongoing"));
-    });
-
-    s.on("ride:completed", (data) => {
-      console.log("[Socket] ride completed");
-      if (data?.ride) dispatch(setCurrentRide(data.ride));
-      dispatch(updateRideStatus("completed"));
-    });
-
-    s.on("ride:cancelled", (data) => {
-      console.log("[Socket] ride cancelled", data);
-      dispatch(updateRideStatus("cancelled"));
-    });
-
-    s.on("ride:passenger_cancelled", () => {
-      dispatch(updateRideStatus("cancelled"));
-    });
-
-    s.on("ride:no_drivers", () => {
-      console.log("[Socket] no drivers");
-      dispatch(updateRideStatus("no_drivers"));
+    socketRef.current.on("gig:booking_status", (payload) => {
+      console.log("[Socket] gig:booking_status", payload?.bookingId, payload?.status);
+      if (payload?.status) {
+        dispatch(updateBookingStatus(payload.status));
+      }
+      if (payload?.booking) {
+        dispatch(setBookingFromSocket(payload.booking));
+      }
     });
   };
 
   const disconnect = () => {
-    if (socketRef.current) {
-      socketRef.current.removeAllListeners();
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
+    socketRef.current?.disconnect();
+    socketRef.current = null;
     setConnected(false);
   };
 
-  const emit = (event, data) => {
-    if (!socketRef.current?.connected) {
-      console.warn("[Socket] emit skipped – not connected:", event);
-      return;
-    }
-    socketRef.current.emit(event, data);
-  };
-
-  // cleanup on unmount
-  useEffect(() => {
-    return () => disconnect();
-  }, []);
+  const emit = (event, data) => socketRef.current?.emit(event, data);
 
   return (
     <SocketContext.Provider
-      value={{
-        connected,
-        connect,
-        disconnect,
-        emit,
-        socket: socketRef,
-      }}
+      value={{ connected, connect, disconnect, emit, socket: socketRef }}
     >
       {children}
     </SocketContext.Provider>
@@ -159,3 +125,4 @@ export const SocketProvider = ({ children }) => {
 };
 
 export const useSocket = () => useContext(SocketContext);
+

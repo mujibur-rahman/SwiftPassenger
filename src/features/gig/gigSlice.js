@@ -5,16 +5,16 @@ const initialState = {
     answers: {}, // { [questionId]: optionId }
     contact: null, // { fullName, mobile, email, address, suburb, postcode, notes, photos }
 
-    job: null, // posted job snapshot: { serviceId, answers, contact, postedAt }
+    job: null, // full server job: { id, serviceId, answers, contact, status, quotes, createdAt }
     jobStatus: "idle", // idle | posted | waiting_quotes | quotes_ready
 
-    quotes: [], // [{ id, providerName, providerPhoto, rating, reviews, price, availability, distance, message }]
+    quotes: [], // from server or socket
     selectedQuoteId: null,
 
-    booking: null, // { quoteId, provider, price, scheduledAt, location, ... }
+    booking: null, // full server booking: { id, jobId, quoteId, provider, price, location, scheduledAt, status }
     bookingStatus: "idle", // idle | confirmed | on_the_way | arrived | started | completed
 
-    review: null, // { rating, text, tags }
+    review: null, // { id, rating, text, tags }
 };
 
 const gigSlice = createSlice({
@@ -44,41 +44,56 @@ const gigSlice = createSlice({
             state.contact = action.payload;
         },
 
-        // জব পোস্ট — বর্তমান serviceId/answers/contact থেকে স্ন্যাপশট তৈরি করে
-        postJob: (state) => {
-            state.job = {
-                serviceId: state.serviceId,
-                answers: state.answers,
-                contact: state.contact,
-                postedAt: new Date().toISOString(),
-            };
-            state.jobStatus = "posted";
-            state.quotes = [];
+        // API response থেকে job সেট (ReviewJobScreen থেকে)
+        postJob: (state, action) => {
+            // action.payload = full job object from server
+            const job = action.payload;
+            state.job = job;
+            state.jobStatus = job?.status || "posted";
+            state.quotes = job?.quotes || [];
         },
 
-        // কোট পাওয়ার অপেক্ষায় থাকলে সেট করা হয় (WaitingForQuotesScreen থেকে)
         setWaitingForQuotes: (state) => {
             if (state.jobStatus === "posted") {
                 state.jobStatus = "waiting_quotes";
             }
         },
 
+        // Socket বা polling থেকে quotes আসলে
         receiveQuotes: (state, action) => {
-            state.quotes = action.payload;
+            state.quotes = action.payload || [];
             state.jobStatus = "quotes_ready";
+            if (state.job) {
+                state.job.quotes = action.payload || [];
+                state.job.status = "quotes_ready";
+            }
         },
 
         selectQuote: (state, action) => {
             state.selectedQuoteId = action.payload;
         },
 
+        // API response থেকে booking সেট
         confirmBooking: (state, action) => {
-            state.booking = action.payload;
-            state.bookingStatus = "confirmed";
+            const booking = action.payload;
+            state.booking = booking;
+            state.bookingStatus = booking?.status || "confirmed";
         },
 
+        // Socket বা polling থেকে status আপডেট
         updateBookingStatus: (state, action) => {
-            state.bookingStatus = action.payload;
+            const status = action.payload;
+            state.bookingStatus = status;
+            if (state.booking) {
+                state.booking.status = status;
+            }
+        },
+
+        // Socket থেকে পুরো booking object আপডেট
+        setBookingFromSocket: (state, action) => {
+            const booking = action.payload;
+            state.booking = booking;
+            state.bookingStatus = booking?.status || state.bookingStatus;
         },
 
         submitReview: (state, action) => {
@@ -99,6 +114,7 @@ export const {
     selectQuote,
     confirmBooking,
     updateBookingStatus,
+    setBookingFromSocket,
     submitReview,
     resetGigJob,
 } = gigSlice.actions;
@@ -111,3 +127,5 @@ export const selectGigAnswers = (state) => state.gig.answers;
 export const selectGigQuotes = (state) => state.gig.quotes;
 export const selectSelectedQuote = (state) =>
     state.gig.quotes.find((q) => q.id === state.gig.selectedQuoteId) || null;
+export const selectGigJobId = (state) => state.gig.job?.id;
+export const selectGigBookingId = (state) => state.gig.booking?.id;

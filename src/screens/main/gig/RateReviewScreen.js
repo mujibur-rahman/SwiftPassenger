@@ -1,6 +1,6 @@
 // @/screens/main/gig/RateReviewScreen.js
 import React, { useState } from "react";
-import { View, Text, ScrollView, StatusBar } from "react-native";
+import { View, Text, ScrollView, StatusBar, Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
@@ -8,31 +8,34 @@ import Button from "@/components/ui/Button";
 import RatingReview from "@/components/gig/RatingReview";
 import { ProviderAvatar } from "@/components/gig/QuoteCard";
 import { submitReview, resetGigJob, selectGig, selectSelectedQuote } from "@/features/gig/gigSlice";
-// import { useSubmitGigReviewMutation } from "@/features/gig/gigApi"; // wire in once backend is ready
+import { useSubmitGigReviewMutation } from "@/features/gig/gigApi";
 
 export default function RateReviewScreen({ navigation }) {
   const { isDark } = useTheme();
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
   const selectedQuote = useSelector(selectSelectedQuote);
-  // const [submitGigReview] = useSubmitGigReviewMutation();
+  const [submitGigReview, { isLoading: isSubmitting }] = useSubmitGigReviewMutation();
 
   const [rating, setRating] = useState(0);
   const [text, setText] = useState("");
   const [tags, setTags] = useState([]);
 
-  const handleSubmit = () => {
-    dispatch(
-      submitReview({
+  const handleSubmit = async () => {
+    try {
+      const review = await submitGigReview({
         quoteId: selectedQuote?.id,
+        bookingId: gig.booking?.id,
         rating,
         text,
         tags,
-      }),
-    );
-    // submitGigReview({...}) — enable once /gig/reviews is live
-    dispatch(resetGigJob());
-    navigation.reset({ index: 0, routes: [{ name: "Tabs" }] });
+      }).unwrap();
+      dispatch(submitReview(review));
+      dispatch(resetGigJob());
+      navigation.reset({ index: 0, routes: [{ name: "Tabs" }] });
+    } catch (err) {
+      Alert.alert("Couldn't submit review", "Please try again.");
+    }
   };
 
   return (
@@ -71,7 +74,7 @@ export default function RateReviewScreen({ navigation }) {
       </ScrollView>
 
       <View className="px-5 pb-5">
-        <Button onPress={handleSubmit} disabled={rating === 0}>
+        <Button onPress={handleSubmit} disabled={rating === 0} loading={isSubmitting}>
           Submit Review
         </Button>
       </View>
