@@ -22,6 +22,8 @@ const ServiceCard = ({ job, onPress, iconSize = 28, className = "" }) => {
       navigation.navigate("FoodSearch");
     } else if (job.id === "3" || job.title === "Gig jobs") {
       navigation.navigate("GigCategories")
+    } else if (job.id === "6" || job.title === "Marketplace pickup") {
+      navigation.navigate("MarketplacePickup");
     } else {
       // অন্য সার্ভিস পরে
       Alert.alert("Coming soon", `${job.title} is coming soon`);

@@ -34,7 +34,7 @@ export default function JobPostedScreen({ navigation }) {
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       <Image
-        source={require("@assets/images/illustrations/order-success.png")}
+        source={require("@assets/images/gigs/lawn_mowing/status/order-success.jpg")}
         style={{ width: 220, height: 220, marginBottom: 24 }}
         resizeMode="contain"
       />

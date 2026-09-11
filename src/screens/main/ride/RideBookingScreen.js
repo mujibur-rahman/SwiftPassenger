@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Location from "expo-location";
-
+import { getCurrentLocationSafe } from "@/utils/getCurrentLocationSafe";
 import Button from "@/components/ui/Button";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import { useSocket } from "@/services/SocketContext";
@@ -111,41 +111,43 @@ export default function RideBookingScreen() {
   // Get current location on mount
   useEffect(() => {
     (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") return;
+      const coords = await getCurrentLocationSafe({
+        accuracy: Location.Accuracy.Balanced, // High often fails on emulator
+      });
 
-        const loc = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.High,
-        });
-        const coords = {
-          latitude: loc.coords.latitude,
-          longitude: loc.coords.longitude,
-        };
-        dispatch(setCurrentLocation(coords));
+      if (!coords) {
+        // Permission denied / services off / no mock GPS on emulator
+        // App continues — user can still search location manually
+        return;
+      }
 
-        if (!pickup) {
+      dispatch(setCurrentLocation(coords));
+
+      if (!pickup) {
+        try {
           const [addr] = await Location.reverseGeocodeAsync(coords);
           const address = addr
             ? `${addr.name || ""} ${addr.street || ""}, ${addr.city || ""}`.trim()
             : "Current Location";
           dispatch(setPickup({ coords, address }));
           setPickupInput(address);
+        } catch {
+          dispatch(setPickup({ coords, address: "Current Location" }));
+          setPickupInput("Current Location");
         }
-
-        mapRef.current?.animateToRegion(
-          {
-            ...coords,
-            latitudeDelta: 0.04,
-            longitudeDelta: 0.04,
-          },
-          500,
-        );
-      } catch (e) {
-        console.log("Location error:", e);
       }
+
+      mapRef.current?.animateToRegion(
+        {
+          ...coords,
+          latitudeDelta: 0.04,
+          longitudeDelta: 0.04,
+        },
+        500
+      );
     })();
   }, [dispatch]);
+
 
   // Fit route when both points exist
   useEffect(() => {

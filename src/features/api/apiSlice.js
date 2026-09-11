@@ -45,6 +45,8 @@ export const apiSlice = createApi({
     "GigJob",
     "Quote",
     "Booking",
+    "MarketplacePickup",
+    "ActivePickup",
   ],
   endpoints: () => ({}), // empty – features will inject
 });

@@ -52,6 +52,19 @@ import JobTrackingScreen from "@/screens/main/gig/JobTrackingScreen";
 import JobCompletedScreen from "@/screens/main/gig/JobCompletedScreen";
 import RateReviewScreen from "@/screens/main/gig/RateReviewScreen";
 
+import MarketplacePickupScreen from "@/screens/main/marketplace/MarketplacePickupScreen";
+import MarketplacePickupLocationScreen from "@/screens/main/marketplace/MarketplacePickupLocationScreen";
+import MarketplaceSellerInfoScreen from "@/screens/main/marketplace/MarketplaceSellerInfoScreen";
+import MarketplaceItemDetailsScreen from "@/screens/main/marketplace/MarketplaceItemDetailsScreen";
+import MarketplaceDeliveryLocationScreen from "@/screens/main/marketplace/MarketplaceDeliveryLocationScreen";
+import MarketplaceEstimateScreen from "@/screens/main/marketplace/MarketplaceEstimateScreen";
+import MarketplaceConfirmScreen from "@/screens/main/marketplace/MarketplaceConfirmScreen";
+import MarketplaceSearchingScreen from "@/screens/main/marketplace/MarketplaceSearchingScreen";
+import MarketplaceTrackingScreen from "@/screens/main/marketplace/MarketplaceTrackingScreen";
+import MarketplaceCompletedScreen from "@/screens/main/marketplace/MarketplaceCompletedScreen";
+import MarketplaceRateScreen from "@/screens/main/marketplace/MarketplaceRateScreen";
+
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -218,6 +231,15 @@ export default function MainNavigator() {
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="SavedPlaces" component={SavedPlacesScreen} />
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+      <Stack.Screen
+        name="RideBooking"
+        component={RideBookingScreen}
+        options={{
+          presentation: "transparentModal",
+          cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
+        }}
+      />
 
       {/* Order Food flow — all stack screens under Main Navigator */}
       <Stack.Screen name="FoodSearch" component={FoodSearchScreen} />
@@ -259,15 +281,18 @@ export default function MainNavigator() {
       <Stack.Screen name="JobCompleted" component={JobCompletedScreen} />
       <Stack.Screen name="RateReview" component={RateReviewScreen} />
 
-      <Stack.Screen
-        name="RideBooking"
-        component={RideBookingScreen}
-        options={{
-          presentation: "transparentModal",
-          cardStyle: { backgroundColor: "transparent" },
-          cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter,
-        }}
-      />
+      {/* Marketplace flow */}
+      <Stack.Screen name="MarketplacePickup" component={MarketplacePickupScreen} />
+      <Stack.Screen name="MarketplacePickupLocation" component={MarketplacePickupLocationScreen} />
+      <Stack.Screen name="MarketplaceSellerInfo" component={MarketplaceSellerInfoScreen} />
+      <Stack.Screen name="MarketplaceItemDetails" component={MarketplaceItemDetailsScreen} />
+      <Stack.Screen name="MarketplaceDeliveryLocation" component={MarketplaceDeliveryLocationScreen} />
+      <Stack.Screen name="MarketplaceEstimate" component={MarketplaceEstimateScreen} />
+      <Stack.Screen name="MarketplaceConfirm" component={MarketplaceConfirmScreen} />
+      <Stack.Screen name="MarketplaceSearching" component={MarketplaceSearchingScreen} />
+      <Stack.Screen name="MarketplaceTracking" component={MarketplaceTrackingScreen} />
+      <Stack.Screen name="MarketplaceCompleted" component={MarketplaceCompletedScreen} />
+      <Stack.Screen name="MarketplaceRate" component={MarketplaceRateScreen} />
     </Stack.Navigator>
   );
 }

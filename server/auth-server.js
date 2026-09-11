@@ -816,6 +816,158 @@ app.post("/gig/reviews", (req, res) => {
   return res.status(201).json(review);
 });
 
+// ========== MARKETPLACE PICKUP MOCK ==========
+let marketplacePickups = [];
+let marketplacePickupIdCounter = 1;
+
+const FAKE_MARKETPLACE_DRIVERS = [
+  { id: "d1", name: "Alex Rivera", vehicle: "Toyota Corolla · ABC-123" },
+  { id: "d2", name: "Sam Chen", vehicle: "Honda Civic · XYZ-789" },
+];
+
+function progressMarketplacePickup(pickupId) {
+  const STEPS = [
+    "searching",
+    "driver_assigned",
+    "driver_to_seller",
+    "arrived_seller",
+    "item_picked",
+    "on_the_way",
+    "arrived_customer",
+    "delivered",
+    "completed",
+  ];
+
+  // Delays from create time (ms)
+  const DELAYS = [3000, 8000, 13000, 18000, 23000, 28000, 33000, 38000];
+
+  STEPS.slice(1).forEach((status, i) => {
+    setTimeout(() => {
+      const pickup = marketplacePickups.find((p) => p.id === pickupId);
+      if (!pickup) return;
+      if (["cancelled", "completed"].includes(pickup.status)) return;
+
+      // Always advance to this step if we haven't reached it yet
+      const currentIdx = STEPS.indexOf(pickup.status);
+      const nextIdx = STEPS.indexOf(status);
+      if (nextIdx <= currentIdx) return;
+
+      pickup.status = status;
+      if (status === "driver_assigned" && !pickup.driver) {
+        pickup.driver =
+          FAKE_MARKETPLACE_DRIVERS[Math.floor(Math.random() * FAKE_MARKETPLACE_DRIVERS.length)];
+      }
+
+      console.log(`Marketplace pickup #${pickupId} → ${status}`);
+
+      if (typeof io !== "undefined") {
+        io.emit("marketplace:pickup:status", {
+          pickupId: pickup.id,
+          status: pickup.status,
+          pickup,
+        });
+        if (status === "driver_assigned") {
+          io.emit("marketplace:pickup:driver_assigned", {
+            pickupId: pickup.id,
+            status: "driver_assigned",
+            driver: pickup.driver,
+            pickup,
+          });
+        }
+      }
+    }, DELAYS[i] || (i + 1) * 5000);
+  });
+}
+
+// GET options
+app.get("/marketplace/pickup/options", (req, res) => {
+  return res.json([
+    { id: "opt1", title: "Local marketplace / bazaar", subtitle: "Collect from a stall or shop" },
+    { id: "opt2", title: "Online seller meetup", subtitle: "Facebook / Marketplace seller" },
+  ]);
+});
+
+// POST estimate
+app.post("/marketplace/pickup/estimate", (req, res) => {
+  const { sellerAddress, deliveryAddress } = req.body || {};
+  // Simple mock fare
+  const distanceKm = 4.2;
+  const fare = Math.max(8, Math.round(distanceKm * 2.5 * 10) / 10);
+  return res.json({
+    fare,
+    distanceKm,
+    durationMin: Math.round(distanceKm * 3.5),
+    currency: "$",
+  });
+});
+
+// POST request
+app.post("/marketplace/pickup/request", (req, res) => {
+  const body = req.body || {};
+  if (!body.sellerName || !body.itemDescription) {
+    return res.status(400).json({ message: "sellerName and itemDescription are required" });
+  }
+
+  const pickup = {
+    id: marketplacePickupIdCounter++,
+    ...body,
+    status: "searching",
+    driver: null,
+    createdAt: new Date().toISOString(),
+  };
+
+  marketplacePickups.push(pickup);
+  progressMarketplacePickup(pickup.id);
+
+  console.log("Marketplace pickup created →", pickup.id);
+  return res.status(201).json(pickup);
+});
+
+// GET active
+app.get("/marketplace/pickup/active", (req, res) => {
+  const active = marketplacePickups.find(
+    (p) => !["completed", "cancelled", "delivered"].includes(p.status)
+  );
+  return res.json(active || null);
+});
+
+// GET by id
+app.get("/marketplace/pickup/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const pickup = marketplacePickups.find((p) => p.id === id);
+  if (!pickup) return res.status(404).json({ message: "Pickup not found" });
+  return res.json(pickup);
+});
+
+// POST cancel
+app.post("/marketplace/pickup/:id/cancel", (req, res) => {
+  const id = Number(req.params.id);
+  const pickup = marketplacePickups.find((p) => p.id === id);
+  if (!pickup) return res.status(404).json({ message: "Pickup not found" });
+  pickup.status = "cancelled";
+  return res.json(pickup);
+});
+
+// POST verify (optional)
+app.post("/marketplace/pickup/:id/verify", (req, res) => {
+  const id = Number(req.params.id);
+  const pickup = marketplacePickups.find((p) => p.id === id);
+  if (!pickup) return res.status(404).json({ message: "Pickup not found" });
+  pickup.verified = true;
+  return res.json(pickup);
+});
+
+// POST rating
+app.post("/marketplace/pickup/:id/rating", (req, res) => {
+  const id = Number(req.params.id);
+  const { rating } = req.body || {};
+  const pickup = marketplacePickups.find((p) => p.id === id);
+  if (!pickup) return res.status(404).json({ message: "Pickup not found" });
+  if (!rating) return res.status(400).json({ message: "rating is required" });
+  pickup.rating = rating;
+  return res.status(201).json({ id, rating, pickupId: id });
+});
+
 server.listen(3000, "0.0.0.0", () => {
   console.log("✅ Auth server + Socket.IO running on http://0.0.0.0:3000");
 });
