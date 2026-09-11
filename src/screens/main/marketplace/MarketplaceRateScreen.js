@@ -1,12 +1,12 @@
-// @/screens/main/marketplace/MarketplaceRateScreen.js
 import React, { useState } from "react";
-import { View, Text, StatusBar, Alert, TouchableOpacity } from "react-native";
+import { View, Text, StatusBar, Alert, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
+import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   selectActivePickupId,
   resetMarketplacePickup,
@@ -43,11 +43,15 @@ export default function MarketplaceRateScreen() {
       </View>
 
       <View className="flex-1 items-center px-6 pt-10">
-        <Text className="mb-2 text-center text-xl font-inter-bold text-foreground">
+        <Image
+          source={{ uri: DUMMY.driverAvatar }}
+          style={{ width: 72, height: 72, borderRadius: 36, marginBottom: 16 }}
+        />
+        <Text className="mb-1 text-center text-xl font-inter-bold text-foreground">
           How was your experience?
         </Text>
         <Text className="mb-8 text-center text-sm text-foreground-muted">
-          Your feedback helps us improve.
+          Rate your driver and the pickup service.
         </Text>
 
         <View className="mb-10 flex-row gap-3">

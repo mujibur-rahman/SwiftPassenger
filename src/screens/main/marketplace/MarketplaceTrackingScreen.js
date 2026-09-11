@@ -1,4 +1,3 @@
-// @/screens/main/marketplace/MarketplaceTrackingScreen.js
 import React, { useEffect, useRef } from "react";
 import {
   View,
@@ -8,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +15,8 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
-import Avatar from "@/components/ui/Avatar";
 import InfoCard from "@/components/marketplace/InfoCard";
+import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   selectActivePickupId,
   setTrackingStatus,
@@ -49,7 +49,6 @@ const TITLES = {
   arrived_customer: "Arrived at Your Location",
   delivered: "Delivered",
   completed: "Completed",
-  searching: "Finding a driver",
 };
 
 export default function MarketplaceTrackingScreen() {
@@ -62,7 +61,6 @@ export default function MarketplaceTrackingScreen() {
   const { socket, connected } = useSocket() || {};
   const completedNavRef = useRef(false);
 
-  // Always poll during tracking (socket can miss events)
   const {
     data: pickup,
     isLoading,
@@ -76,7 +74,6 @@ export default function MarketplaceTrackingScreen() {
   });
 
   const [verifyPickup, { isLoading: verifying }] = useVerifyMarketplacePickupMutation();
-
   const status = pickup?.status || trackingStatus || "driver_assigned";
   const stepIndex = STEPS.indexOf(status);
 
@@ -88,34 +85,24 @@ export default function MarketplaceTrackingScreen() {
     if (completedNavRef.current) return;
     if (status === "completed" || status === "delivered") {
       completedNavRef.current = true;
-      const t = setTimeout(() => {
+      setTimeout(() => {
         try {
           navigation.replace("MarketplaceCompleted");
         } catch {
           navigation.navigate("MarketplaceCompleted");
         }
       }, 50);
-      return () => clearTimeout(t);
     }
   }, [status, navigation]);
 
   useEffect(() => {
     if (!socket?.current || !pickupId) return;
     const handler = (payload) => {
-      if (
-        payload?.pickupId != null &&
-        String(payload.pickupId) !== String(pickupId)
-      ) {
-        return;
-      }
+      if (payload?.pickupId != null && String(payload.pickupId) !== String(pickupId)) return;
       if (payload?.status) dispatch(setTrackingStatus(payload.status));
     };
     socket.current.on("marketplace:pickup:status", handler);
-    socket.current.on("marketplace:pickup:driver_assigned", handler);
-    return () => {
-      socket.current?.off("marketplace:pickup:status", handler);
-      socket.current?.off("marketplace:pickup:driver_assigned", handler);
-    };
+    return () => socket.current?.off("marketplace:pickup:status", handler);
   }, [socket, pickupId, dispatch]);
 
   const handleVerify = async () => {
@@ -152,43 +139,61 @@ export default function MarketplaceTrackingScreen() {
         {isLoading && !pickup ? (
           <View className="items-center py-16">
             <ActivityIndicator size="large" color={colors?.primary} />
-            <Text className="mt-3 text-sm text-foreground-muted">Loading pickup…</Text>
           </View>
         ) : (
           <>
+            {/* Map / status illustration */}
+            <View className="mb-4 overflow-hidden rounded-2xl border border-border">
+              <Image
+                source={{
+                  uri:
+                    status === "arrived_seller" || status === "item_picked"
+                      ? DUMMY.arrivedStore
+                      : status === "arrived_customer" || status === "delivered"
+                        ? DUMMY.deliveryHand
+                        : DUMMY.mapRoute,
+                }}
+                style={{ width: "100%", height: 160 }}
+                resizeMode="cover"
+              />
+            </View>
+
+            {/* Hero for key states */}
             {(status === "item_picked" || status === "arrived_seller") && (
-              <View className="mb-5 items-center rounded-3xl border border-border bg-card py-8">
+              <View className="mb-4 items-center rounded-2xl border border-border bg-card py-6">
                 <View
-                  className={`mb-3 h-16 w-16 items-center justify-center rounded-full ${
+                  className={`mb-2 h-14 w-14 items-center justify-center rounded-full ${
                     status === "item_picked" ? "bg-success/20" : "bg-primary/15"
                   }`}
                 >
                   <Icon
                     name={status === "item_picked" ? "check-circle" : "map-marker-check"}
-                    size={36}
+                    size={32}
                     color={
                       status === "item_picked"
                         ? colors?.success || "#34D399"
-                        : colors?.primary || "#38BDF8"
+                        : colors?.primary
                     }
                   />
                 </View>
                 <Text className="text-lg font-inter-bold text-foreground">
-                  {status === "item_picked"
-                    ? "Item Picked Up!"
-                    : "Your driver has arrived"}
+                  {status === "item_picked" ? "Item Picked Up!" : "Driver has arrived"}
                 </Text>
-                <Text className="mt-1 px-6 text-center text-sm text-foreground-muted">
+                <Text className="mt-1 px-4 text-center text-sm text-foreground-muted">
                   {status === "item_picked"
-                    ? "Your driver has collected the item from the seller."
+                    ? "Your driver collected the item from the seller."
                     : "They are at the pickup location."}
                 </Text>
               </View>
             )}
 
+            {/* Driver card */}
             {driver && (
               <View className="mb-4 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
-                <Avatar name={driver.name || "Driver"} size="md" />
+                <Image
+                  source={{ uri: DUMMY.driverAvatar }}
+                  style={{ width: 52, height: 52, borderRadius: 26 }}
+                />
                 <View className="flex-1">
                   <Text className="text-base font-inter-bold text-foreground">
                     {driver.name || "Driver"}
@@ -199,39 +204,30 @@ export default function MarketplaceTrackingScreen() {
                     </Text>
                   ) : null}
                 </View>
-                <View className="flex-row gap-2">
-                  <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full bg-background-muted">
-                    <Icon name="phone" size={18} color={colors?.primary || "#38BDF8"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full bg-background-muted">
-                    <Icon name="message-text" size={18} color={colors?.primary || "#38BDF8"} />
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full bg-background-muted">
+                  <Icon name="phone" size={18} color={colors?.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full bg-background-muted">
+                  <Icon name="message-text" size={18} color={colors?.primary} />
+                </TouchableOpacity>
               </View>
             )}
 
             <InfoCard
-              icon="store"
+              imageUri={DUMMY.sellerShop}
               label="Pickup"
-              title={draft.sellerName || pickup?.sellerName || "Seller"}
-              subtitle={
-                draft.sellerAddress?.address ||
-                pickup?.sellerAddress?.address ||
-                ""
-              }
+              title={draft.sellerName || pickup?.sellerName}
+              subtitle={draft.sellerAddress?.address}
               className="mb-3"
             />
             <InfoCard
               icon="map-marker"
               label="Delivery"
-              title={
-                draft.deliveryAddress?.address ||
-                pickup?.deliveryAddress?.address ||
-                "—"
-              }
-              className="mb-5"
+              title={draft.deliveryAddress?.address}
+              className="mb-4"
             />
 
+            {/* Progress */}
             <View className="mb-5 rounded-2xl border border-border bg-card p-4">
               <Text className="mb-3 text-xs font-inter-medium uppercase text-foreground-muted">
                 Progress
@@ -240,19 +236,13 @@ export default function MarketplaceTrackingScreen() {
                 const done = stepIndex >= 0 && idx <= stepIndex;
                 return (
                   <View key={step} className="mb-2.5 flex-row items-center gap-3">
-                    <View
-                      className={`h-2.5 w-2.5 rounded-full ${
-                        done ? "bg-primary" : "bg-border"
-                      }`}
-                    />
+                    <View className={`h-2.5 w-2.5 rounded-full ${done ? "bg-primary" : "bg-border"}`} />
                     <Text
                       className={`text-sm font-inter ${
-                        done
-                          ? "font-inter-semibold text-foreground"
-                          : "text-foreground-muted"
+                        done ? "font-inter-semibold text-foreground" : "text-foreground-muted"
                       }`}
                     >
-                      {TITLES[step] || step}
+                      {TITLES[step]}
                     </Text>
                   </View>
                 );
@@ -262,14 +252,9 @@ export default function MarketplaceTrackingScreen() {
             {status === "arrived_seller" && (
               <View className="mb-4">
                 <Text className="mb-3 text-center text-sm text-foreground-muted">
-                  Please confirm the item and order details with the seller.
+                  Confirm the item and order details with the seller.
                 </Text>
-                <Button
-                  onPress={handleVerify}
-                  loading={verifying}
-                  disabled={verifying}
-                  fullWidth
-                >
+                <Button onPress={handleVerify} loading={verifying} disabled={verifying} fullWidth>
                   Confirm Pickup
                 </Button>
               </View>
@@ -286,18 +271,13 @@ export default function MarketplaceTrackingScreen() {
             )}
 
             {isError ? (
-              <View className="items-center">
-                <Text className="mb-2 text-sm text-error">Connection problem</Text>
-                <TouchableOpacity onPress={() => refetch()}>
-                  <Text className="text-sm font-inter-semibold text-primary">Retry</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity onPress={() => refetch()} className="items-center">
+                <Text className="text-sm text-error">Connection problem · Retry</Text>
+              </TouchableOpacity>
             ) : (
               <Text className="text-center text-xs text-foreground-muted">
                 {isFetching ? "Updating… " : ""}
-                {connected ? "Live updates on" : "Checking for updates…"}
-                {" · "}
-                {status}
+                {connected ? "Live" : "Polling"} · {status}
               </Text>
             )}
           </>

@@ -1,6 +1,13 @@
-// @/screens/main/marketplace/MarketplaceItemDetailsScreen.js
 import React, { useState } from "react";
-import { View, Text, ScrollView, StatusBar, Alert, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StatusBar,
+  Alert,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
@@ -9,6 +16,7 @@ import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import AppTextInput from "@/components/ui/AppTextInput";
 import StepProgress from "@/components/marketplace/StepProgress";
+import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   setDraftField,
   selectMarketplaceDraft,
@@ -26,13 +34,11 @@ export default function MarketplaceItemDetailsScreen() {
   const [approximateValue, setApproximateValue] = useState(draft.approximateValue || "");
   const [itemNotes, setItemNotes] = useState(draft.itemNotes || "");
 
-  const changeQty = (delta) => {
-    setItemQuantity((q) => Math.max(1, Math.min(99, (Number(q) || 1) + delta)));
-  };
+  const changeQty = (d) => setItemQuantity((q) => Math.max(1, Math.min(99, (Number(q) || 1) + d)));
 
   const handleNext = () => {
     if (!itemDescription.trim()) {
-      Alert.alert("Required", "Please describe the item to pick up.");
+      Alert.alert("Required", "Please describe the item.");
       return;
     }
     dispatch(setDraftField({ key: "itemDescription", value: itemDescription.trim() }));
@@ -57,10 +63,18 @@ export default function MarketplaceItemDetailsScreen() {
       >
         <StepProgress current={3} total={5} />
 
-        <Text className="mb-1 text-xl font-inter-bold text-foreground">What should we pick up?</Text>
-        <Text className="mb-5 text-sm font-inter text-foreground-muted">
-          Clear details help the driver collect the right item.
-        </Text>
+        {/* Product image placeholder */}
+        <View className="mb-5 items-center overflow-hidden rounded-2xl border border-border bg-card">
+          <Image
+            source={{ uri: DUMMY.itemProduct }}
+            style={{ width: "100%", height: 180 }}
+            resizeMode="cover"
+          />
+          <View className="w-full flex-row items-center justify-center gap-2 border-t border-border py-3">
+            <Icon name="camera-plus-outline" size={18} color={colors?.primary} />
+            <Text className="text-sm font-inter-medium text-primary">Add item photo (optional)</Text>
+          </View>
+        </View>
 
         <View className="mb-5 gap-3 rounded-2xl border border-border bg-card p-4">
           <AppTextInput
@@ -77,7 +91,7 @@ export default function MarketplaceItemDetailsScreen() {
                 onPress={() => changeQty(-1)}
                 className="h-10 w-10 items-center justify-center rounded-xl border border-border bg-background-muted"
               >
-                <Icon name="minus" size={18} color={colors?.foreground || "#F0F9FF"} />
+                <Icon name="minus" size={18} color={colors?.foreground} />
               </TouchableOpacity>
               <Text className="min-w-[28px] text-center text-lg font-inter-bold text-foreground">
                 {itemQuantity}
@@ -86,26 +100,26 @@ export default function MarketplaceItemDetailsScreen() {
                 onPress={() => changeQty(1)}
                 className="h-10 w-10 items-center justify-center rounded-xl border border-border bg-background-muted"
               >
-                <Icon name="plus" size={18} color={colors?.foreground || "#F0F9FF"} />
+                <Icon name="plus" size={18} color={colors?.foreground} />
               </TouchableOpacity>
             </View>
           </View>
 
           <AppTextInput
-            label="Category (optional)"
+            label="Category"
             value={itemCategory}
             onChangeText={setItemCategory}
             placeholder="Electronics, Fashion…"
           />
           <AppTextInput
-            label="Approximate value (optional)"
+            label="Approximate value"
             value={approximateValue}
             onChangeText={setApproximateValue}
             placeholder="e.g. 4500"
             keyboardType="numeric"
           />
           <AppTextInput
-            label="Special instructions (optional)"
+            label="Special instructions"
             value={itemNotes}
             onChangeText={setItemNotes}
             placeholder="Handle with care, check original box…"

@@ -1,4 +1,4 @@
-// @/screens/main/marketplace/MarketplacePickupScreen.js
+// Marketplace Pickup Home (mockup screen 1) — NOT app HomeScreen.js
 import React from "react";
 import {
   View,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -16,22 +17,23 @@ import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import { useGetMarketplacePickupOptionsQuery } from "@/features/marketplace/marketplacePickupApi";
 import { resetMarketplacePickup } from "@/features/marketplace/marketplacePickupSlice";
+import { DUMMY } from "@/components/marketplace/dummyAssets";
 
-const HOW_IT_WORKS = [
-  { icon: "map-marker", title: "Set locations", body: "Seller pickup & your delivery address" },
-  { icon: "package-variant", title: "Describe the item", body: "What to collect and any notes" },
-  { icon: "motorbike", title: "Driver handles it", body: "We find a driver to pick up & deliver" },
+const POPULAR = [
+  { id: "daraz", title: "Daraz", uri: DUMMY.daraz },
+  { id: "fb", title: "Facebook", uri: DUMMY.facebook },
+  { id: "ebay", title: "eBay", uri: DUMMY.ebay },
+  { id: "local", title: "Local Shops", uri: DUMMY.localShop },
 ];
 
 export default function MarketplacePickupScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { isDark, colors } = useTheme();
-
   const { data: options, isLoading, isError, refetch } =
     useGetMarketplacePickupOptionsQuery();
 
-  const handleStart = () => {
+  const start = () => {
     dispatch(resetMarketplacePickup());
     navigation.navigate("MarketplacePickupLocation");
   };
@@ -48,97 +50,80 @@ export default function MarketplacePickupScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Hero */}
-        <View className="mb-6 overflow-hidden rounded-3xl border border-border bg-card p-5">
-          <View className="mb-3 h-14 w-14 items-center justify-center rounded-2xl bg-primary/15">
-            <Icon name="storefront-outline" size={28} color={colors?.primary || "#38BDF8"} />
+        <View className="mb-5 overflow-hidden rounded-3xl border border-border bg-card">
+          <Image
+            source={{ uri: DUMMY.heroMarketplace }}
+            style={{ width: "100%", height: 140 }}
+            resizeMode="cover"
+          />
+          <View className="p-5">
+            <Text className="text-xl font-inter-bold text-foreground">
+              Need something from a marketplace?
+            </Text>
+            <Text className="mt-2 text-sm font-inter leading-5 text-foreground-secondary">
+              We’ll pick it up from the seller and deliver it to you.
+            </Text>
+            <Button className="mt-4" onPress={start} fullWidth>
+              Start Marketplace Pickup
+            </Button>
           </View>
-          <Text className="text-xl font-inter-bold text-foreground">
-            Need something from a marketplace?
-          </Text>
-          <Text className="mt-2 text-sm font-inter leading-5 text-foreground-secondary">
-            We’ll send a driver to collect your item from a seller and bring it to you.
-          </Text>
-          <Button className="mt-5" onPress={handleStart} fullWidth>
-            Start Marketplace Pickup
-          </Button>
         </View>
 
-        {/* How it works */}
-        <Text className="mb-3 text-sm font-inter-semibold text-foreground">How it works</Text>
-        <View className="mb-6 gap-3">
-          {HOW_IT_WORKS.map((step, i) => (
-            <View
-              key={step.title}
-              className="flex-row items-center gap-3 rounded-2xl border border-border bg-card p-3.5"
+        {/* Popular marketplaces */}
+        <Text className="mb-3 text-sm font-inter-semibold text-foreground">
+          Popular Marketplaces
+        </Text>
+        <View className="mb-6 flex-row flex-wrap justify-between gap-y-3">
+          {POPULAR.map((p) => (
+            <TouchableOpacity
+              key={p.id}
+              onPress={start}
+              activeOpacity={0.85}
+              className="w-[23%] items-center"
             >
-              <View className="h-10 w-10 items-center justify-center rounded-xl bg-background-muted">
-                <Icon name={step.icon} size={20} color={colors?.primary || "#38BDF8"} />
-              </View>
-              <View className="flex-1">
-                <Text className="text-sm font-inter-semibold text-foreground">
-                  {i + 1}. {step.title}
-                </Text>
-                <Text className="mt-0.5 text-xs font-inter text-foreground-muted">
-                  {step.body}
-                </Text>
-              </View>
-            </View>
+              <Image
+                source={{ uri: p.uri }}
+                style={{ width: 56, height: 56, borderRadius: 16 }}
+              />
+              <Text
+                className="mt-1.5 text-center text-[11px] font-inter-medium text-foreground-muted"
+                numberOfLines={1}
+              >
+                {p.title}
+              </Text>
+            </TouchableOpacity>
           ))}
         </View>
 
-        {/* Options from API */}
-        <Text className="mb-3 text-sm font-inter-semibold text-foreground">
-          Popular options
-        </Text>
-
+        {/* API options */}
+        <Text className="mb-3 text-sm font-inter-semibold text-foreground">Options</Text>
         {isLoading && (
-          <View className="items-center py-6">
-            <ActivityIndicator color={colors?.primary} />
-          </View>
+          <ActivityIndicator color={colors?.primary} className="py-4" />
         )}
-
         {isError && (
-          <View className="mb-4 items-center rounded-2xl border border-border bg-card p-4">
-            <Text className="mb-2 text-sm text-error">Couldn’t load options</Text>
-            <TouchableOpacity onPress={() => refetch()}>
-              <Text className="text-sm font-inter-semibold text-primary">Retry</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => refetch()} className="mb-3">
+            <Text className="text-sm text-error">Couldn’t load — tap to retry</Text>
+          </TouchableOpacity>
         )}
-
-        {!isLoading && !isError && (!options || options.length === 0) && (
-          <Text className="mb-4 text-sm text-foreground-muted">
-            No options available right now. You can still start a new pickup.
-          </Text>
-        )}
-
-        {options?.length > 0 && (
-          <View className="gap-3">
-            {options.map((opt) => (
-              <TouchableOpacity
-                key={opt.id}
-                activeOpacity={0.85}
-                onPress={handleStart}
-                className="flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4"
-              >
-                <View className="h-11 w-11 items-center justify-center rounded-xl bg-background-muted">
-                  <Icon name="store" size={22} color={colors?.primary || "#38BDF8"} />
-                </View>
-                <View className="flex-1">
-                  <Text className="text-base font-inter-semibold text-foreground">
-                    {opt.title}
-                  </Text>
-                  {opt.subtitle ? (
-                    <Text className="mt-0.5 text-sm font-inter text-foreground-muted">
-                      {opt.subtitle}
-                    </Text>
-                  ) : null}
-                </View>
-                <Icon name="chevron-right" size={20} color={colors?.foregroundMuted || "#7DD3FC"} />
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
+        {options?.map((opt) => (
+          <TouchableOpacity
+            key={opt.id}
+            onPress={start}
+            activeOpacity={0.85}
+            className="mb-3 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4"
+          >
+            <View className="h-11 w-11 items-center justify-center rounded-xl bg-background-muted">
+              <Icon name="storefront-outline" size={22} color={colors?.primary} />
+            </View>
+            <View className="flex-1">
+              <Text className="text-base font-inter-semibold text-foreground">{opt.title}</Text>
+              {opt.subtitle ? (
+                <Text className="mt-0.5 text-sm text-foreground-muted">{opt.subtitle}</Text>
+              ) : null}
+            </View>
+            <Icon name="chevron-right" size={20} color={colors?.foregroundMuted} />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );

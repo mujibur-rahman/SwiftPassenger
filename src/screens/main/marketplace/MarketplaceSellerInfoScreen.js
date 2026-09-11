@@ -1,6 +1,5 @@
-// @/screens/main/marketplace/MarketplaceSellerInfoScreen.js
 import React, { useState } from "react";
-import { View, Text, ScrollView, StatusBar, Alert } from "react-native";
+import { View, Text, ScrollView, StatusBar, Alert, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
@@ -8,7 +7,7 @@ import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import AppTextInput from "@/components/ui/AppTextInput";
 import StepProgress from "@/components/marketplace/StepProgress";
-import InfoCard from "@/components/marketplace/InfoCard";
+import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   setDraftField,
   selectMarketplaceDraft,
@@ -53,16 +52,22 @@ export default function MarketplaceSellerInfoScreen() {
       >
         <StepProgress current={2} total={5} />
 
-        {draft.sellerAddress?.address ? (
-          <InfoCard
-            icon="map-marker"
-            label="Pickup location"
-            title={draft.sellerAddress.address}
-            className="mb-5"
+        {/* Seller preview card */}
+        <View className="mb-5 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
+          <Image
+            source={{ uri: DUMMY.sellerShop }}
+            style={{ width: 56, height: 56, borderRadius: 14 }}
           />
-        ) : null}
+          <View className="flex-1">
+            <Text className="text-base font-inter-semibold text-foreground">
+              {sellerName || "Seller / Shop"}
+            </Text>
+            <Text className="mt-0.5 text-sm text-foreground-muted" numberOfLines={1}>
+              {draft.sellerAddress?.address || "Pickup location"}
+            </Text>
+          </View>
+        </View>
 
-        <Text className="mb-3 text-sm font-inter-semibold text-foreground">Seller / Shop</Text>
         <View className="mb-5 gap-3 rounded-2xl border border-border bg-card p-4">
           <AppTextInput
             label="Seller / shop name"
@@ -71,19 +76,19 @@ export default function MarketplaceSellerInfoScreen() {
             placeholder="e.g. ABC Electronics"
           />
           <AppTextInput
-            label="Marketplace / source (optional)"
+            label="Marketplace / source"
             value={marketplaceSource}
             onChangeText={setMarketplaceSource}
             placeholder="Facebook Marketplace, Daraz…"
           />
           <AppTextInput
-            label="Order / reference no. (optional)"
+            label="Order / reference no."
             value={orderReference}
             onChangeText={setOrderReference}
             placeholder="MP-102938"
           />
           <AppTextInput
-            label="Seller phone (optional)"
+            label="Seller phone"
             value={sellerPhone}
             onChangeText={setSellerPhone}
             placeholder="01XXXXXXXXX"
@@ -91,12 +96,9 @@ export default function MarketplaceSellerInfoScreen() {
           />
         </View>
 
-        <Text className="mb-3 text-sm font-inter-semibold text-foreground">
-          Pickup instructions
-        </Text>
         <View className="mb-6 rounded-2xl border border-border bg-card p-4">
           <AppTextInput
-            label="Notes for driver"
+            label="Pickup instructions"
             value={pickupInstructions}
             onChangeText={setPickupInstructions}
             placeholder="Call before arrival, ask for Rahman…"

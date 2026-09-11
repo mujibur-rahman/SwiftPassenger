@@ -1,6 +1,5 @@
-// @/screens/main/marketplace/MarketplaceDeliveryLocationScreen.js
 import React, { useState } from "react";
-import { View, Text, StatusBar, Alert, ScrollView } from "react-native";
+import { View, Text, StatusBar, Alert, ScrollView, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
@@ -10,6 +9,7 @@ import Button from "@/components/ui/Button";
 import AppTextInput from "@/components/ui/AppTextInput";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
 import StepProgress from "@/components/marketplace/StepProgress";
+import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   setDeliveryAddress,
   setDraftField,
@@ -22,7 +22,6 @@ export default function MarketplaceDeliveryLocationScreen() {
   const { isDark, colors } = useTheme();
   const draft = useSelector(selectMarketplaceDraft);
   const currentLocation = useSelector((s) => s.location?.currentLocation);
-
   const [text, setText] = useState(draft.deliveryAddress?.address || "");
   const [receiverPhone, setReceiverPhone] = useState(draft.receiverPhone || "");
 
@@ -44,13 +43,7 @@ export default function MarketplaceDeliveryLocationScreen() {
       return;
     }
     if (!draft.deliveryAddress?.latitude && text.trim()) {
-      dispatch(
-        setDeliveryAddress({
-          address: text.trim(),
-          latitude: null,
-          longitude: null,
-        })
-      );
+      dispatch(setDeliveryAddress({ address: text.trim(), latitude: null, longitude: null }));
     }
     dispatch(setDraftField({ key: "receiverPhone", value: receiverPhone.trim() }));
     navigation.navigate("MarketplaceEstimate");
@@ -70,15 +63,15 @@ export default function MarketplaceDeliveryLocationScreen() {
       >
         <StepProgress current={4} total={5} />
 
-        {/* Route preview */}
-        <View className="mb-5 rounded-2xl border border-border bg-card p-4">
+        {/* Route card */}
+        <View className="mb-4 rounded-2xl border border-border bg-card p-4">
           <View className="flex-row items-start gap-3">
-            <View className="items-center">
+            <View className="items-center pt-1">
               <View className="h-3 w-3 rounded-full bg-primary" />
-              <View className="my-1 h-8 w-0.5 bg-border" />
-              <Icon name="map-marker" size={16} color={colors?.primary || "#38BDF8"} />
+              <View className="my-1 h-10 w-0.5 bg-border" />
+              <Icon name="map-marker" size={16} color={colors?.primary} />
             </View>
-            <View className="flex-1 gap-5">
+            <View className="flex-1 gap-4">
               <View>
                 <Text className="text-[11px] font-inter-medium uppercase text-foreground-muted">
                   Pickup
@@ -92,11 +85,19 @@ export default function MarketplaceDeliveryLocationScreen() {
                   Delivery
                 </Text>
                 <Text className="mt-0.5 text-sm font-inter text-foreground-secondary">
-                  Choose below
+                  {text || "Choose below"}
                 </Text>
               </View>
             </View>
           </View>
+        </View>
+
+        <View className="mb-4 overflow-hidden rounded-2xl border border-border">
+          <Image
+            source={{ uri: DUMMY.mapDelivery }}
+            style={{ width: "100%", height: 140 }}
+            resizeMode="cover"
+          />
         </View>
 
         <View className="mb-4 z-50">

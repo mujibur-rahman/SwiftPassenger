@@ -1,6 +1,5 @@
-// @/screens/main/marketplace/MarketplaceEstimateScreen.js
 import React, { useEffect } from "react";
-import { View, Text, StatusBar, ActivityIndicator, Alert, ScrollView } from "react-native";
+import { View, Text, StatusBar, ActivityIndicator, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
@@ -20,7 +19,6 @@ export default function MarketplaceEstimateScreen() {
   const dispatch = useDispatch();
   const { isDark, colors } = useTheme();
   const draft = useSelector(selectMarketplaceDraft);
-
   const [getEstimate, { data, isLoading, isError, error }] =
     useGetMarketplacePickupEstimateMutation();
 
@@ -38,14 +36,6 @@ export default function MarketplaceEstimateScreen() {
   useEffect(() => {
     fetchEstimate();
   }, []);
-
-  const handleNext = () => {
-    if (!data) {
-      Alert.alert("Please wait", "Fare estimate is not ready yet.");
-      return;
-    }
-    navigation.navigate("MarketplaceConfirm");
-  };
 
   return (
     <View className="flex-1 bg-background">
@@ -68,22 +58,20 @@ export default function MarketplaceEstimateScreen() {
           icon="home-map-marker"
           label="Delivery"
           title={draft.deliveryAddress?.address || "—"}
-          className="mb-6"
+          className="mb-5"
         />
 
         {isLoading && (
           <View className="items-center rounded-2xl border border-border bg-card py-12">
             <ActivityIndicator size="large" color={colors?.primary} />
-            <Text className="mt-3 text-sm font-inter text-foreground-muted">
-              Calculating fare…
-            </Text>
+            <Text className="mt-3 text-sm text-foreground-muted">Calculating fare…</Text>
           </View>
         )}
 
         {isError && (
           <View className="mb-4 items-center rounded-2xl border border-border bg-card p-5">
             <Text className="mb-2 text-center text-sm text-error">
-              {error?.data?.message || "Couldn’t get estimate. Check your connection."}
+              {error?.data?.message || "Couldn’t get estimate."}
             </Text>
             <Button variant="ghost" onPress={fetchEstimate}>
               Retry
@@ -97,30 +85,32 @@ export default function MarketplaceEstimateScreen() {
               Estimated fare
             </Text>
             <Text className="mt-1 text-4xl font-inter-bold text-foreground">
-              {data.currency || "৳"}
+              {data.currency === "$" ? "৳" : data.currency || "৳"}
               {data.fare}
             </Text>
             <View className="mt-4 flex-row flex-wrap gap-4">
               <View className="flex-row items-center gap-1.5">
-                <Icon name="map-marker-distance" size={16} color={colors?.foregroundMuted || "#7DD3FC"} />
-                <Text className="text-sm font-inter text-foreground-secondary">
-                  {data.distanceKm} km
-                </Text>
+                <Icon name="map-marker-distance" size={16} color={colors?.foregroundMuted} />
+                <Text className="text-sm text-foreground-secondary">{data.distanceKm} km</Text>
               </View>
               <View className="flex-row items-center gap-1.5">
-                <Icon name="clock-outline" size={16} color={colors?.foregroundMuted || "#7DD3FC"} />
-                <Text className="text-sm font-inter text-foreground-secondary">
-                  ~{data.durationMin} min
-                </Text>
+                <Icon name="clock-outline" size={16} color={colors?.foregroundMuted} />
+                <Text className="text-sm text-foreground-secondary">~{data.durationMin} min</Text>
               </View>
             </View>
-            <Text className="mt-4 text-xs font-inter leading-4 text-foreground-muted">
-              Final fare may vary based on traffic and actual distance.
-            </Text>
+            <View className="mt-4 rounded-xl bg-background-muted px-3 py-2.5">
+              <Text className="text-xs font-inter leading-4 text-foreground-muted">
+                Final fare may vary based on traffic and actual distance.
+              </Text>
+            </View>
           </View>
         )}
 
-        <Button onPress={handleNext} disabled={!data || isLoading} fullWidth>
+        <Button
+          onPress={() => navigation.navigate("MarketplaceConfirm")}
+          disabled={!data || isLoading}
+          fullWidth
+        >
           Continue to confirm
         </Button>
       </ScrollView>
