@@ -98,6 +98,7 @@ export default function JobTrackingScreen({ navigation }) {
           <ProviderAvatar
             photo={selectedQuote?.providerPhoto}
             name={gig.booking?.provider || selectedQuote?.providerName}
+            id={selectedQuote?.id}
             size={48}
           />
           <View className="flex-1">

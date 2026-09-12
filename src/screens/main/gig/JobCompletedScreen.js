@@ -43,6 +43,7 @@ export default function JobCompletedScreen({ navigation }) {
             <ProviderAvatar
               photo={selectedQuote?.providerPhoto}
               name={gig.booking?.provider || selectedQuote?.providerName}
+              id={selectedQuote?.id}
               size={24}
             />
             <Text className="text-sm font-inter-semibold text-foreground">

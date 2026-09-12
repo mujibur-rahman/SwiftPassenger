@@ -1,6 +1,4 @@
 // @/components/gig/ProviderCard.jsx
-// Compact version of QuoteCard for CompareQuotesScreen — subset of fields +
-// a select radio, so the customer can pick one provider while comparing.
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
@@ -18,7 +16,16 @@ export default function ProviderCard({
   const warning = colors?.warning ?? "#FBBF24";
 
   if (!quote) return null;
-  const { providerName, providerPhoto, rating, reviews, price, availability, distance } = quote;
+  const {
+    id,
+    providerName,
+    providerPhoto,
+    rating,
+    reviews,
+    price,
+    availability,
+    distance,
+  } = quote;
 
   return (
     <Pressable
@@ -31,7 +38,12 @@ export default function ProviderCard({
         ${className}
       `}
     >
-      <ProviderAvatar photo={providerPhoto} name={providerName} size={44} />
+      <ProviderAvatar
+        photo={providerPhoto}
+        name={providerName}
+        id={id}
+        size={44}
+      />
 
       <View className="flex-1">
         <View className="flex-row items-center gap-1.5">
@@ -40,7 +52,9 @@ export default function ProviderCard({
           </Text>
           {isBestValue ? (
             <View className="rounded-full bg-success/15 px-1.5 py-0.5">
-              <Text className="text-[9px] font-inter-bold uppercase text-success">Best value</Text>
+              <Text className="text-[9px] font-inter-bold uppercase text-success">
+                Best value
+              </Text>
             </View>
           ) : null}
         </View>
@@ -56,18 +70,22 @@ export default function ProviderCard({
           ) : null}
         </View>
         {availability ? (
-          <Text className="mt-0.5 text-[11px] font-inter text-foreground-muted">{availability}</Text>
+          <Text className="mt-0.5 text-[11px] font-inter text-foreground-muted">
+            {availability}
+          </Text>
         ) : null}
       </View>
 
       <View className="items-end gap-2">
-        <Text className="text-base font-inter-bold text-primary">${Number(price).toFixed(0)}</Text>
+        <Text className="text-base font-inter-bold text-primary">
+          ${Number(price).toFixed(0)}
+        </Text>
         <View
-          className={`h-5 w-5 items-center justify-center rounded-full border-2 ${selected ? "border-primary bg-primary" : "border-border bg-transparent"}`}
+          className={`h-5 w-5 items-center justify-center rounded-full border-2 ${
+            selected ? "border-primary bg-primary" : "border-border bg-transparent"
+          }`}
         >
-          {selected ? (
-            <Icon name="check" size={12} color={colors?.primaryForeground || "#fff"} />
-          ) : null}
+          {selected ? <Icon name="check" size={12} color={isDark ? "#060E1A" : "#FFFFFF"} /> : null}
         </View>
       </View>
     </Pressable>

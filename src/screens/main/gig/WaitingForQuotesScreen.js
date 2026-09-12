@@ -12,29 +12,15 @@ import {
 } from "@/features/gig/gigSlice";
 import { useGetQuotesQuery } from "@/features/gig/gigApi";
 import { useSocket } from "@/services/SocketContext";
-
-// Map server quote ids to local avatar assets (server doesn't send photos)
-const PROVIDER_PHOTOS = {
-  q1: require("@assets/images/gigs/lawn_mowing/providers/avatar-john.png"),
-  q2: require("@assets/images/gigs/lawn_mowing/providers/avatar-mike.png"),
-  q3: require("@assets/images/gigs/lawn_mowing/providers/avatar-greenleaf.png"),
-};
-
-function enrichQuotes(quotes = []) {
-  return quotes.map((q) => ({
-    ...q,
-    providerPhoto: q.providerPhoto || PROVIDER_PHOTOS[q.id] || null,
-  }));
-}
+import { enrichQuotesWithPhotos } from "@/utils/providerPhotos";
 
 export default function WaitingForQuotesScreen({ navigation }) {
-  const { isDark } = useTheme();
+  const { isDark, colors } = useTheme();
   const dispatch = useDispatch();
   const gig = useSelector(selectGig);
   const jobId = useSelector(selectGigJobId);
   const { socket, connected } = useSocket() || {};
 
-  // Polling only when socket is not connected (fallback)
   const { data: apiQuotes, isFetching, isError, refetch } = useGetQuotesQuery(jobId, {
     skip: !jobId,
     pollingInterval: connected ? 0 : 3000,
@@ -45,22 +31,18 @@ export default function WaitingForQuotesScreen({ navigation }) {
     dispatch(setWaitingForQuotes());
   }, [dispatch]);
 
-  // When polling returns quotes
   useEffect(() => {
     if (apiQuotes && apiQuotes.length > 0 && gig.quotes.length === 0) {
-      const enriched = enrichQuotes(apiQuotes);
-      dispatch(receiveQuotes(enriched));
+      dispatch(receiveQuotes(enrichQuotesWithPhotos(apiQuotes)));
     }
   }, [apiQuotes, gig.quotes.length, dispatch]);
 
-  // Socket real-time (preferred)
   useEffect(() => {
     if (!socket?.current || !jobId) return;
 
     const handler = (payload) => {
       if (payload?.jobId === jobId && payload?.quotes?.length > 0) {
-        const enriched = enrichQuotes(payload.quotes);
-        dispatch(receiveQuotes(enriched));
+        dispatch(receiveQuotes(enrichQuotesWithPhotos(payload.quotes)));
       }
     };
 
@@ -70,7 +52,6 @@ export default function WaitingForQuotesScreen({ navigation }) {
     };
   }, [socket, jobId, dispatch]);
 
-  // Navigate when we have quotes
   useEffect(() => {
     if (gig.quotes.length > 0) {
       navigation.replace("QuotesReceived");
@@ -98,14 +79,18 @@ export default function WaitingForQuotesScreen({ navigation }) {
           Your job is live. We're waiting for service providers to send you their quotes.
         </Text>
 
-        <View className="rounded-2xl border border-border bg-card px-5 py-3 items-center">
+        <View className="items-center rounded-2xl border border-border bg-card px-5 py-3">
           {(isFetching || gig.quotes.length === 0) && !isError ? (
-            <ActivityIndicator size="small" color="#7DD3FC" style={{ marginBottom: 8 }} />
+            <ActivityIndicator
+              size="small"
+              color={colors?.primary || "#7DD3FC"}
+              style={{ marginBottom: 8 }}
+            />
           ) : null}
 
           {isError ? (
             <>
-              <Text className="mb-2 text-sm font-inter text-error text-center">
+              <Text className="mb-2 text-center text-sm font-inter text-error">
                 Couldn't reach the server
               </Text>
               <Text

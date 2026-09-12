@@ -5,22 +5,34 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
 import Avatar from "@/components/ui/Avatar";
 import Button from "@/components/ui/Button";
+import { resolveProviderPhoto } from "@/utils/providerPhotos";
 
-// Avatar's `uri` prop wraps the value as `{ uri }`, which only works for
-// remote/string URIs — a local require()'d avatar (a number, not a string)
-// needs to be passed straight to <Image source={...}>. This wrapper picks
-// the right path and falls back to Avatar's name-initial circle when there's
-// no photo at all, so QuoteCard/ProviderCard don't need Avatar.jsx touched.
-export function ProviderAvatar({ photo, name, size = 48 }) {
-  if (photo) {
+/**
+ * Shows local/remote profile image when available; otherwise name initials via Avatar.
+ *
+ * photo: require() number | { uri } | string URL | null
+ * name: provider display name (fallback)
+ * id: optional quote/provider id for local asset lookup
+ */
+export function ProviderAvatar({ photo, name, id, size = 48 }) {
+  const resolved =
+    photo != null
+      ? typeof photo === "string" && photo.startsWith("http")
+        ? { uri: photo }
+        : photo
+      : resolveProviderPhoto({ id, providerName: name, name });
+
+  if (resolved) {
     return (
       <Image
-        source={photo}
+        source={resolved}
         style={{ width: size, height: size, borderRadius: size / 2 }}
         resizeMode="cover"
       />
     );
   }
+
+  // No image in assets / no photo → name initials (existing behaviour)
   return <Avatar name={name} size={size} />;
 }
 
@@ -36,6 +48,7 @@ export default function QuoteCard({
 
   if (!quote) return null;
   const {
+    id,
     providerName,
     providerPhoto,
     rating,
@@ -49,7 +62,12 @@ export default function QuoteCard({
   return (
     <View className={`rounded-2xl border border-border bg-card p-4 ${className}`}>
       <View className="flex-row items-center gap-3">
-        <ProviderAvatar photo={providerPhoto} name={providerName} size={48} />
+        <ProviderAvatar
+          photo={providerPhoto}
+          name={providerName}
+          id={id}
+          size={48}
+        />
         <View className="flex-1">
           <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
             {providerName}
@@ -61,7 +79,9 @@ export default function QuoteCard({
             </Text>
           </View>
         </View>
-        <Text className="text-lg font-inter-bold text-primary">${Number(price).toFixed(0)}</Text>
+        <Text className="text-lg font-inter-bold text-primary">
+          ${Number(price).toFixed(0)}
+        </Text>
       </View>
 
       <View className="mt-3 flex-row items-center gap-3">
@@ -80,24 +100,22 @@ export default function QuoteCard({
       </View>
 
       {message ? (
-        <Text className="mt-2 text-xs font-inter italic text-foreground-muted" numberOfLines={2}>
-          "{message}"
+        <Text className="mt-3 text-sm font-inter text-foreground-secondary" numberOfLines={2}>
+          {message}
         </Text>
       ) : null}
 
-      <View className="mt-3 flex-row gap-3">
-        <Button
-          variant="outline"
-          size="sm"
-          fullWidth={false}
-          className="flex-1"
-          onPress={() => onViewProfile?.(quote)}
-        >
-          View Profile
-        </Button>
-        <Button size="sm" fullWidth={false} className="flex-1" onPress={() => onViewQuote?.(quote)}>
-          Compare Quote
-        </Button>
+      <View className="mt-3 flex-row gap-2">
+        {onViewProfile ? (
+          <Button variant="outline" size="sm" className="flex-1" onPress={onViewProfile}>
+            Profile
+          </Button>
+        ) : null}
+        {onViewQuote ? (
+          <Button size="sm" className="flex-1" onPress={onViewQuote}>
+            Compare quote
+          </Button>
+        ) : null}
       </View>
     </View>
   );

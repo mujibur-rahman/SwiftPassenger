@@ -55,6 +55,7 @@ export default function RateReviewScreen({ navigation }) {
             <ProviderAvatar
               photo={selectedQuote?.providerPhoto}
               name={gig.booking?.provider || selectedQuote?.providerName}
+              id={selectedQuote?.id}
               size={64}
             />
           </View>
