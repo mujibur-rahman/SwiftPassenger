@@ -30,5 +30,7 @@ export const DUMMY = {
   success: "https://picsum.photos/seed/successcheck/200/200",
 
   // Hero banner
-  heroMarketplace: "https://picsum.photos/seed/mphero/800/400",
+  // heroMarketplace: "https://picsum.photos/seed/mphero/800/400",
+  heroMarketplace: "@assets/images/marketplace/marketplace-pickup.jpg"
+
 };

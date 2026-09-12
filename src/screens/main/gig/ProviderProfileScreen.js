@@ -13,9 +13,9 @@ import { selectGigQuotes, selectQuote } from "@/features/gig/gigSlice";
 // Same portfolio set shown for every provider today — swap for per-provider
 // data once the backend supplies it.
 const PORTFOLIO_IMAGES = [
-  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-1.png"),
-  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-2.png"),
-  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-3.png"),
+  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-1.jpg"),
+  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-2.jpg"),
+  require("@assets/images/gigs/lawn_mowing/portfolio/portfolio-3.jpg"),
 ];
 
 export default function ProviderProfileScreen({ route, navigation }) {

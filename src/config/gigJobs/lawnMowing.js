@@ -129,7 +129,7 @@ export default {
           id: "researching",
           label: "Just researching",
           title: "Just researching",
-          image: require("@assets/images/gigs/lawn_mowing/timing/just-researching.jpg"),
+          image: require("@assets/images/gigs/lawn_mowing/timing/just-researching.png"),
         },
       ],
     },
