@@ -1,11 +1,11 @@
+// @/screens/main/marketplace/MarketplaceRateScreen.js
 import React, { useState } from "react";
-import { View, Text, StatusBar, Alert, TouchableOpacity, Image } from "react-native";
+import { View, StatusBar, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
-import Button from "@/components/ui/Button";
+import RateReviewForm from "@/components/shared/RateReviewForm";
 import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   selectActivePickupId,
@@ -13,13 +13,24 @@ import {
 } from "@/features/marketplace/marketplacePickupSlice";
 import { useRateMarketplacePickupMutation } from "@/features/marketplace/marketplacePickupApi";
 
+const MARKETPLACE_TAGS = [
+  "Arrived on time",
+  "Careful with item",
+  "Good communication",
+  "Professional",
+  "Fair price",
+];
+
 export default function MarketplaceRateScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { isDark, colors } = useTheme();
+  const { isDark } = useTheme();
   const pickupId = useSelector(selectActivePickupId);
-  const [rating, setRating] = useState(0);
   const [ratePickup, { isLoading }] = useRateMarketplacePickupMutation();
+
+  const [rating, setRating] = useState(0);
+  const [text, setText] = useState("");
+  const [tags, setTags] = useState([]);
 
   const handleSubmit = async () => {
     if (rating < 1) {
@@ -27,11 +38,11 @@ export default function MarketplaceRateScreen() {
       return;
     }
     try {
-      await ratePickup({ id: pickupId, rating }).unwrap();
+      await ratePickup({ id: pickupId, rating, text, tags }).unwrap();
       dispatch(resetMarketplacePickup());
       navigation.reset({ index: 0, routes: [{ name: "Tabs" }] });
     } catch {
-      Alert.alert("Couldn’t submit rating", "Please try again.");
+      Alert.alert("Couldn't submit rating", "Please try again.");
     }
   };
 
@@ -42,44 +53,22 @@ export default function MarketplaceRateScreen() {
         <ScreenHeader title="Rate Pickup" onBack={() => navigation.goBack()} />
       </View>
 
-      <View className="flex-1 items-center px-6 pt-10">
-        <Image
-          source={DUMMY.driverAvatar}
-          style={{ width: 72, height: 72, borderRadius: 36, marginBottom: 16 }}
-        />
-        <Text className="mb-1 text-center text-xl font-inter-bold text-foreground">
-          How was your experience?
-        </Text>
-        <Text className="mb-8 text-center text-sm text-foreground-muted">
-          Rate your driver and the pickup service.
-        </Text>
-
-        <View className="mb-10 flex-row gap-3">
-          {[1, 2, 3, 4, 5].map((n) => (
-            <TouchableOpacity key={n} onPress={() => setRating(n)} hitSlop={8}>
-              <Icon
-                name={n <= rating ? "star" : "star-outline"}
-                size={36}
-                color={
-                  n <= rating
-                    ? colors?.warning || "#FBBF24"
-                    : colors?.foregroundMuted || "#7DD3FC"
-                }
-              />
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Button
-          className="w-full"
-          onPress={handleSubmit}
-          disabled={isLoading || rating < 1}
-          loading={isLoading}
-          fullWidth
-        >
-          Submit
-        </Button>
-      </View>
+      <RateReviewForm
+        title="How was your experience?"
+        subtitle="Rate your driver and the pickup service."
+        subjectName="Your driver"
+        subjectPhoto={DUMMY.driverAvatar}
+        rating={rating}
+        onRatingChange={setRating}
+        text={text}
+        onTextChange={setText}
+        tags={tags}
+        onTagsChange={setTags}
+        tagOptions={MARKETPLACE_TAGS}
+        onSubmit={handleSubmit}
+        isSubmitting={isLoading}
+        submitLabel="Submit"
+      />
     </View>
   );
 }

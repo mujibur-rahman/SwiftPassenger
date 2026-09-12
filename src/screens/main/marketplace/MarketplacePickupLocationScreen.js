@@ -15,13 +15,9 @@ import {
   setSellerAddress,
   selectMarketplaceDraft,
 } from "@/features/marketplace/marketplacePickupSlice";
+import { DEFAULT_LOCATION, DEFAULT_REGION } from "@/constants/defaultLocation";
 
-const DEFAULT_REGION = {
-  latitude: 23.8103,
-  longitude: 90.4125,
-  latitudeDelta: 0.05,
-  longitudeDelta: 0.05,
-};
+// DEFAULT_REGION imported from @/constants/defaultLocation;
 
 export default function MarketplacePickupLocationScreen() {
   const navigation = useNavigation();

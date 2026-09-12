@@ -103,7 +103,7 @@ export default function MarketplaceConfirmScreen() {
           <View className="mb-6 rounded-2xl border border-primary/30 bg-primary/10 p-4">
             <Text className="text-xs font-inter-medium text-foreground-muted">Estimated fare</Text>
             <Text className="mt-1 text-2xl font-inter-bold text-foreground">
-              ৳{estimate.fare}
+              ${estimate.fare}
             </Text>
           </View>
         )}

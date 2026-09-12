@@ -30,6 +30,7 @@ import {
   useVerifyMarketplacePickupMutation,
 } from "@/features/marketplace/marketplacePickupApi";
 import { useSocket } from "@/services/SocketContext";
+import { DEFAULT_LOCATION, DEFAULT_REGION } from "@/constants/defaultLocation";
 
 const STEPS = [
   "driver_assigned",
@@ -193,8 +194,8 @@ export default function MarketplaceTrackingScreen() {
     : deliveryCoord
       ? { ...deliveryCoord, latitudeDelta: 0.05, longitudeDelta: 0.05 }
       : {
-        latitude: 23.8103,
-        longitude: 90.4125,
+        latitude: DEFAULT_LOCATION.latitude,
+        longitude: DEFAULT_LOCATION.longitude,
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       };

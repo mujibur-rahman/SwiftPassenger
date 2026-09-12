@@ -19,6 +19,13 @@ io.on("connection", (socket) => {
   });
 });
 
+const DEFAULT_LOCATION = {
+  latitude: -32.7615,
+  longitude: 151.7441,
+  address: "Ralph Terrace, Australia",
+};
+
+
 const JWT_SECRET = "development-secret-change-this";
 const REFRESH_SECRET = "refresh-secret-change-this";
 
@@ -267,8 +274,8 @@ function assignDriverLater(rideId, delayMs = 3000) {
     ride.driver = {
       ...driver,
       location: {
-        latitude: (pickup?.latitude || 23.81) + 0.004,
-        longitude: (pickup?.longitude || 90.41) + 0.003,
+        latitude: (pickup?.latitude || DEFAULT_LOCATION.latitude) + 0.004,
+        longitude: (pickup?.longitude || DEFAULT_LOCATION.longitude) + 0.003,
       },
     };
     console.log(`Driver assigned to ride #${rideId} →`, driver.name);

@@ -26,6 +26,7 @@ import {
   useCancelRideMutation,
   useGetActiveRideQuery,
 } from "@/features/ride/rideApi";
+import { DEFAULT_LOCATION, DEFAULT_REGION } from "@/constants/defaultLocation";
 
 const STATUS_CONFIG = {
   searching: {
@@ -136,8 +137,8 @@ export default function ActiveRideScreen({ navigation }) {
         provider={PROVIDER_GOOGLE}
         customMapStyle={DARK_MAP_STYLE}
         initialRegion={{
-          latitude: origin?.latitude || 23.81,
-          longitude: origin?.longitude || 90.41,
+          latitude: origin?.latitude || DEFAULT_LOCATION.latitude,
+          longitude: origin?.longitude || DEFAULT_LOCATION.longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}
@@ -205,7 +206,7 @@ export default function ActiveRideScreen({ navigation }) {
         )}
 
         <Text className="text-sm text-foreground-muted mb-3">
-          Fare est. ৳{currentRide?.estimatedFare ?? "—"}
+          Fare est. ${currentRide?.estimatedFare ?? "—"}
         </Text>
 
         {["searching", "accepted", "pickup"].includes(rideStatus) && (

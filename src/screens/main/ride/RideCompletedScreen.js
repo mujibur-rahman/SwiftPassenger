@@ -142,7 +142,7 @@ export default function RideCompletedScreen() {
                 Total Fare
               </Text>
               <Text className="text-3xl font-inter-extrabold text-primary">
-                ৳{Number(fare).toFixed(0)}
+                ${Number(fare).toFixed(0)}
               </Text>
             </View>
 
@@ -237,7 +237,7 @@ export default function RideCompletedScreen() {
                           ${active ? "text-primary" : "text-foreground-muted"}
                         `}
                       >
-                        {t === 0 ? "No tip" : `৳${t}`}
+                        {t === 0 ? "No tip" : `$${t}`}
                       </Text>
                     </TouchableOpacity>
                   );

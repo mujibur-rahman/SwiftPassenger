@@ -142,7 +142,7 @@ export default function MarketplaceSearchingScreen() {
           <InfoCard icon="store" label="Pickup" title={draft.sellerName} subtitle={draft.sellerAddress?.address} />
           <InfoCard icon="map-marker" label="Delivery" title={draft.deliveryAddress?.address} />
           {estimate && (
-            <InfoCard icon="cash" label="Estimated fare" title={`৳${estimate.fare}`} />
+            <InfoCard icon="cash" label="Estimated fare" title={`$${estimate.fare}`} />
           )}
         </View>
 

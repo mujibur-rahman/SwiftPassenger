@@ -35,6 +35,7 @@ import {
   setFareEstimate,
   updateRideStatus,
 } from "@/features/ride/rideSlice";
+import { DEFAULT_LOCATION, DEFAULT_REGION } from "@/constants/defaultLocation";
 
 const RIDE_TYPES = [
   { id: "economy", name: "SwiftX", icon: "car", multiplier: 1.0 },
@@ -169,8 +170,8 @@ export default function RideBookingScreen() {
     // For now we keep a mock destination (you can later wire Google Places / Mapbox)
     // Replace this block with real geocoding when ready
     const mockDest = {
-      latitude: (pickup?.latitude || 23.8103) + 0.018,
-      longitude: (pickup?.longitude || 90.4125) + 0.012,
+      latitude: (pickup?.latitude || DEFAULT_LOCATION.latitude) + 0.018,
+      longitude: (pickup?.longitude || DEFAULT_LOCATION.longitude) + 0.012,
     };
 
     dispatch(setDestination({ coords: mockDest, address: destInput }));
@@ -262,8 +263,8 @@ export default function RideBookingScreen() {
         showsUserLocation
         showsMyLocationButton={false}
         initialRegion={{
-          latitude: currentLocation?.latitude || 23.8103,
-          longitude: currentLocation?.longitude || 90.4125,
+          latitude: currentLocation?.latitude || DEFAULT_LOCATION.latitude,
+          longitude: currentLocation?.longitude || DEFAULT_LOCATION.longitude,
           latitudeDelta: 0.05,
           longitudeDelta: 0.05,
         }}

@@ -85,7 +85,7 @@ export default function MarketplaceEstimateScreen() {
               Estimated fare
             </Text>
             <Text className="mt-1 text-4xl font-inter-bold text-foreground">
-              {data.currency === "$" ? "৳" : data.currency || "৳"}
+              {data.currency === "$" ? "$" : data.currency || "$"}
               {data.fare}
             </Text>
             <View className="mt-4 flex-row flex-wrap gap-4">

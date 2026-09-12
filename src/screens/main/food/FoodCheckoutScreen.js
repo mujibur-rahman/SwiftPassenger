@@ -60,7 +60,7 @@ export default function FoodCheckoutScreen({ navigation }) {
           </View>
           <View className="flex-1">
             <Text className="text-xs font-inter text-foreground-muted">Delivery to</Text>
-            <Text className="text-[14px] font-inter-semibold text-foreground">123 Main St, Natore</Text>
+            <Text className="text-[14px] font-inter-semibold text-foreground">Ralph Terrace, Australia</Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("SavedPlaces")}>
             <Text className="text-[13px] font-inter-semibold" style={{ color: primary }}>Change</Text>

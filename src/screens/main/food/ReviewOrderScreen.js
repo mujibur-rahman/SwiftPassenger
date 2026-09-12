@@ -56,7 +56,7 @@ export default function ReviewOrderScreen({ route, navigation }) {
         offer: cart.offer,
         paymentMethod,
         totals,
-        address: "123 Main St, Natore",
+        address: "Ralph Terrace, Australia",
       };
 
       let orderId = `ORD-${Date.now()}`;
@@ -89,7 +89,7 @@ export default function ReviewOrderScreen({ route, navigation }) {
           <Icon name="map-marker" size={20} color={primary} />
           <View className="flex-1">
             <Text className="text-xs font-inter text-foreground-muted">Delivery to</Text>
-            <Text className="text-[14px] font-inter-semibold text-foreground">123 Main St, Natore</Text>
+            <Text className="text-[14px] font-inter-semibold text-foreground">Ralph Terrace, Australia</Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("SavedPlaces")}>
             <Text className="text-[13px] font-inter-semibold" style={{ color: primary }}>Change</Text>

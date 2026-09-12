@@ -63,7 +63,7 @@ export default function MarketplaceCompletedScreen() {
               </Text>
               {estimate ? (
                 <Text className="mt-0.5 text-sm text-foreground-secondary">
-                  Total · ৳{estimate.fare}
+                  Total · ${estimate.fare}
                 </Text>
               ) : null}
             </View>
