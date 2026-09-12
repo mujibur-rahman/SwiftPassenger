@@ -1,4 +1,4 @@
-// src/components/ui/Dropdown.jsx
+// src/components/ui/AppDropdown.jsx
 import React, { useState, useRef, useEffect } from "react";
 import {
   View,
@@ -28,7 +28,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
  * - className?: string
  * - renderOption?: (option, selected) => ReactNode
  */
-export default function Dropdown({
+export default function AppDropdown({
   label,
   placeholder = "Select...",
   options = [],
@@ -86,7 +86,7 @@ export default function Dropdown({
         activeOpacity={0.75}
         disabled={disabled}
         className={`
-          h-12 flex-row items-center gap-2 rounded-xl border bg-input px-3
+          h-14 flex-row items-center gap-2 rounded-xl border bg-input px-3
           ${error ? "border-error" : open ? "border-ring" : "border-border"}
           ${disabled ? "opacity-50" : ""}
         `}
@@ -206,7 +206,7 @@ export default function Dropdown({
 //   { label: "XL", value: "xl", icon: "van-passenger", subtitle: "Up to 6 seats" },
 // ];
 
-// <Dropdown
+// <AppDropdown
 //   label="Ride type"
 //   placeholder="Choose ride"
 //   options={RIDE_TYPES}
@@ -216,7 +216,7 @@ export default function Dropdown({
 // />
 
 // const [paymentId, setPaymentId] = useState(0);
-//   <Dropdown
+//   <AppDropdown
 //   label="Pay with"
 //   options={[
 //     { label: "Visa •• 4242", value: "card_1", icon: "credit-card" },

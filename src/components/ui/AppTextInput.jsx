@@ -103,7 +103,7 @@ const AppTextInput = forwardRef(
               <Text className="text-sm font-inter-semibold tracking-wide text-foreground-secondary">
                 {label}
                 {required && (
-                  <Text className="font-inter-bold text-error"> *</Text>
+                  <Text className="font-inter-bold text-primary"> *</Text>
                 )}
               </Text>
             ) : (

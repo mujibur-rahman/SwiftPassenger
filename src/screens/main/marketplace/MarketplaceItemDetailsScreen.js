@@ -15,12 +15,26 @@ import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import AppTextInput from "@/components/ui/AppTextInput";
+import AppDropdown from "@/components/ui/AppDropdown";
 import StepProgress from "@/components/marketplace/StepProgress";
 import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   setDraftField,
   selectMarketplaceDraft,
 } from "@/features/marketplace/marketplacePickupSlice";
+
+const CATEGORY_OPTIONS = [
+  { label: "Electronics", value: "electronics", icon: "chip" },
+  { label: "Fashion & Clothing", value: "fashion", icon: "tshirt-crew" },
+  { label: "Home & Furniture", value: "home", icon: "sofa" },
+  { label: "Sports & Outdoors", value: "sports", icon: "basketball" },
+  { label: "Books & Stationery", value: "books", icon: "book-open-variant" },
+  { label: "Toys & Games", value: "toys", icon: "controller-classic" },
+  { label: "Health & Beauty", value: "health", icon: "heart-pulse" },
+  { label: "Automotive", value: "automotive", icon: "car" },
+  { label: "Food & Groceries", value: "food", icon: "food-apple" },
+  { label: "Other", value: "other", icon: "dots-horizontal" },
+];
 
 export default function MarketplaceItemDetailsScreen() {
   const navigation = useNavigation();
@@ -43,7 +57,7 @@ export default function MarketplaceItemDetailsScreen() {
     }
     dispatch(setDraftField({ key: "itemDescription", value: itemDescription.trim() }));
     dispatch(setDraftField({ key: "itemQuantity", value: Number(itemQuantity) || 1 }));
-    dispatch(setDraftField({ key: "itemCategory", value: itemCategory.trim() }));
+    dispatch(setDraftField({ key: "itemCategory", value: itemCategory }));
     dispatch(setDraftField({ key: "approximateValue", value: approximateValue.trim() }));
     dispatch(setDraftField({ key: "itemNotes", value: itemNotes.trim() }));
     navigation.navigate("MarketplaceDeliveryLocation");
@@ -67,8 +81,8 @@ export default function MarketplaceItemDetailsScreen() {
         <View className="mb-5 items-center overflow-hidden rounded-2xl border border-border bg-card">
           <Image
             source={DUMMY.itemProduct}
-            style={{ width: "100%", height: 180 }}
-            resizeMode="contain"
+            className="w-full h-46"
+            resizeMode="cover"
           />
           <View className="w-full flex-row items-center justify-center gap-2 border-t border-border py-3">
             <Icon name="camera-plus-outline" size={18} color={colors?.primary} />
@@ -82,6 +96,7 @@ export default function MarketplaceItemDetailsScreen() {
             value={itemDescription}
             onChangeText={setItemDescription}
             placeholder="e.g. Wireless Headphones"
+            required
           />
 
           <View>
@@ -89,33 +104,36 @@ export default function MarketplaceItemDetailsScreen() {
             <View className="flex-row items-center gap-4">
               <TouchableOpacity
                 onPress={() => changeQty(-1)}
-                className="h-10 w-10 items-center justify-center rounded-xl border border-border bg-background-muted"
+                className="h-14 w-14 items-center justify-center rounded-xl border border-border bg-background-muted"
               >
                 <Icon name="minus" size={18} color={colors?.foreground} />
               </TouchableOpacity>
-              <Text className="min-w-[28px] text-center text-lg font-inter-bold text-foreground">
+              <Text className="min-w-8 text-center text-lg font-inter-bold text-foreground">
                 {itemQuantity}
               </Text>
               <TouchableOpacity
                 onPress={() => changeQty(1)}
-                className="h-10 w-10 items-center justify-center rounded-xl border border-border bg-background-muted"
+                className="h-14 w-14 items-center justify-center rounded-xl border border-border bg-background-muted"
               >
                 <Icon name="plus" size={18} color={colors?.foreground} />
               </TouchableOpacity>
             </View>
           </View>
 
-          <AppTextInput
+          <AppDropdown
             label="Category"
+            placeholder="Select a category…"
+            options={CATEGORY_OPTIONS}
             value={itemCategory}
-            onChangeText={setItemCategory}
-            placeholder="Electronics, Fashion…"
+            onChange={(val) => setItemCategory(val)}
+            leftIcon="tag-outline"
           />
           <AppTextInput
-            label="Approximate value"
+            // label="Approximate value"
+            label="Price"
             value={approximateValue}
             onChangeText={setApproximateValue}
-            placeholder="e.g. 4500"
+            placeholder="e.g. 500"
             keyboardType="numeric"
           />
           <AppTextInput
