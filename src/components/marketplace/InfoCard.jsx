@@ -20,7 +20,7 @@ export default function InfoCard({
       <View className="flex-row items-start gap-3">
         {imageUri ? (
           <Image
-            source={{ uri: imageUri }}
+            source={imageUri}
             className="h-12 w-12 rounded-xl"
             style={{ width: 48, height: 48, borderRadius: 12 }}
           />

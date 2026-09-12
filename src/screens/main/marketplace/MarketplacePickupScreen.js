@@ -52,7 +52,7 @@ export default function MarketplacePickupScreen() {
         {/* Hero */}
         <View className="mb-5 overflow-hidden rounded-3xl border border-border bg-card">
           <Image
-            source={require("@assets/images/marketplace/marketplace-pickup.jpg")}
+            source={DUMMY.heroMarketplace}
             style={{ width: "100%", height: 140 }}
             resizeMode="cover"
           />

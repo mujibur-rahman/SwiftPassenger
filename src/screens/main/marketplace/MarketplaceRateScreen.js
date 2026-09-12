@@ -44,7 +44,7 @@ export default function MarketplaceRateScreen() {
 
       <View className="flex-1 items-center px-6 pt-10">
         <Image
-          source={{ uri: DUMMY.driverAvatar }}
+          source={DUMMY.driverAvatar}
           style={{ width: 72, height: 72, borderRadius: 36, marginBottom: 16 }}
         />
         <Text className="mb-1 text-center text-xl font-inter-bold text-foreground">

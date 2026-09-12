@@ -117,7 +117,7 @@ export default function MarketplaceSearchingScreen() {
       <View className="flex-1 px-5">
         <View className="flex-1 items-center justify-center">
           <Image
-            source={{ uri: DUMMY.searchingCar }}
+            source={DUMMY.searchingCar}
             style={{ width: 120, height: 120, borderRadius: 60, marginBottom: 16 }}
           />
           {!driverReady && (

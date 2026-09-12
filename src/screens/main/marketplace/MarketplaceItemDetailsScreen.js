@@ -66,9 +66,9 @@ export default function MarketplaceItemDetailsScreen() {
         {/* Product image placeholder */}
         <View className="mb-5 items-center overflow-hidden rounded-2xl border border-border bg-card">
           <Image
-            source={{ uri: DUMMY.itemProduct }}
+            source={DUMMY.itemProduct}
             style={{ width: "100%", height: 180 }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
           <View className="w-full flex-row items-center justify-center gap-2 border-t border-border py-3">
             <Icon name="camera-plus-outline" size={18} color={colors?.primary} />

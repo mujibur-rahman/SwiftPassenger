@@ -32,7 +32,7 @@ export default function MarketplaceCompletedScreen() {
       >
         <View className="items-center mb-8">
           <Image
-            source={{ uri: DUMMY.success }}
+            source={DUMMY.success}
             style={{ width: 88, height: 88, borderRadius: 44, marginBottom: 16 }}
           />
           <View className="mb-2 h-14 w-14 items-center justify-center rounded-full bg-success/20 absolute top-6">
@@ -54,7 +54,7 @@ export default function MarketplaceCompletedScreen() {
           ) : null}
           <View className="flex-row items-center gap-3">
             <Image
-              source={{ uri: DUMMY.itemProduct }}
+              source={DUMMY.itemProduct}
               style={{ width: 48, height: 48, borderRadius: 10 }}
             />
             <View className="flex-1">

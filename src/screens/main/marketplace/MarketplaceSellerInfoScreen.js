@@ -55,7 +55,7 @@ export default function MarketplaceSellerInfoScreen() {
         {/* Seller preview card */}
         <View className="mb-5 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
           <Image
-            source={{ uri: DUMMY.sellerShop }}
+            source={DUMMY.sellerShop}
             style={{ width: 56, height: 56, borderRadius: 14 }}
           />
           <View className="flex-1">

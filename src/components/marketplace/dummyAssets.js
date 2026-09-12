@@ -1,36 +1,31 @@
 /**
- * Dummy image URLs for Marketplace UI.
- * Replace with local require(...) assets when ready.
+ * Marketplace dummy/local assets.
+ * All local require() assets must be passed directly as `source={DUMMY.xxx}`.
+ * Only plain string URL values should be wrapped in `source={{ uri: DUMMY.xxx }}`.
  */
 export const DUMMY = {
-  // Marketplace logos / popular stores
+  // Marketplace logos / popular stores (remote URLs — use { uri: ... })
   daraz: "https://picsum.photos/seed/daraz/96/96",
   facebook: "https://picsum.photos/seed/fbmarket/96/96",
   ebay: "https://picsum.photos/seed/ebay/96/96",
   localShop: "https://picsum.photos/seed/localshop/96/96",
 
-  // Seller / shop
-  sellerShop: "https://picsum.photos/seed/abcelectronics/120/120",
+  // Seller / shop (local asset — pass directly as source={DUMMY.sellerShop})
+  sellerShop: require("@assets/images/marketplace/seller-shop.jpg"),
 
-  // Item product
-  itemProduct: "https://picsum.photos/seed/headphones/400/400",
+  // Item product (local asset — pass directly as source={DUMMY.itemProduct})
+  itemProduct: require("@assets/images/marketplace/wireless-headphone.jpg"),
 
-  // Map placeholders (static)
-  mapPickup: "https://picsum.photos/seed/mappickup/800/480",
-  mapDelivery: "https://picsum.photos/seed/mapdelivery/800/480",
-  mapRoute: "https://picsum.photos/seed/maproute/800/480",
+  // Driver avatar (local asset — pass directly as source={DUMMY.driverAvatar})
+  driverAvatar: require("@assets/images/marketplace/driver-avatar.png"),
 
-  // Driver
-  driverAvatar: "https://picsum.photos/seed/driverrahim/200/200",
+  // Hero banner (local asset)
+  heroMarketplace: require("@assets/images/marketplace/marketplace-pickup.jpg"),
 
-  // Illustrations
-  searchingCar: "https://picsum.photos/seed/carblue/300/300",
-  arrivedStore: "https://picsum.photos/seed/storearrive/400/300",
-  deliveryHand: "https://picsum.photos/seed/deliveryhand/400/300",
-  success: "https://picsum.photos/seed/successcheck/200/200",
-
-  // Hero banner
-  // heroMarketplace: "https://picsum.photos/seed/mphero/800/400",
-  heroMarketplace: "@assets/images/marketplace/marketplace-pickup.jpg"
-
+  // Illustrations (local assets — pass directly as source={DUMMY.xxx})
+  searchingCar: require("@assets/images/marketplace/finding-driver.jpg"),
+  arrivedStore: require("@assets/images/marketplace/driver-arrived.jpg"),
+  mapRoute: require("@assets/images/marketplace/live.jpg"),
+  deliveryHand: require("@assets/images/marketplace/delivery.png"),
+  success: require("@assets/images/marketplace/order-successwebp.webp"),
 };
