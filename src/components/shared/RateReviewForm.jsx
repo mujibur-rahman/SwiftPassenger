@@ -78,12 +78,12 @@ export default function RateReviewForm({
             >
                 {/* Subject (driver / provider / restaurant) */}
                 {(subjectName || subjectPhoto) && (
-                    <View className="mb-5 items-center">
-                        <View className="mb-2">
+                    <View className="mb-2 items-center">
+                        <View className="mb-6">
                             {subjectPhoto ? (
                                 <Image
                                     source={subjectPhoto}
-                                    style={{ width: 64, height: 64, borderRadius: 32 }}
+                                    className="w-24 h-24 rounded-full shadow-2xl shadow-foreground"
                                     resizeMode="cover"
                                 />
                             ) : (
@@ -91,7 +91,7 @@ export default function RateReviewForm({
                             )}
                         </View>
                         {subjectName ? (
-                            <Text className="text-base font-inter-bold text-foreground">
+                            <Text className="text-xl font-inter-bold text-foreground">
                                 {subjectName}
                             </Text>
                         ) : null}
