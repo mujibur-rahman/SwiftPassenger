@@ -5,10 +5,10 @@
  */
 export const DUMMY = {
   // Marketplace logos / popular stores (remote URLs — use { uri: ... })
-  daraz: "https://picsum.photos/seed/daraz/96/96",
-  facebook: "https://picsum.photos/seed/fbmarket/96/96",
-  ebay: "https://picsum.photos/seed/ebay/96/96",
-  localShop: "https://picsum.photos/seed/localshop/96/96",
+  daraz: require("@assets/icons/daraz.png"),
+  facebook: require("@assets/icons/facebook.png"),
+  ebay: require("@assets/icons/ebay.png"),
+  localShop: require("@assets/icons/localshop.png"),
 
   // Seller / shop (local asset — pass directly as source={DUMMY.sellerShop})
   sellerShop: require("@assets/images/marketplace/seller-shop.jpg"),
@@ -17,7 +17,7 @@ export const DUMMY = {
   itemProduct: require("@assets/images/marketplace/wireless-headphone.jpg"),
 
   // Driver avatar (local asset — pass directly as source={DUMMY.driverAvatar})
-  driverAvatar: require("@assets/images/marketplace/driver-avatar.png"),
+  driverAvatar: require("@assets/images/avatar/avatar-profile.jpg"),
 
   // Hero banner (local asset)
   heroMarketplace: require("@assets/images/marketplace/marketplace-pickup.jpg"),

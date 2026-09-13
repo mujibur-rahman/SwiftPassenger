@@ -95,7 +95,7 @@ export default function MarketplaceItemDetailsScreen() {
             label="Item description"
             value={itemDescription}
             onChangeText={setItemDescription}
-            placeholder="e.g. Wireless Headphones"
+            placeholder="Enter item description"
             required
           />
 
@@ -133,7 +133,7 @@ export default function MarketplaceItemDetailsScreen() {
             label="Price"
             value={approximateValue}
             onChangeText={setApproximateValue}
-            placeholder="e.g. 500"
+            placeholder="Enter item price"
             keyboardType="numeric"
           />
           <AppTextInput

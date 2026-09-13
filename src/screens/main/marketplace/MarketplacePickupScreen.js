@@ -82,7 +82,7 @@ export default function MarketplacePickupScreen() {
               className="w-[23%] items-center"
             >
               <Image
-                source={{ uri: p.uri }}
+                source={p.uri}
                 style={{ width: 56, height: 56, borderRadius: 16 }}
               />
               <Text

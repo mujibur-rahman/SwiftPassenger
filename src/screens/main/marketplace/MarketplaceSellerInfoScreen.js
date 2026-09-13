@@ -56,7 +56,7 @@ export default function MarketplaceSellerInfoScreen() {
         <View className="mb-5 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
           <Image
             source={DUMMY.sellerShop}
-            style={{ width: 56, height: 56, borderRadius: 14 }}
+            className="w-12 h-12 rounded-xl"
           />
           <View className="flex-1">
             <Text className="text-base font-inter-semibold text-foreground">
@@ -73,25 +73,25 @@ export default function MarketplaceSellerInfoScreen() {
             label="Seller / shop name"
             value={sellerName}
             onChangeText={setSellerName}
-            placeholder="e.g. ABC Electronics"
+            placeholder="Enter seller name"
           />
           <AppTextInput
             label="Marketplace / source"
             value={marketplaceSource}
             onChangeText={setMarketplaceSource}
-            placeholder="Facebook Marketplace, Daraz…"
+            placeholder="Enter marketplace / source"
           />
           <AppTextInput
             label="Order / reference no."
             value={orderReference}
             onChangeText={setOrderReference}
-            placeholder="MP-102938"
+            placeholder="Enter order/reference no."
           />
           <AppTextInput
             label="Seller phone"
             value={sellerPhone}
             onChangeText={setSellerPhone}
-            placeholder="01XXXXXXXXX"
+            placeholder="Enter seller phone number"
             keyboardType="phone-pad"
           />
         </View>

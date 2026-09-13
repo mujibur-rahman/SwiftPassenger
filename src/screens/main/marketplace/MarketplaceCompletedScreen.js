@@ -33,7 +33,8 @@ export default function MarketplaceCompletedScreen() {
         <View className="items-center mb-8">
           <Image
             source={DUMMY.success}
-            style={{ width: 88, height: 88, borderRadius: 44, marginBottom: 16 }}
+            // style={{ width: 88, height: 88, borderRadius: 44, marginBottom: 16 }}
+            className="w-25 h-25 mb-4 rounded-full"
           />
           <View className="mb-2 h-14 w-14 items-center justify-center rounded-full bg-success/20 absolute top-6">
             <Icon name="check" size={28} color={colors?.success || "#34D399"} />
@@ -55,7 +56,7 @@ export default function MarketplaceCompletedScreen() {
           <View className="flex-row items-center gap-3">
             <Image
               source={DUMMY.itemProduct}
-              style={{ width: 48, height: 48, borderRadius: 10 }}
+              className="w-12 h-12 rounded-md"
             />
             <View className="flex-1">
               <Text className="text-base font-inter-semibold text-foreground">
