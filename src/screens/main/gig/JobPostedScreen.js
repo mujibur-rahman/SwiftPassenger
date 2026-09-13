@@ -35,8 +35,8 @@ export default function JobPostedScreen({ navigation }) {
 
       <Image
         source={require("@assets/images/gigs/lawn_mowing/status/order-success.jpg")}
-        style={{ width: 220, height: 220, marginBottom: 24 }}
-        resizeMode="contain"
+        className="w-full h-55 mb-8 rounded-xl shadow-xl shadow-foreground"
+        resizeMode="cover"
       />
 
       <Text className="mb-2 text-center text-2xl font-inter-bold text-foreground">

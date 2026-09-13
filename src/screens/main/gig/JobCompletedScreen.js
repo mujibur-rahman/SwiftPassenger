@@ -25,8 +25,8 @@ export default function JobCompletedScreen({ navigation }) {
 
       <Image
         source={require("@assets/images/gigs/lawn_mowing/status/job-completed.png")}
-        style={{ width: 200, height: 200, marginBottom: 16 }}
-        resizeMode="contain"
+        className="w-70 h-70 mb-8 rounded-full shadow-2xl shadow-foreground"
+        resizeMode="cover"
       />
 
       <Text className="mb-2 text-center text-2xl font-inter-bold text-foreground">

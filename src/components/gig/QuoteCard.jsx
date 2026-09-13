@@ -107,7 +107,7 @@ export default function QuoteCard({
 
       <View className="mt-3 flex-row gap-2">
         {onViewProfile ? (
-          <Button variant="outline" size="sm" className="flex-1" onPress={onViewProfile}>
+          <Button variant="outline" size="sm" className="flex-1" onPress={() => onViewProfile(quote)}>
             Profile
           </Button>
         ) : null}
