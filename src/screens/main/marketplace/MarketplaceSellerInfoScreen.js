@@ -3,15 +3,16 @@ import { View, Text, ScrollView, StatusBar, Alert, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@/theme";
-import ScreenHeader from "@/components/ui/ScreenHeader";
-import Button from "@/components/ui/Button";
-import AppTextInput from "@/components/ui/AppTextInput";
-import StepProgress from "@/components/marketplace/StepProgress";
 import { DUMMY } from "@/components/marketplace/dummyAssets";
 import {
   setDraftField,
   selectMarketplaceDraft,
 } from "@/features/marketplace/marketplacePickupSlice";
+import ScreenHeader from "@/components/ui/ScreenHeader";
+import Button from "@/components/ui/Button";
+import AppTextInput from "@/components/ui/AppTextInput";
+import StepProgress from "@/components/marketplace/StepProgress";
+import Avatar from "@/components/ui/Avatar";
 
 export default function MarketplaceSellerInfoScreen() {
   const navigation = useNavigation();
@@ -52,12 +53,16 @@ export default function MarketplaceSellerInfoScreen() {
       >
         <StepProgress current={2} total={5} />
 
-        {/* Seller preview card */}
         <View className="mb-5 flex-row items-center gap-3 rounded-2xl border border-border bg-card p-4">
-          <Image
-            source={DUMMY.sellerShop}
-            className="w-12 h-12 rounded-xl"
-          />
+          {sellerName.trim() ? (
+            <Avatar name={sellerName.trim()} size={48} />
+          ) : (
+            <Image
+              source={DUMMY.sellerShop}
+              className="h-12 w-12 rounded-xl"
+              resizeMode="cover"
+            />
+          )}
           <View className="flex-1">
             <Text className="text-base font-inter-semibold text-foreground">
               {sellerName || "Seller / Shop"}

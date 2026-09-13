@@ -27,5 +27,5 @@ export const DUMMY = {
   arrivedStore: require("@assets/images/marketplace/driver-arrived.jpg"),
   mapRoute: require("@assets/images/marketplace/live.jpg"),
   deliveryHand: require("@assets/images/marketplace/delivery.png"),
-  success: require("@assets/images/marketplace/order-successwebp.webp"),
+  success: require("@assets/images/marketplace/order-success.png"),
 };
