@@ -14,7 +14,7 @@ export const DUMMY = {
   sellerShop: require("@assets/images/marketplace/seller-shop.jpg"),
 
   // Item product (local asset — pass directly as source={DUMMY.itemProduct})
-  itemProduct: require("@assets/images/marketplace/wireless-headphone.jpg"),
+  itemProduct: require("@assets/images/marketplace/marketplace.jpg"),
 
   // Driver avatar (local asset — pass directly as source={DUMMY.driverAvatar})
   driverAvatar: require("@assets/images/avatar/avatar-profile.jpg"),

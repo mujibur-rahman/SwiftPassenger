@@ -208,7 +208,6 @@ export default function MarketplaceItemDetailsScreen() {
             leftIcon="tag-outline"
           />
           <AppTextInput
-            // label="Approximate value"
             label="Price"
             value={approximateValue}
             onChangeText={setApproximateValue}

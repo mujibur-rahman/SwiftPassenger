@@ -22,7 +22,6 @@ export default function InfoCard({
           <Image
             source={imageUri}
             className="h-12 w-12 rounded-xl"
-            style={{ width: 48, height: 48, borderRadius: 12 }}
           />
         ) : icon ? (
           <View className="mt-0.5 h-10 w-10 items-center justify-center rounded-xl bg-background-muted">

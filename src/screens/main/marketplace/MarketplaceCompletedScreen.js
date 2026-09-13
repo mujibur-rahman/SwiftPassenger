@@ -34,12 +34,12 @@ export default function MarketplaceCompletedScreen() {
           <Image
             source={DUMMY.success}
             // style={{ width: 88, height: 88, borderRadius: 44, marginBottom: 16 }}
-            className="w-25 h-25 mb-4 rounded-full"
+            className="w-full h-40 mb-8 rounded-xl shadow-xl shadow-foreground"
           />
-          <View className="mb-2 h-14 w-14 items-center justify-center rounded-full bg-success/20 absolute top-6">
-            <Icon name="check" size={28} color={colors?.success || "#34D399"} />
-          </View>
-          <Text className="mt-14 text-center text-2xl font-inter-bold text-foreground">
+          {/* <View className="mb-2 h-14 w-14 items-center justify-center rounded-full bg-success/20 absolute top-6">
+            <Icon name="check" size={60} color={colors?.success || "#34D399"} />
+          </View> */}
+          <Text className="text-center text-2xl font-inter-bold text-foreground">
             Pickup Completed!
           </Text>
           <Text className="mt-2 text-center text-sm font-inter text-foreground-muted">
