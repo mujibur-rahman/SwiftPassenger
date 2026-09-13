@@ -18,9 +18,9 @@ export default function OrderPlacedScreen({ route, navigation }) {
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
       <Image
-        source={require("@assets/images/illustrations/order-success.png")}
-        style={{ width: 220, height: 220, marginBottom: 24 }}
-        resizeMode="contain"
+        source={require("@assets/images/food/order-placed.jpg")}
+        className="w-full h-60 mb-8 rounded-xl shadow-2xl shadow-foreground"
+        resizeMode="cover"
       />
 
       <Text className="mb-2 text-center text-2xl font-inter-bold text-foreground">Order Placed!</Text>
