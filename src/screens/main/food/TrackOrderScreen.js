@@ -333,13 +333,13 @@ export default function TrackOrderScreen({ route, navigation }) {
               <Button
                 fullWidth
                 onPress={() =>
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: "Tabs" }],
+                  navigation.navigate("RateFoodOrder", {
+                    orderId: order?.id,
+                    restaurantName: order?.restaurantName,
                   })
                 }
               >
-                Back to Home
+                Rate & Review
               </Button>
               <Button
                 variant="outline"

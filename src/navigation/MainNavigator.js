@@ -35,6 +35,7 @@ import FoodPaymentScreen from "@/screens/main/food/FoodPaymentScreen";
 import ReviewOrderScreen from "@/screens/main/food/ReviewOrderScreen";
 import OrderPlacedScreen from "@/screens/main/food/OrderPlacedScreen";
 import TrackOrderScreen from "@/screens/main/food/TrackOrderScreen";
+import RateFoodOrderScreen from "@/screens/main/food/RateFoodOrderScreen";
 
 import GigCategoriesScreen from "@/screens/main/gig/GigCategoriesScreen";
 import GigQuestionScreen from "@/screens/main/gig/GigQuestionScreen";
@@ -255,6 +256,7 @@ export default function MainNavigator() {
       <Stack.Screen name="ReviewOrder" component={ReviewOrderScreen} />
       <Stack.Screen name="OrderPlaced" component={OrderPlacedScreen} />
       <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
+      <Stack.Screen name="RateFoodOrder" component={RateFoodOrderScreen} />
 
       {/* Gig Jobs flow — all stack screens under Main Navigator */}
       <Stack.Screen name="GigCategories" component={GigCategoriesScreen} />
