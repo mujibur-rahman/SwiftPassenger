@@ -177,10 +177,10 @@ export default function ShopListBuilderScreen({ route, navigation }) {
           onChange={(v) => dispatch(setBudgetLimit(v))}
           formatLabel={(v) => `$${v}`}
         />
-        <View className="mt-1 flex-row justify-between">
+        {/* <View className="mt-1 flex-row justify-between">
           <Text className="text-[11px] font-inter text-foreground-muted">$5</Text>
           <Text className="text-[11px] font-inter text-foreground-muted">$100</Text>
-        </View>
+        </View> */}
 
         <View className="mt-7 mb-4">
           <Text className="mb-2 text-[13px] font-inter-semibold text-foreground-secondary">

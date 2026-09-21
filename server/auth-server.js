@@ -1,3 +1,4 @@
+// server/auth-server.js
 const express = require("express");
 const http = require("http");
 const jwt = require("jsonwebtoken");
@@ -982,10 +983,10 @@ app.post("/marketplace/pickup/:id/rating", (req, res) => {
 // approve/reject) that the setTimeout chain has to pause for instead of
 // just ticking through a fixed status list. See checkShopItemsResolved().
 const SHOP_STORES = [
-  { id: 1, name: "Fresh Mart", category: "Grocery", categoryTag: "groceries", distanceKm: 0.8, hours: "Open · Closes 10 PM", icon: "leaf" },
-  { id: 2, name: "Big Bazaar", category: "Grocery", categoryTag: "groceries", distanceKm: 1.2, hours: "Open · Closes 11 PM", icon: "cart" },
-  { id: 3, name: "Pharmacy Plus", category: "Pharmacy", categoryTag: "pharmacy", distanceKm: 1.5, hours: "Open · Closes 9 PM", icon: "cross" },
-  { id: 4, name: "City Supermarket", category: "Grocery", categoryTag: "groceries", distanceKm: 2.1, hours: "Open · Closes 10 PM", icon: "store" },
+  { id: 1, name: "Woolworths", category: "Grocery", categoryTag: "groceries", distanceKm: 0.8, hours: "Open · Closes 10 PM", icon: "leaf" },
+  { id: 2, name: "Coles", category: "Grocery", categoryTag: "groceries", distanceKm: 1.2, hours: "Open · Closes 11 PM", icon: "cart" },
+  { id: 3, name: "Chemist Warehouse", category: "Pharmacy", categoryTag: "pharmacy", distanceKm: 1.5, hours: "Open · Closes 9 PM", icon: "cross" },
+  { id: 4, name: "ALDI", category: "Grocery", categoryTag: "groceries", distanceKm: 2.1, hours: "Open · Closes 10 PM", icon: "store" },
 ];
 
 const SHOP_FEES = { serviceFee: 3.0, deliveryFee: 2.0 };

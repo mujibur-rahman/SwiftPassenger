@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
-import { useGetActiveShopOrderQuery } from "@/features/shop/shopApi";
+import { useGetShopOrderByIdQuery } from "@/features/shop/shopApi";
 import { hydrateShopOrder } from "@/features/shop/shopOrderSlice";
 
 export default function ShopPurchasedScreen({ route, navigation }) {
@@ -17,11 +17,14 @@ export default function ShopPurchasedScreen({ route, navigation }) {
   const primary = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
   const success = colors?.success ?? (isDark ? "#34D399" : "#16A34A");
 
-  // Still polling here — the user might sit on this screen while the
-  // shopper starts driving, and "Track Delivery" below should only make
-  // sense once status has actually reached "delivering".
-  const { data } = useGetActiveShopOrderQuery(undefined, { pollingInterval: 3000 });
-  const order = data?.order;
+  // Fetch the specific order by ID so this screen keeps working even after
+  // the order reaches 'delivered' status (which /shop/orders/active excludes).
+  const orderId = route?.params?.orderId;
+  const { data } = useGetShopOrderByIdQuery(orderId, {
+    skip: !orderId,
+    pollingInterval: 3000,
+  });
+  const order = data;
 
   useEffect(() => {
     if (order) dispatch(hydrateShopOrder(order));
@@ -109,6 +112,9 @@ export default function ShopPurchasedScreen({ route, navigation }) {
         </Button>
         <Button variant="outline" onPress={() => navigation.navigate("ShopReceipt", { orderId: order.id, orderNumber: order.orderNumber })}>
           View Receipt
+        </Button>
+        <Button variant="ghost" onPress={() => navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] })}>
+          Done
         </Button>
       </View>
     </View>

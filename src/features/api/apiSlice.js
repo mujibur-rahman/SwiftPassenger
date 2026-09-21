@@ -50,6 +50,7 @@ export const apiSlice = createApi({
     "ActivePickup",
     "ShopStore",
     "ActiveShopOrder",
+    "ShopOrder",
   ],
   endpoints: () => ({}), // empty – features will inject
 });
