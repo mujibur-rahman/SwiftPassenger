@@ -30,7 +30,7 @@ const SocketContext = createContext(null);
 // CRITICAL: Must be the same host/port as the API (auth-server + Socket.IO on 3000)
 // Android emulator: http://10.0.2.2:3000
 // Physical device: http://YOUR_LAN_IP:3000
-const SOCKET_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.101:3000";
+const SOCKET_URL = process.env.EXPO_PUBLIC_BASE_URL || "http://192.168.0.100:3000";
 
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);

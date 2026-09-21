@@ -32,6 +32,7 @@ export default function RegisterScreen({ navigation }) {
       Alert.alert("Error", "Please fill in all required fields");
       return;
     }
+    
 
     if (form.password.length < 6) {
       Alert.alert("Error", "Password must be at least 6 characters");

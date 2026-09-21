@@ -975,6 +975,250 @@ app.post("/marketplace/pickup/:id/rating", (req, res) => {
   return res.status(201).json({ id, rating, pickupId: id });
 });
 
+// ========== SHOP FOR ME MOCK ==========
+// Same in-memory-array + setTimeout-progression convention as the FOOD and
+// GIG JOBS mocks above. The one thing food/gig don't have: item-level
+// status inside an order, and a mid-flight customer decision (substitute
+// approve/reject) that the setTimeout chain has to pause for instead of
+// just ticking through a fixed status list. See checkShopItemsResolved().
+const SHOP_STORES = [
+  { id: 1, name: "Fresh Mart", category: "Grocery", categoryTag: "groceries", distanceKm: 0.8, hours: "Open · Closes 10 PM", icon: "leaf" },
+  { id: 2, name: "Big Bazaar", category: "Grocery", categoryTag: "groceries", distanceKm: 1.2, hours: "Open · Closes 11 PM", icon: "cart" },
+  { id: 3, name: "Pharmacy Plus", category: "Pharmacy", categoryTag: "pharmacy", distanceKm: 1.5, hours: "Open · Closes 9 PM", icon: "cross" },
+  { id: 4, name: "City Supermarket", category: "Grocery", categoryTag: "groceries", distanceKm: 2.1, hours: "Open · Closes 10 PM", icon: "store" },
+];
+
+const SHOP_FEES = { serviceFee: 3.0, deliveryFee: 2.0 };
+
+const FAKE_SHOPPERS = [
+  { id: 401, name: "Rahat Islam", phone: "01712345678", rating: 4.8, ratingCount: 256, vehicle: "Toyota Corolla · ABC 1234" },
+  { id: 402, name: "Nusrat Jahan", phone: "01812345679", rating: 4.9, ratingCount: 312, vehicle: "Honda City · DEF 5678" },
+];
+
+function pickFakeShopper() {
+  return FAKE_SHOPPERS[Math.floor(Math.random() * FAKE_SHOPPERS.length)];
+}
+
+// ========== SEARCH STORES ==========
+app.get("/shop/stores", (req, res) => {
+  const q = String(req.query.q || "").trim().toLowerCase();
+  const category = String(req.query.category || "nearby").trim().toLowerCase();
+
+  let results = SHOP_STORES;
+  if (category === "groceries" || category === "pharmacy") {
+    results = results.filter((s) => s.categoryTag === category);
+  }
+  if (q) {
+    results = results.filter((s) => s.name.toLowerCase().includes(q) || s.category.toLowerCase().includes(q));
+  }
+
+  return res.json(results);
+});
+
+// ========== ORDERS ==========
+let shopOrders = [];
+let shopOrderIdCounter = 1;
+
+// Every item resolved (nothing left "pending") is what unblocks checkout —
+// this fires once right after order creation (nothing to resolve yet) and
+// again after every substitute-response, since that's the only thing that
+// can move an item off "pending" besides the shopper finding it outright.
+function checkShopItemsResolved(orderId) {
+  const order = shopOrders.find((o) => o.id === orderId);
+  if (!order || order.status !== "shopping") return;
+  const allResolved = order.items.every((it) => it.status !== "pending");
+  if (!allResolved) return;
+
+  order.status = "checkout";
+  order.actualTotal = order.items.reduce((sum, it) => {
+    if (it.status === "found" || it.status === "substituted") {
+      return sum + (Number(it.actualPrice) || 0) * (it.qty || 1);
+    }
+    return sum;
+  }, 0) + SHOP_FEES.serviceFee + SHOP_FEES.deliveryFee;
+
+  setTimeout(() => {
+    const o = shopOrders.find((x) => x.id === orderId);
+    if (!o || o.status !== "checkout") return;
+    o.status = "purchased";
+  }, 2500);
+
+  setTimeout(() => {
+    const o = shopOrders.find((x) => x.id === orderId);
+    if (!o || o.status !== "purchased") return;
+    o.status = "delivering";
+    o.eta = { minutes: 12, distanceKm: 2.5 };
+  }, 6000);
+
+  setTimeout(() => {
+    const o = shopOrders.find((x) => x.id === orderId);
+    if (!o || o.status !== "delivering") return;
+    o.status = "delivered";
+  }, 18000);
+}
+
+// searching → assigned → to_store → shopping (then items resolve one by
+// one; one item is deliberately flagged for a substitute so the
+// approve/reject UI has something to show in the demo).
+function progressShopOrder(orderId) {
+  setTimeout(() => {
+    const order = shopOrders.find((o) => o.id === orderId);
+    if (!order || order.status !== "searching") return;
+    order.status = "assigned";
+    order.shopper = pickFakeShopper();
+  }, 2500);
+
+  setTimeout(() => {
+    const order = shopOrders.find((o) => o.id === orderId);
+    if (!order || order.status !== "assigned") return;
+    order.status = "to_store";
+  }, 4000);
+
+  setTimeout(() => {
+    const order = shopOrders.find((o) => o.id === orderId);
+    if (!order || order.status !== "to_store") return;
+    order.status = "shopping";
+
+    const items = order.items;
+    items.forEach((item, index) => {
+      const isLast = index === items.length - 1;
+      const delay = 2500 + index * 2200;
+
+      setTimeout(() => {
+        const o = shopOrders.find((x) => x.id === orderId);
+        if (!o || o.status !== "shopping") return;
+        const it = o.items.find((x) => x.id === item.id);
+        if (!it || it.status !== "pending") return;
+
+        if (isLast && items.length > 1) {
+          // Flag the last item for a substitute instead of marking it
+          // found outright — stays "pending" (shown as "Searching...")
+          // until the customer responds.
+          o.pendingSubstitute = {
+            itemId: it.id,
+            itemName: it.name,
+            suggestedName: `${it.name} (different brand)`,
+            suggestedPrice: Math.round((it.estimatedPrice || 5) * 1.15 * 100) / 100,
+            originalPrice: it.estimatedPrice || 5,
+          };
+        } else {
+          it.status = "found";
+          it.actualPrice = it.estimatedPrice || Math.round((3 + Math.random() * 8) * 100) / 100;
+        }
+        checkShopItemsResolved(orderId);
+      }, delay);
+    });
+  }, 6500);
+}
+
+app.post("/shop/orders", (req, res) => {
+  const { storeId, storeName, items, budgetLimit, substitutionPreference, deliveryAddress, paymentMethod, estimatedTotal } = req.body || {};
+
+  if (!storeId || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: "storeId and items are required" });
+  }
+  if (!budgetLimit || budgetLimit <= 0) {
+    return res.status(400).json({ message: "budgetLimit is required" });
+  }
+
+  const order = {
+    id: shopOrderIdCounter++,
+    orderNumber: `SP${100000 + shopOrderIdCounter}`,
+    storeId,
+    storeName,
+    items: items.map((it, i) => ({
+      id: it.id || `item_${i}`,
+      name: it.name,
+      qty: it.qty || 1,
+      unit: it.unit || "",
+      note: it.note || "",
+      status: "pending",
+      actualPrice: null,
+      substitutedWith: null,
+      estimatedPrice: it.estimatedPrice || null,
+    })),
+    budgetLimit,
+    substitutionPreference: substitutionPreference || "suggest_similar",
+    deliveryAddress,
+    paymentMethod,
+    fees: SHOP_FEES,
+    estimatedTotal: estimatedTotal || budgetLimit + SHOP_FEES.serviceFee + SHOP_FEES.deliveryFee,
+    actualTotal: null,
+    status: "searching", // searching → assigned → to_store → shopping → checkout → purchased → delivering → delivered
+    shopper: null,
+    pendingSubstitute: null,
+    eta: null,
+    rating: null,
+    createdAt: new Date().toISOString(),
+  };
+
+  shopOrders.push(order);
+  progressShopOrder(order.id);
+
+  console.log("Shop order placed →", order.id, order.storeName);
+
+  return res.status(201).json(order);
+});
+
+app.get("/shop/orders/active", (req, res) => {
+  const active = [...shopOrders]
+    .reverse()
+    .find((o) => !["delivered", "cancelled"].includes(o.status));
+
+  if (!active) return res.json({ order: null });
+  return res.json({ order: active });
+});
+
+app.get("/shop/orders/history", (req, res) => {
+  return res.json(shopOrders.filter((o) => o.status === "delivered"));
+});
+
+app.get("/shop/orders/:id", (req, res) => {
+  const order = shopOrders.find((o) => o.id === Number(req.params.id));
+  if (!order) return res.status(404).json({ message: "Order not found" });
+  return res.json(order);
+});
+
+// ========== SUBSTITUTE RESPONSE ==========
+app.post("/shop/:orderId/items/:itemId/substitute-response", (req, res) => {
+  const order = shopOrders.find((o) => o.id === Number(req.params.orderId));
+  if (!order) return res.status(404).json({ message: "Order not found" });
+
+  const { approved } = req.body || {};
+  const item = order.items.find((it) => it.id === req.params.itemId);
+  if (!item) return res.status(404).json({ message: "Item not found" });
+
+  if (!order.pendingSubstitute || order.pendingSubstitute.itemId !== item.id) {
+    return res.status(409).json({ message: "No pending substitute for this item" });
+  }
+
+  if (approved) {
+    item.status = "substituted";
+    item.actualPrice = order.pendingSubstitute.suggestedPrice;
+    item.substitutedWith = { name: order.pendingSubstitute.suggestedName, price: order.pendingSubstitute.suggestedPrice };
+  } else {
+    item.status = "skipped";
+    item.actualPrice = 0;
+  }
+  order.pendingSubstitute = null;
+
+  checkShopItemsResolved(order.id);
+
+  return res.json(order);
+});
+
+// ========== RATE SHOPPER ==========
+app.post("/shop/orders/:id/rate", (req, res) => {
+  const order = shopOrders.find((o) => o.id === Number(req.params.id));
+  if (!order) return res.status(404).json({ message: "Order not found" });
+
+  const { rating, tags, comment } = req.body || {};
+  if (!rating) return res.status(400).json({ message: "rating is required" });
+
+  order.rating = { rating, tags: tags || [], comment: comment || "" };
+  return res.status(201).json(order.rating);
+});
+
 server.listen(3000, "0.0.0.0", () => {
   console.log("✅ Auth server + Socket.IO running on http://0.0.0.0:3000");
 });

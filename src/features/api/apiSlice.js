@@ -15,6 +15,7 @@ const rawBaseQuery = fetchBaseQuery({
     headers.set("Content-Type", "application/json");
     return headers;
   },
+
 });
 
 const baseQueryWithAuth = async (args, api, extraOptions) => {
@@ -47,6 +48,8 @@ export const apiSlice = createApi({
     "Booking",
     "MarketplacePickup",
     "ActivePickup",
+    "ShopStore",
+    "ActiveShopOrder",
   ],
   endpoints: () => ({}), // empty – features will inject
 });

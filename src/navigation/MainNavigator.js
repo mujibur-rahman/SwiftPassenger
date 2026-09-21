@@ -36,6 +36,19 @@ import ReviewOrderScreen from "@/screens/main/food/ReviewOrderScreen";
 import OrderPlacedScreen from "@/screens/main/food/OrderPlacedScreen";
 import TrackOrderScreen from "@/screens/main/food/TrackOrderScreen";
 import RateFoodOrderScreen from "@/screens/main/food/RateFoodOrderScreen";
+import ShopStoreSearchScreen from "@/screens/main/shop/ShopStoreSearchScreen";
+import ShopListBuilderScreen from "@/screens/main/shop/ShopListBuilderScreen";
+import ShopCheckoutScreen from "@/screens/main/shop/ShopCheckoutScreen";
+import ShopPaymentScreen from "@/screens/main/shop/ShopPaymentScreen";
+import ShopReviewOrderScreen from "@/screens/main/shop/ShopReviewOrderScreen";
+import ShopOrderPlacedScreen from "@/screens/main/shop/ShopOrderPlacedScreen";
+import ShopTrackOrderScreen from "@/screens/main/shop/ShopTrackOrderScreen";
+import ShopPurchasedScreen from "@/screens/main/shop/ShopPurchasedScreen";
+import ShopOnTheWayScreen from "@/screens/main/shop/ShopOnTheWayScreen";
+import ShopDeliveredScreen from "@/screens/main/shop/ShopDeliveredScreen";
+import ShopReceiptScreen from "@/screens/main/shop/ShopReceiptScreen";
+import RateShopOrderScreen from "@/screens/main/shop/RateShopOrderScreen";
+import ShopCompleteScreen from "@/screens/main/shop/ShopCompleteScreen";
 
 import GigCategoriesScreen from "@/screens/main/gig/GigCategoriesScreen";
 import GigQuestionScreen from "@/screens/main/gig/GigQuestionScreen";
@@ -257,6 +270,25 @@ export default function MainNavigator() {
       <Stack.Screen name="OrderPlaced" component={OrderPlacedScreen} />
       <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
       <Stack.Screen name="RateFoodOrder" component={RateFoodOrderScreen} />
+      {/*
+        Shop for me — mirrors the food stack's shape (search → build →
+        checkout → payment → review → placed → track → rate), plus one
+        screen food has no equivalent of (ShopReceipt, for the itemized
+        refund breakdown only shopping needs).
+      */}
+      <Stack.Screen name="ShopStoreSearch" component={ShopStoreSearchScreen} />
+      <Stack.Screen name="ShopListBuilder" component={ShopListBuilderScreen} />
+      <Stack.Screen name="ShopCheckout" component={ShopCheckoutScreen} />
+      <Stack.Screen name="ShopPayment" component={ShopPaymentScreen} />
+      <Stack.Screen name="ShopReviewOrder" component={ShopReviewOrderScreen} />
+      <Stack.Screen name="ShopOrderPlaced" component={ShopOrderPlacedScreen} />
+      <Stack.Screen name="ShopTrackOrder" component={ShopTrackOrderScreen} />
+      <Stack.Screen name="ShopPurchased" component={ShopPurchasedScreen} />
+      <Stack.Screen name="ShopOnTheWay" component={ShopOnTheWayScreen} />
+      <Stack.Screen name="ShopDelivered" component={ShopDeliveredScreen} />
+      <Stack.Screen name="ShopReceipt" component={ShopReceiptScreen} />
+      <Stack.Screen name="RateShopOrder" component={RateShopOrderScreen} />
+      <Stack.Screen name="ShopComplete" component={ShopCompleteScreen} />
 
       {/* Gig Jobs flow — all stack screens under Main Navigator */}
       <Stack.Screen name="GigCategories" component={GigCategoriesScreen} />

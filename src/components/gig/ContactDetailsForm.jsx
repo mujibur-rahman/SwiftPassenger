@@ -10,6 +10,7 @@ import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useTheme } from "@/theme";
 import AppTextInput from "@/components/ui/AppTextInput";
+// import IconButton from "@/components/ui/IconButton";
 
 const FIELDS = [
   { key: "fullName", label: "Full Name", required: true },
@@ -106,7 +107,7 @@ export default function ContactDetailsForm({
         <View className="flex-row flex-wrap gap-3">
           {photos.map((uri) => (
             <View key={uri} className="relative">
-              <Image source={{ uri }} style={{ width: 96, height: 96, borderRadius: 16 }} />
+              <Image source={{ uri }} resizeMode="cover" className="h-24 w-24 rounded-xl" />
               <TouchableOpacity
                 onPress={() => removePhoto(uri)}
                 className="absolute -right-1.5 -top-1.5 h-5 w-5 items-center justify-center rounded-full bg-error"
@@ -118,10 +119,12 @@ export default function ContactDetailsForm({
 
           <TouchableOpacity
             onPress={pickPhoto}
-            className="h-24 w-24 items-center justify-center rounded-2xl border border-dashed border-primary/40 bg-card"
+            className="h-24 w-24 items-center justify-center rounded-xl border border-dashed border-primary/40 bg-card"
           >
             <Icon name="plus" size={22} color={primary} />
           </TouchableOpacity>
+          {/* <IconButton icon="plus" size={84} iconSize={22} border className="border-dashed rounded-xl" />
+          <IconButton icon="camera" onPress={pickPhoto} rounded="rounded-xl" border variant="primary" /> */}
         </View>
       )}
     </View>

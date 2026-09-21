@@ -10,6 +10,8 @@ import cartReducer from "@/features/food/cartSlice";
 import foodOrderReducer from "@/features/food/foodOrderSlice";
 import gigReducer from "@/features/gig/gigSlice";
 import marketplacePickupReducer from "@/features/marketplace/marketplacePickupSlice";
+import shopCartReducer from "@/features/shop/shopCartSlice";
+import shopOrderReducer from "@/features/shop/shopOrderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +24,8 @@ export const store = configureStore({
     foodOrder: foodOrderReducer,
     gig: gigReducer,
     marketplacePickup: marketplacePickupReducer,
+    shopCart: shopCartReducer,
+    shopOrder: shopOrderReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
