@@ -30,7 +30,7 @@ export default function ShopPaymentScreen({ route, navigation }) {
   const warning = colors?.warning ?? (isDark ? "#FBBF24" : "#D97706");
   const cart = useSelector(selectShopCart);
 
-  const deliveryAddress = route.params?.deliveryAddress || { title: "Home", subtitle: "123 Main Street, Dhaka" };
+  const deliveryAddress = route.params?.deliveryAddress || { title: "Home", subtitle: "25 Derwent Esplanade, Rosny Park, Tasmania, Australia" };
   const receiverPhone = route.params?.receiverPhone || "";
   const deliveryInstructions = route.params?.deliveryInstructions || "";
 

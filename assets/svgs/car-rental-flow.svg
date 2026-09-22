@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="1280" viewBox="0 0 920 1280">
+  <defs>
+    <linearGradient id="gPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="gSuccess" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0EA5E9" flood-opacity="0.25"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748B"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="920" height="1280" fill="#0B1220"/>
+  <rect x="24" y="24" width="872" height="1232" rx="24" fill="#0F172A" stroke="#1E3A5F" stroke-width="1"/>
+
+  <!-- Title -->
+  <text x="460" y="70" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700" fill="#F0F9FF" text-anchor="middle">SwiftRide — Car Rental Flow</text>
+  <text x="460" y="98" font-family="Inter, Arial, sans-serif" font-size="14" fill="#7DD3FC" text-anchor="middle">Step-by-step customer journey</text>
+
+  <!-- Step boxes -->
+  <!-- 1 -->
+  <rect x="280" y="130" width="360" height="72" rx="16" fill="url(#gPrimary)" filter="url(#shadow)"/>
+  <text x="460" y="162" font-family="Inter, Arial, sans-serif" font-size="13" fill="#060E1A" text-anchor="middle" font-weight="600">STEP 1</text>
+  <text x="460" y="184" font-family="Inter, Arial, sans-serif" font-size="16" fill="#060E1A" text-anchor="middle" font-weight="700">Home → Tap “Car rental”</text>
+
+  <path d="M460 202 L460 230" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 2 -->
+  <rect x="280" y="235" width="360" height="72" rx="16" fill="#0D1E32" stroke="#38BDF8" stroke-width="2"/>
+  <text x="460" y="267" font-family="Inter, Arial, sans-serif" font-size="13" fill="#7DD3FC" text-anchor="middle" font-weight="600">STEP 2</text>
+  <text x="460" y="289" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F0F9FF" text-anchor="middle" font-weight="700">Search: Location + Dates + Time</text>
+
+  <path d="M460 307 L460 335" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 3 -->
+  <rect x="280" y="340" width="360" height="72" rx="16" fill="#0D1E32" stroke="#38BDF8" stroke-width="2"/>
+  <text x="460" y="372" font-family="Inter, Arial, sans-serif" font-size="13" fill="#7DD3FC" text-anchor="middle" font-weight="600">STEP 3</text>
+  <text x="460" y="394" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F0F9FF" text-anchor="middle" font-weight="700">Car List + Category Filters</text>
+
+  <path d="M460 412 L460 440" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 4 -->
+  <rect x="280" y="445" width="360" height="72" rx="16" fill="#0D1E32" stroke="#38BDF8" stroke-width="2"/>
+  <text x="460" y="477" font-family="Inter, Arial, sans-serif" font-size="13" fill="#7DD3FC" text-anchor="middle" font-weight="600">STEP 4</text>
+  <text x="460" y="499" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F0F9FF" text-anchor="middle" font-weight="700">Car Details (Specs &amp; Features)</text>
+
+  <path d="M460 517 L460 545" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 5 -->
+  <rect x="280" y="550" width="360" height="72" rx="16" fill="#0D1E32" stroke="#38BDF8" stroke-width="2"/>
+  <text x="460" y="582" font-family="Inter, Arial, sans-serif" font-size="13" fill="#7DD3FC" text-anchor="middle" font-weight="600">STEP 5</text>
+  <text x="460" y="604" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F0F9FF" text-anchor="middle" font-weight="700">Booking Summary + Add-ons</text>
+
+  <path d="M460 622 L460 650" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 6 -->
+  <rect x="280" y="655" width="360" height="72" rx="16" fill="#0D1E32" stroke="#38BDF8" stroke-width="2"/>
+  <text x="460" y="687" font-family="Inter, Arial, sans-serif" font-size="13" fill="#7DD3FC" text-anchor="middle" font-weight="600">STEP 6</text>
+  <text x="460" y="709" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F0F9FF" text-anchor="middle" font-weight="700">Payment (bKash / Nagad / Card)</text>
+
+  <path d="M460 727 L460 755" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 7 -->
+  <rect x="280" y="760" width="360" height="72" rx="16" fill="url(#gSuccess)" filter="url(#shadow)"/>
+  <text x="460" y="792" font-family="Inter, Arial, sans-serif" font-size="13" fill="#064E3B" text-anchor="middle" font-weight="600">STEP 7</text>
+  <text x="460" y="814" font-family="Inter, Arial, sans-serif" font-size="16" fill="#064E3B" text-anchor="middle" font-weight="700">Confirmation + Booking Code</text>
+
+  <path d="M460 832 L460 860" stroke="#64748B" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- 8 -->
+  <rect x="280" y="865" width="360" height="72" rx="16" fill="#1E3A5F" stroke="#818CF8" stroke-width="2"/>
+  <text x="460" y="897" font-family="Inter, Arial, sans-serif" font-size="13" fill="#C4B5FD" text-anchor="middle" font-weight="600">STEP 8</text>
+  <text x="460" y="919" font-family="Inter, Arial, sans-serif" font-size="16" fill="#F0F9FF" text-anchor="middle" font-weight="700">My Rentals (View / Cancel)</text>
+
+  <!-- Side notes -->
+  <rect x="40" y="340" width="200" height="100" rx="12" fill="#0D1E32" stroke="#1E3A5F"/>
+  <text x="140" y="370" font-family="Inter, Arial, sans-serif" font-size="12" fill="#7DD3FC" text-anchor="middle" font-weight="600">Filters</text>
+  <text x="140" y="392" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Economy · SUV</text>
+  <text x="140" y="410" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Luxury · Electric</text>
+  <text x="140" y="428" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Seats · Transmission</text>
+
+  <rect x="680" y="550" width="200" height="110" rx="12" fill="#0D1E32" stroke="#1E3A5F"/>
+  <text x="780" y="580" font-family="Inter, Arial, sans-serif" font-size="12" fill="#7DD3FC" text-anchor="middle" font-weight="600">Add-ons</text>
+  <text x="780" y="602" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Extra Driver</text>
+  <text x="780" y="620" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Child Seat · GPS</text>
+  <text x="780" y="638" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Full Insurance</text>
+  <text x="780" y="656" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Mobile Wi-Fi</text>
+
+  <rect x="40" y="655" width="200" height="90" rx="12" fill="#0D1E32" stroke="#1E3A5F"/>
+  <text x="140" y="685" font-family="Inter, Arial, sans-serif" font-size="12" fill="#7DD3FC" text-anchor="middle" font-weight="600">Payments</text>
+  <text x="140" y="707" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">bKash · Nagad</text>
+  <text x="140" y="725" font-family="Inter, Arial, sans-serif" font-size="11" fill="#BAE6FD" text-anchor="middle">Card · Cash on Pickup</text>
+
+  <!-- Footer legend -->
+  <text x="460" y="1020" font-family="Inter, Arial, sans-serif" font-size="13" fill="#94A3B8" text-anchor="middle">Screens: CarRentalHome → CarList → CarDetails → BookingSummary → Payment → Confirmation → MyRentals</text>
+
+  <rect x="120" y="1050" width="680" height="160" rx="16" fill="#0D1E32" stroke="#1E3A5F"/>
+  <text x="460" y="1085" font-family="Inter, Arial, sans-serif" font-size="14" fill="#38BDF8" text-anchor="middle" font-weight="700">Business value</text>
+  <text x="460" y="1112" font-family="Inter, Arial, sans-serif" font-size="12" fill="#BAE6FD" text-anchor="middle">Self-serve booking · Transparent pricing · Local payments</text>
+  <text x="460" y="1134" font-family="Inter, Arial, sans-serif" font-size="12" fill="#BAE6FD" text-anchor="middle">Flexible add-ons · Instant confirmation · Easy cancellation</text>
+  <text x="460" y="1156" font-family="Inter, Arial, sans-serif" font-size="12" fill="#BAE6FD" text-anchor="middle">Categories: Economy · SUV · Luxury · Electric</text>
+  <text x="460" y="1185" font-family="Inter, Arial, sans-serif" font-size="11" fill="#64748B" text-anchor="middle">SwiftRide Passenger App · Car Rental Module</text>
+</svg>

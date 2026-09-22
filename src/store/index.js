@@ -14,6 +14,7 @@ import shopCartReducer from "@/features/shop/shopCartSlice";
 import shopOrderReducer from "@/features/shop/shopOrderSlice";
 import insuranceReducer from "@/features/insurance/insuranceSlice";
 import parcelDeliveryReducer from "@/features/parcel/parcelDeliverySlice";
+import rentalReducer from "@/features/rental/rentalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ export const store = configureStore({
     shopOrder: shopOrderReducer,
     insurance: insuranceReducer,
     parcelDelivery: parcelDeliveryReducer,
+    rental: rentalReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

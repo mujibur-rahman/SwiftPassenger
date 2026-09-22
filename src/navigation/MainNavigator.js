@@ -89,6 +89,15 @@ import PolicySuccessScreen from "@/screens/main/insurance/PolicySuccessScreen";
 import MyPoliciesScreen from "@/screens/main/insurance/MyPoliciesScreen";
 import ClaimTypeScreen from "@/screens/main/insurance/ClaimTypeScreen";
 
+// Car Rental
+import CarRentalHomeScreen from "@/screens/main/rental/CarRentalHomeScreen";
+import CarListScreen from "@/screens/main/rental/CarListScreen";
+import CarDetailsScreen from "@/screens/main/rental/CarDetailsScreen";
+import RentalBookingSummaryScreen from "@/screens/main/rental/RentalBookingSummaryScreen";
+import RentalPaymentScreen from "@/screens/main/rental/RentalPaymentScreen";
+import RentalConfirmationScreen from "@/screens/main/rental/RentalConfirmationScreen";
+import MyRentalsScreen from "@/screens/main/rental/MyRentalsScreen";
+
 import ParcelDeliveryHomeScreen from "@/screens/main/parcel/ParcelDeliveryHomeScreen";
 import ParcelPickupLocationScreen from "@/screens/main/parcel/ParcelPickupLocationScreen";
 import ParcelDeliveryLocationScreen from "@/screens/main/parcel/ParcelDeliveryLocationScreen";
@@ -393,6 +402,15 @@ export default function MainNavigator() {
       <Stack.Screen name="ParcelReceipt" component={ParcelReceiptScreen} />
       <Stack.Screen name="ParcelRate" component={ParcelRateScreen} />
       <Stack.Screen name="ParcelComplete" component={ParcelCompleteScreen} />
+
+      {/* Car Rental flow */}
+      <Stack.Screen name="CarRentalHome" component={CarRentalHomeScreen} />
+      <Stack.Screen name="CarList" component={CarListScreen} />
+      <Stack.Screen name="CarDetails" component={CarDetailsScreen} />
+      <Stack.Screen name="RentalBookingSummary" component={RentalBookingSummaryScreen} />
+      <Stack.Screen name="RentalPayment" component={RentalPaymentScreen} />
+      <Stack.Screen name="RentalConfirmation" component={RentalConfirmationScreen} />
+      <Stack.Screen name="MyRentals" component={MyRentalsScreen} />
     </Stack.Navigator>
   );
 }

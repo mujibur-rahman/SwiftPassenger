@@ -30,6 +30,8 @@ const ServiceCard = ({ job, onPress, iconSize = 28, className = "" }) => {
       navigation.navigate("MarketplacePickup");
     } else if (job.id === "7" || job.title === "Car insurance") {
       navigation.navigate("CarInsuranceLanding");
+    } else if (job.id === "8" || job.title === "Car rental") {
+      navigation.navigate("CarRentalHome");
     } else {
       // অন্য সার্ভিস পরে
       Alert.alert("Coming soon", `${job.title} is coming soon`);

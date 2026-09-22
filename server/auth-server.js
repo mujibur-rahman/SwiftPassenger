@@ -1536,6 +1536,183 @@ app.post("/parcel/deliveries/:id/rating", (req, res) => {
   return res.status(201).json(parcel.rating);
 });
 
+// ========== CAR RENTAL ==========
+const RENTAL_CARS_DB = [
+  {
+    id: "rc1",
+    name: "Toyota Corolla",
+    brand: "Toyota",
+    model: "Corolla",
+    year: 2023,
+    image: "@assets/images/rental/toyota-small.jpg",
+    images: ["@assets/images/rental/toyota-large.jpg"],
+    pricePerDay: 3500,
+    category: "Economy",
+    seats: 5,
+    transmission: "Automatic",
+    fuel: "Petrol",
+    rating: 4.8,
+    reviewCount: 124,
+    features: ["AC", "Bluetooth", "Rear Camera", "ABS", "Airbags"],
+    available: true,
+  },
+  {
+    id: "rc2",
+    name: "Honda CR-V",
+    brand: "Honda",
+    model: "CR-V",
+    year: 2022,
+    image: "@assets/images/rental/honda-small.jpg",
+    images: ["@assets/images/rental/honda-large.jpg"],
+    pricePerDay: 5500,
+    category: "SUV",
+    seats: 7,
+    transmission: "Automatic",
+    fuel: "Petrol",
+    rating: 4.9,
+    reviewCount: 89,
+    features: ["AC", "Bluetooth", "Sunroof", "4WD", "Cruise Control"],
+    available: true,
+  },
+  {
+    id: "rc3",
+    name: "BMW 5 Series",
+    brand: "BMW",
+    model: "5 Series",
+    year: 2024,
+    image: "@assets/images/rental/bmw-small.jpg",
+    images: ["@assets/images/rental/bmw-large.jpg"],
+    pricePerDay: 12000,
+    category: "Luxury",
+    seats: 5,
+    transmission: "Automatic",
+    fuel: "Petrol",
+    rating: 4.7,
+    reviewCount: 56,
+    features: ["AC", "Leather", "Premium Sound", "Navigation", "Sunroof"],
+    available: true,
+  },
+  {
+    id: "rc4",
+    name: "Suzuki Swift",
+    brand: "Suzuki",
+    model: "Swift",
+    year: 2023,
+    image: "@assets/images/rental/suzuki-small.jpg",
+    images: ["@assets/images/rental/suzuki-large.jpg"],
+    pricePerDay: 2800,
+    category: "Economy",
+    seats: 5,
+    transmission: "Manual",
+    fuel: "Petrol",
+    rating: 4.5,
+    reviewCount: 210,
+    features: ["AC", "Bluetooth", "Power Steering"],
+    available: true,
+  },
+  {
+    id: "rc5",
+    name: "Tesla Model 3",
+    brand: "Tesla",
+    model: "Model 3",
+    year: 2024,
+    image: "@assets/images/rental/tesla-small.jpg",
+    images: ["@assets/images/rental/tesla-large.jpg"],
+    pricePerDay: 15000,
+    category: "Electric",
+    seats: 5,
+    transmission: "Automatic",
+    fuel: "Electric",
+    rating: 4.9,
+    reviewCount: 42,
+    features: ["Autopilot", "Premium Audio", "Glass Roof", "Fast Charging"],
+    available: true,
+  },
+  {
+    id: "rc6",
+    name: "Toyota Hilux",
+    brand: "Toyota",
+    model: "Hilux",
+    year: 2022,
+    image: "@assets/images/rental/hilux-small.jpg",
+    images: ["@assets/images/rental/hilux-large.jpg"],
+    pricePerDay: 6500,
+    category: "SUV",
+    seats: 5,
+    transmission: "Manual",
+    fuel: "Diesel",
+    rating: 4.6,
+    reviewCount: 78,
+    features: ["4WD", "AC", "Tow Package", "Bed Liner"],
+    available: true,
+  },
+];
+
+let rentalBookings = [];
+let rentalBookingIdCounter = 1;
+
+app.get("/rental/cars", (req, res) => {
+  let list = [...RENTAL_CARS_DB];
+  const { category, transmission, seats, minPrice, maxPrice } = req.query || {};
+  if (category && category !== "all") {
+    list = list.filter((c) => c.category === category);
+  }
+  if (transmission && transmission !== "all") {
+    list = list.filter((c) => c.transmission === transmission);
+  }
+  if (seats) {
+    list = list.filter((c) => c.seats >= Number(seats));
+  }
+  if (minPrice) {
+    list = list.filter((c) => c.pricePerDay >= Number(minPrice));
+  }
+  if (maxPrice) {
+    list = list.filter((c) => c.pricePerDay <= Number(maxPrice));
+  }
+  return res.json(list);
+});
+
+app.get("/rental/cars/:id", (req, res) => {
+  const car = RENTAL_CARS_DB.find((c) => c.id === req.params.id);
+  if (!car) return res.status(404).json({ message: "Car not found" });
+  return res.json(car);
+});
+
+app.post("/rental/bookings", (req, res) => {
+  const body = req.body || {};
+  if (!body.carId) {
+    return res.status(400).json({ message: "carId is required" });
+  }
+  const booking = {
+    id: rentalBookingIdCounter++,
+    bookingCode: `SR${Math.floor(100000 + Math.random() * 900000)}`,
+    status: "confirmed",
+    createdAt: new Date().toISOString(),
+    ...body,
+  };
+  rentalBookings.unshift(booking);
+  return res.status(201).json(booking);
+});
+
+app.get("/rental/bookings", (req, res) => {
+  return res.json(rentalBookings);
+});
+
+app.get("/rental/bookings/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const booking = rentalBookings.find((b) => b.id === id || String(b.id) === req.params.id);
+  if (!booking) return res.status(404).json({ message: "Booking not found" });
+  return res.json(booking);
+});
+
+app.post("/rental/bookings/:id/cancel", (req, res) => {
+  const id = Number(req.params.id);
+  const booking = rentalBookings.find((b) => b.id === id || String(b.id) === req.params.id);
+  if (!booking) return res.status(404).json({ message: "Booking not found" });
+  booking.status = "cancelled";
+  return res.json(booking);
+});
+
 server.listen(3000, "0.0.0.0", () => {
   console.log("✅ Auth server + Socket.IO running on http://0.0.0.0:3000");
 });
