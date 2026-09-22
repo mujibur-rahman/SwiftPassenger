@@ -120,14 +120,14 @@ export default function ParcelDeliveryLocationScreen() {
           />
         </View>
 
-        {coord && (
+        {/* {coord && (
           <View className="mb-3 flex-row items-center gap-2 rounded-xl bg-background-muted px-3 py-2.5">
             <Icon name="map-marker" size={18} color={pinColor} />
             <Text className="flex-1 text-sm font-inter-medium text-foreground" numberOfLines={2}>
               {text}
             </Text>
           </View>
-        )}
+        )} */}
 
         <Button onPress={handleNext} fullWidth>
           Next
