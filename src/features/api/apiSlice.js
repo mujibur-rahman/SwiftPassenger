@@ -54,6 +54,8 @@ export const apiSlice = createApi({
     "InsuranceVehicle",
     "InsurancePolicy",
     "InsuranceClaim",
+    "ParcelDelivery",
+    "ActiveParcelDelivery",
   ],
   endpoints: () => ({}), // empty – features will inject
 });

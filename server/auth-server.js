@@ -1350,6 +1350,178 @@ app.get("/insurance/claims", (req, res) => {
   return res.json(insuranceClaims);
 });
 
+// ========== PARCEL DELIVERY MOCK ==========
+// Same in-memory-array + setTimeout-progression convention as
+// MARKETPLACE PICKUP above — parcel is its own domain (own array, own
+// counter, own status list) even though the shape of the demo backend
+// is deliberately identical.
+let parcelDeliveries = [];
+let parcelDeliveryIdCounter = 1;
+
+const FAKE_PARCEL_DRIVERS = [
+  { id: "pd1", name: "Karim Uddin", rating: 4.7, ratingCount: 412, vehicle: "Yamaha FZ · DHK-2214" },
+  { id: "pd2", name: "Farhana Akter", rating: 4.9, ratingCount: 288, vehicle: "Honda CB · DHK-5591" },
+];
+
+const PARCEL_DELIVERY_OPTIONS = [
+  { id: "standard", label: "Standard", etaMinutes: "30–60 min", extraFee: 0 },
+  { id: "express", label: "Express", etaMinutes: "20–30 min", extraFee: 3.0 },
+  { id: "priority", label: "Priority", etaMinutes: "15–20 min", extraFee: 5.0 },
+];
+
+const PARCEL_STEPS = [
+  "searching",
+  "driver_assigned",
+  "driver_to_pickup",
+  "arrived_pickup",
+  "parcel_picked",
+  "on_the_way",
+  "near_destination",
+  "arrived_destination",
+  "delivered",
+  "completed",
+];
+
+// Delays from create time (ms) — one entry per step after "searching",
+// same pacing convention as progressMarketplacePickup.
+const PARCEL_DELAYS = [3000, 7000, 11000, 15000, 20000, 25000, 30000, 35000, 40000];
+
+function progressParcelDelivery(parcelId) {
+  PARCEL_STEPS.slice(1).forEach((status, i) => {
+    setTimeout(() => {
+      const parcel = parcelDeliveries.find((p) => p.id === parcelId);
+      if (!parcel) return;
+      if (["cancelled", "completed"].includes(parcel.status)) return;
+
+      const currentIdx = PARCEL_STEPS.indexOf(parcel.status);
+      const nextIdx = PARCEL_STEPS.indexOf(status);
+      if (nextIdx <= currentIdx) return;
+
+      parcel.status = status;
+      if (status === "driver_assigned" && !parcel.driver) {
+        parcel.driver = FAKE_PARCEL_DRIVERS[Math.floor(Math.random() * FAKE_PARCEL_DRIVERS.length)];
+      }
+
+      console.log(`Parcel delivery #${parcelId} → ${status}`);
+
+      if (typeof io !== "undefined") {
+        io.emit("parcel:delivery:status", {
+          parcelId: parcel.id,
+          status: parcel.status,
+          parcel,
+        });
+        if (status === "driver_assigned") {
+          io.emit("parcel:delivery:driver_assigned", {
+            parcelId: parcel.id,
+            status: "driver_assigned",
+            driver: parcel.driver,
+            parcel,
+          });
+        }
+      }
+    }, PARCEL_DELAYS[i] || (i + 1) * 5000);
+  });
+}
+
+app.get("/parcel/options", (req, res) => {
+  return res.json(PARCEL_DELIVERY_OPTIONS);
+});
+
+app.post("/parcel/estimate", (req, res) => {
+  const { pickupAddress, deliveryAddress, deliveryOption } = req.body || {};
+  const distanceKm = 4.2;
+  const deliveryFee = Math.max(6, Math.round(distanceKm * 1.8 * 10) / 10);
+  const serviceFee = 1.5;
+  const additionalFee = deliveryOption?.extraFee || 0;
+  const fare = Math.round((deliveryFee + serviceFee + additionalFee) * 100) / 100;
+
+  return res.json({
+    fare,
+    deliveryFee,
+    serviceFee,
+    additionalFee,
+    distanceKm,
+    durationMin: Math.round(distanceKm * 4),
+    currency: "$",
+  });
+});
+
+app.post("/parcel/deliveries", (req, res) => {
+  const body = req.body || {};
+  if (!body.pickupAddress || !body.deliveryAddress) {
+    return res.status(400).json({ message: "pickupAddress and deliveryAddress are required" });
+  }
+  if (!body.receiverName || !body.receiverPhone) {
+    return res.status(400).json({ message: "receiverName and receiverPhone are required" });
+  }
+
+  const parcel = {
+    id: parcelDeliveryIdCounter++,
+    ...body,
+    status: "searching",
+    driver: null,
+    createdAt: new Date().toISOString(),
+  };
+
+  parcelDeliveries.push(parcel);
+  progressParcelDelivery(parcel.id);
+
+  console.log("Parcel delivery created →", parcel.id);
+  return res.status(201).json(parcel);
+});
+
+app.get("/parcel/deliveries/active", (req, res) => {
+  const active = parcelDeliveries.find(
+    (p) => !["completed", "cancelled", "delivered"].includes(p.status)
+  );
+  return res.json(active || null);
+});
+
+app.get("/parcel/deliveries/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const parcel = parcelDeliveries.find((p) => p.id === id);
+  if (!parcel) return res.status(404).json({ message: "Parcel delivery not found" });
+  return res.json(parcel);
+});
+
+app.post("/parcel/deliveries/:id/cancel", (req, res) => {
+  const id = Number(req.params.id);
+  const parcel = parcelDeliveries.find((p) => p.id === id);
+  if (!parcel) return res.status(404).json({ message: "Parcel delivery not found" });
+
+  const cancellableFrom = ["searching", "driver_assigned", "driver_to_pickup"];
+  if (!cancellableFrom.includes(parcel.status)) {
+    return res.status(409).json({
+      message: "This delivery can no longer be cancelled — the parcel is already with the driver.",
+    });
+  }
+
+  parcel.status = "cancelled";
+  if (typeof io !== "undefined") {
+    io.emit("parcel:delivery:status", { parcelId: parcel.id, status: "cancelled", parcel });
+  }
+  return res.json(parcel);
+});
+
+app.post("/parcel/deliveries/:id/verify-pickup", (req, res) => {
+  const id = Number(req.params.id);
+  const parcel = parcelDeliveries.find((p) => p.id === id);
+  if (!parcel) return res.status(404).json({ message: "Parcel delivery not found" });
+  parcel.pickupVerified = true;
+  return res.json(parcel);
+});
+
+app.post("/parcel/deliveries/:id/rating", (req, res) => {
+  const id = Number(req.params.id);
+  const { rating, tags, comment } = req.body || {};
+  const parcel = parcelDeliveries.find((p) => p.id === id);
+  if (!parcel) return res.status(404).json({ message: "Parcel delivery not found" });
+  if (!rating) return res.status(400).json({ message: "rating is required" });
+
+  parcel.rating = { rating, tags: tags || [], comment: comment || "" };
+  return res.status(201).json(parcel.rating);
+});
+
 server.listen(3000, "0.0.0.0", () => {
   console.log("✅ Auth server + Socket.IO running on http://0.0.0.0:3000");
 });

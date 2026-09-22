@@ -13,6 +13,7 @@ import marketplacePickupReducer from "@/features/marketplace/marketplacePickupSl
 import shopCartReducer from "@/features/shop/shopCartSlice";
 import shopOrderReducer from "@/features/shop/shopOrderSlice";
 import insuranceReducer from "@/features/insurance/insuranceSlice";
+import parcelDeliveryReducer from "@/features/parcel/parcelDeliverySlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ export const store = configureStore({
     shopCart: shopCartReducer,
     shopOrder: shopOrderReducer,
     insurance: insuranceReducer,
+    parcelDelivery: parcelDeliveryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

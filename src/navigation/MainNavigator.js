@@ -89,6 +89,25 @@ import PolicySuccessScreen from "@/screens/main/insurance/PolicySuccessScreen";
 import MyPoliciesScreen from "@/screens/main/insurance/MyPoliciesScreen";
 import ClaimTypeScreen from "@/screens/main/insurance/ClaimTypeScreen";
 
+import ParcelDeliveryHomeScreen from "@/screens/main/parcel/ParcelDeliveryHomeScreen";
+import ParcelPickupLocationScreen from "@/screens/main/parcel/ParcelPickupLocationScreen";
+import ParcelDeliveryLocationScreen from "@/screens/main/parcel/ParcelDeliveryLocationScreen";
+import ParcelDetailsScreen from "@/screens/main/parcel/ParcelDetailsScreen";
+import ParcelSizeWeightScreen from "@/screens/main/parcel/ParcelSizeWeightScreen";
+import ParcelSenderInformationScreen from "@/screens/main/parcel/ParcelSenderInformationScreen";
+import ParcelReceiverInformationScreen from "@/screens/main/parcel/ParcelReceiverInformationScreen";
+import ParcelDeliveryOptionsScreen from "@/screens/main/parcel/ParcelDeliveryOptionsScreen";
+import ParcelFareEstimateScreen from "@/screens/main/parcel/ParcelFareEstimateScreen";
+import ParcelPaymentScreen from "@/screens/main/parcel/ParcelPaymentScreen";
+import ParcelOrderReviewScreen from "@/screens/main/parcel/ParcelOrderReviewScreen";
+import ParcelConfirmScreen from "@/screens/main/parcel/ParcelConfirmScreen";
+import ParcelSearchingScreen from "@/screens/main/parcel/ParcelSearchingScreen";
+import ParcelTrackingScreen from "@/screens/main/parcel/ParcelTrackingScreen";
+import ParcelDeliveredScreen from "@/screens/main/parcel/ParcelDeliveredScreen";
+import ParcelReceiptScreen from "@/screens/main/parcel/ParcelReceiptScreen";
+import ParcelRateScreen from "@/screens/main/parcel/ParcelRateScreen";
+import ParcelCompleteScreen from "@/screens/main/parcel/ParcelCompleteScreen";
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -349,6 +368,31 @@ export default function MainNavigator() {
       <Stack.Screen name="PolicySuccess" component={PolicySuccessScreen} />
       <Stack.Screen name="MyPolicies" component={MyPoliciesScreen} />
       <Stack.Screen name="ClaimType" component={ClaimTypeScreen} />
+
+      {/*
+        Parcel Delivery — its own domain (own slice, own API, own backend
+        state machine), but tracking follows Marketplace's consolidation:
+        driver_assigned through arrived_destination all live in ONE
+        ParcelTrackingScreen rather than 6 near-duplicate screens.
+      */}
+      <Stack.Screen name="ParcelDeliveryHome" component={ParcelDeliveryHomeScreen} />
+      <Stack.Screen name="ParcelPickupLocation" component={ParcelPickupLocationScreen} />
+      <Stack.Screen name="ParcelDeliveryLocation" component={ParcelDeliveryLocationScreen} />
+      <Stack.Screen name="ParcelDetails" component={ParcelDetailsScreen} />
+      <Stack.Screen name="ParcelSizeWeight" component={ParcelSizeWeightScreen} />
+      <Stack.Screen name="ParcelSenderInformation" component={ParcelSenderInformationScreen} />
+      <Stack.Screen name="ParcelReceiverInformation" component={ParcelReceiverInformationScreen} />
+      <Stack.Screen name="ParcelDeliveryOptions" component={ParcelDeliveryOptionsScreen} />
+      <Stack.Screen name="ParcelFareEstimate" component={ParcelFareEstimateScreen} />
+      <Stack.Screen name="ParcelPayment" component={ParcelPaymentScreen} />
+      <Stack.Screen name="ParcelOrderReview" component={ParcelOrderReviewScreen} />
+      <Stack.Screen name="ParcelConfirm" component={ParcelConfirmScreen} />
+      <Stack.Screen name="ParcelSearching" component={ParcelSearchingScreen} />
+      <Stack.Screen name="ParcelTracking" component={ParcelTrackingScreen} />
+      <Stack.Screen name="ParcelDelivered" component={ParcelDeliveredScreen} />
+      <Stack.Screen name="ParcelReceipt" component={ParcelReceiptScreen} />
+      <Stack.Screen name="ParcelRate" component={ParcelRateScreen} />
+      <Stack.Screen name="ParcelComplete" component={ParcelCompleteScreen} />
     </Stack.Navigator>
   );
 }
