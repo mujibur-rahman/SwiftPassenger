@@ -39,6 +39,7 @@ const initialState = {
     gst: 0,
     totalPremium: 0,
   },
+  billingCycle: "yearly", // "monthly" | "quarterly" | "yearly"
   // Issued policies (mock / from API)
   policies: [],
   activePolicyId: null,
@@ -103,11 +104,15 @@ const insuranceSlice = createSlice({
     recalculateQuote(state) {
       state.quote = calculateQuote(state.coverage);
     },
+    setBillingCycle(state, action) {
+      state.billingCycle = action.payload; // "monthly" | "quarterly" | "yearly"
+    },
     resetInsuranceDraft(state) {
       state.vehicle = initialState.vehicle;
       state.personal = initialState.personal;
       state.coverage = initialState.coverage;
       state.quote = initialState.quote;
+      state.billingCycle = initialState.billingCycle;
     },
     addPolicy(state, action) {
       state.policies.unshift(action.payload);
@@ -127,6 +132,7 @@ export const {
   setPolicyType,
   setIdv,
   recalculateQuote,
+  setBillingCycle,
   resetInsuranceDraft,
   addPolicy,
   setPolicies,
@@ -136,6 +142,7 @@ export const selectInsuranceVehicle = (s) => s.insurance.vehicle;
 export const selectInsurancePersonal = (s) => s.insurance.personal;
 export const selectInsuranceCoverage = (s) => s.insurance.coverage;
 export const selectInsuranceQuote = (s) => s.insurance.quote;
+export const selectInsuranceBillingCycle = (s) => s.insurance.billingCycle;
 export const selectInsurancePolicies = (s) => s.insurance.policies;
 
 export default insuranceSlice.reducer;

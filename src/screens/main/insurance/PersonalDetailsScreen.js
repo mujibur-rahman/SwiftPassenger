@@ -108,17 +108,6 @@ export default function PersonalDetailsScreen({ navigation }) {
         />
 
         <AppTextInput
-          label="PIN code"
-          required
-          placeholder="7001"
-          value={form.pinCode}
-          onChangeText={(v) => update("pinCode", v)}
-          keyboardType="number-pad"
-          error={errors.pinCode}
-          containerClassName="mb-3"
-        />
-
-        <AppTextInput
           label="Address"
           placeholder="House, road, area"
           value={form.address}
@@ -126,6 +115,17 @@ export default function PersonalDetailsScreen({ navigation }) {
           multiline
           numberOfLines={2}
           containerClassName="mb-4"
+        />
+
+        <AppTextInput
+          label="Post code"
+          required
+          placeholder="7001"
+          value={form.pinCode}
+          onChangeText={(v) => update("pinCode", v)}
+          keyboardType="number-pad"
+          error={errors.pinCode}
+          containerClassName="mb-3"
         />
 
         <AppTextInput

@@ -55,8 +55,11 @@ export default function PolicySuccessScreen({ navigation, route }) {
         <Button variant="secondary" pill={true} onPress={() => navigation.replace("MyPolicies")} className="mb-3">
           View My Policies
         </Button>
-        <Button variant="ghost" onPress={handleShare}>
+        <Button variant="outline" pill={true} onPress={handleShare} className="mb-3">
           Share
+        </Button>
+        <Button variant="secondary" pill={true} onPress={() => navigation.reset({ index: 0, routes: [{ name: "Tabs" }] })}>
+          Back to Home
         </Button>
       </View>
     </View>
