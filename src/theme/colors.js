@@ -2,6 +2,8 @@
  * Semantic color tokens for Light & Dark themes.
  * These map to CSS variables used by NativeWind (bg-background, text-foreground, etc.)
  * Existing classNames stay the same — only the underlying values change.
+ *
+ * Keep darkColors / lightColors / themeHex / global.css in sync.
  */
 
 export const darkColors = {
@@ -32,6 +34,11 @@ export const darkColors = {
   "--color-error": "#F87171",
   "--color-info": "#60A5FA",
   "--color-accent": "#D4AF6A",
+
+  /* Gradient stops (LinearGradient / reuse anywhere) */
+  "--color-gradient-from": "#0EA5E9",
+  "--color-gradient-via": "#38BDF8",
+  "--color-gradient-to": "#818CF8",
 };
 
 export const lightColors = {
@@ -62,6 +69,11 @@ export const lightColors = {
   "--color-error": "#DC2626",
   "--color-info": "#2563EB",
   "--color-accent": "#D4AF6A",
+
+  /* Gradient stops */
+  "--color-gradient-from": "#22D3EE",
+  "--color-gradient-via": "#0EA5E9",
+  "--color-gradient-to": "#818CF8",
 };
 
 /**
@@ -89,6 +101,10 @@ export const themeHex = {
     info: "#60A5FA",
     accent: "#D4AF6A",
     statusBar: "light-content",
+    gradientFrom: "#0EA5E9",
+    gradientVia: "#38BDF8",
+    gradientTo: "#818CF8",
+    gradient: ["#0EA5E9", "#38BDF8", "#818CF8"],
   },
   light: {
     background: "#FFFFFF",
@@ -109,5 +125,9 @@ export const themeHex = {
     info: "#2563EB",
     accent: "#D4AF6A",
     statusBar: "dark-content",
+    gradientFrom: "#22D3EE",
+    gradientVia: "#0EA5E9",
+    gradientTo: "#818CF8",
+    gradient: ["#22D3EE", "#0EA5E9", "#818CF8"],
   },
 };

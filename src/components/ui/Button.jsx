@@ -1,70 +1,31 @@
 // src/components/ui/Button.jsx
 import React, { useMemo } from "react";
-import { TouchableOpacity, Text, ActivityIndicator, View } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  View,
+  Platform,
+} from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@/theme";
 
 /**
- * Reusable Button component
+ * Reusable Button — all colors come from theme (colors.js / global.css).
+ * Do not hardcode palette values here.
  *
- * Props:
- * - children: React.ReactNode | string
- * - onPress?: () => void
- * - variant?: "primary" | "secondary" | "error" | "success" | "warning" | "info" | "muted" | "outline" | "ghost" | "card" | "link"
- * - size?: "xs" | "sm" | "md" | "lg"
- * - loading?: boolean
- * - disabled?: boolean
- * - fullWidth?: boolean
- * - icon?: string (MaterialCommunityIcons name for icon-only button)
- * - iconSize?: number
- * - iconColor?: string
- * - spinnerColor?: string
- * - leftIcon?: string | React.ReactNode
- * - rightIcon?: string | React.ReactNode
- * - activeOpacity?: number
- * - className?: string
- * - textClassName?: string
+ * Variants: primary | gradient | secondary | dark | error | success |
+ *           warning | info | muted | outline | ghost | card | link
+ * Props: pill, size, loading, disabled, fullWidth, leftIcon, rightIcon, className
  */
 
 const SIZES = {
-  xs: {
-    height: "h-9",
-    text: "text-xs",
-    px: "px-3",
-    rounded: "rounded-xl",
-    iconBox: "size-8",
-    icon: 16,
-  },
-  sm: {
-    height: "h-10",
-    text: "text-sm",
-    px: "px-4",
-    rounded: "rounded-xl",
-    iconBox: "size-9",
-    icon: 18,
-  },
-  md: {
-    height: "h-14",
-    text: "text-base",
-    px: "px-5",
-    rounded: "rounded-2xl",
-    iconBox: "size-11",
-    icon: 22,
-  },
-  lg: {
-    height: "h-16",
-    text: "text-lg",
-    px: "px-6",
-    rounded: "rounded-2xl",
-    iconBox: "size-12",
-    icon: 24,
-  },
-  link: {
-    text: "text-sm",
-    px: "px-0",
-    iconBox: "size-8",
-    icon: 18,
-  },
+  xs: { height: 36, text: "text-xs", px: 14, iconBox: 32, icon: 16 },
+  sm: { height: 44, text: "text-sm", px: 18, iconBox: 36, icon: 18 },
+  md: { height: 54, text: "text-base", px: 22, iconBox: 44, icon: 22 },
+  lg: { height: 60, text: "text-lg", px: 26, iconBox: 48, icon: 24 },
+  link: { height: undefined, text: "text-sm", px: 0, iconBox: 32, icon: 18 },
 };
 
 export default function Button({
@@ -72,111 +33,174 @@ export default function Button({
   onPress,
   variant = "primary",
   size = "md",
+  pill = false,
   loading = false,
   disabled = false,
   fullWidth = true,
-  // icon-only mode
-  icon, // MCI name → icon-only button
+  icon,
   iconSize,
   iconColor,
   spinnerColor,
-  leftIcon, // ReactNode or MCI name string
+  leftIcon,
   rightIcon,
-  activeOpacity = 0.85,
+  activeOpacity = 0.88,
   className = "",
   textClassName = "",
+  style,
   ...props
 }) {
   const { colors, isDark } = useTheme();
 
-  // Dynamic theme-aware variant configurations for container classes, text classes,
-  // and vector icon / spinner hex colors
+  const primaryHex = colors?.primary;
+  const gradientColors =
+    colors?.gradient ??
+    [colors?.gradientFrom, colors?.gradientVia, colors?.gradientTo].filter(
+      Boolean,
+    );
+
   const variants = useMemo(() => {
-    const primaryHex = colors?.primary ?? (isDark ? "#38BDF8" : "#0EA5E9");
-    const foregroundHex = colors?.foreground ?? (isDark ? "#F0F9FF" : "#0F172A");
-    const mutedHex = isDark ? "#7DD3FC" : "#64748B";
-    const secondaryTextHex = isDark ? "#BAE6FD" : "#0369A1";
-    const onPrimaryTextHex = isDark ? "#060E1A" : "#FFFFFF";
+    const foregroundHex = colors?.foreground;
+    const mutedHex = colors?.foregroundMuted;
+    const secondaryTextHex = colors?.secondaryForeground;
+    const onPrimaryTextHex = colors?.primaryForeground;
+    const borderHex = colors?.border;
+    const secondaryBg = colors?.secondary;
+    const cardBg = colors?.card;
+    const mutedBg = colors?.backgroundMuted;
+    const errorHex = colors?.error;
+    const successHex = colors?.success;
+    const warningHex = colors?.warning;
+    const infoHex = colors?.info;
 
     return {
       primary: {
-        container: "bg-primary",
-        text: "text-primary-foreground",
+        bg: primaryHex,
+        text: onPrimaryTextHex,
         spinner: onPrimaryTextHex,
         icon: onPrimaryTextHex,
+        elevated: true,
+        shadowColor: primaryHex,
+        useGradient: false,
+      },
+      gradient: {
+        bg: "transparent",
+        text: "#FFFFFF",
+        spinner: "#FFFFFF",
+        icon: "#FFFFFF",
+        elevated: true,
+        shadowColor: colors?.gradientVia ?? primaryHex,
+        useGradient: true,
       },
       secondary: {
-        container: "bg-secondary",
-        text: "text-secondary-foreground",
+        bg: secondaryBg,
+        text: secondaryTextHex,
         spinner: secondaryTextHex,
         icon: secondaryTextHex,
+        elevated: false,
+        borderColor: borderHex,
+        useGradient: false,
+      },
+      dark: {
+        bg: isDark ? colors?.backgroundSecondary : colors?.foreground,
+        text: isDark ? colors?.foreground : colors?.background,
+        spinner: isDark ? colors?.foreground : colors?.background,
+        icon: isDark ? colors?.foreground : colors?.background,
+        elevated: false,
+        borderColor: isDark ? borderHex : "transparent",
+        useGradient: false,
       },
       error: {
-        container: "bg-error",
-        text: "text-white",
+        bg: errorHex,
+        text: "#FFFFFF",
         spinner: "#FFFFFF",
         icon: "#FFFFFF",
+        elevated: true,
+        shadowColor: errorHex,
+        useGradient: false,
       },
       success: {
-        container: "bg-success",
-        text: "text-primary-foreground",
-        spinner: isDark ? "#060E1A" : "#FFFFFF",
-        icon: isDark ? "#060E1A" : "#FFFFFF",
+        bg: successHex,
+        text: isDark ? colors?.background : "#FFFFFF",
+        spinner: isDark ? colors?.background : "#FFFFFF",
+        icon: isDark ? colors?.background : "#FFFFFF",
+        elevated: true,
+        shadowColor: successHex,
+        useGradient: false,
       },
       warning: {
-        container: "bg-warning",
-        text: "text-primary-foreground",
-        spinner: isDark ? "#060E1A" : "#FFFFFF",
-        icon: isDark ? "#060E1A" : "#FFFFFF",
+        bg: warningHex,
+        text: isDark ? colors?.background : "#FFFFFF",
+        spinner: isDark ? colors?.background : "#FFFFFF",
+        icon: isDark ? colors?.background : "#FFFFFF",
+        elevated: false,
+        useGradient: false,
       },
       info: {
-        container: "bg-info",
-        text: "text-white",
+        bg: infoHex,
+        text: "#FFFFFF",
         spinner: "#FFFFFF",
         icon: "#FFFFFF",
+        elevated: false,
+        useGradient: false,
       },
       muted: {
-        container: "bg-background-muted",
-        text: "text-foreground",
+        bg: mutedBg,
+        text: foregroundHex,
         spinner: mutedHex,
         icon: mutedHex,
+        elevated: false,
+        useGradient: false,
       },
       outline: {
-        container: "bg-transparent border border-border",
-        text: "text-foreground",
+        bg: "transparent",
+        text: foregroundHex,
         spinner: foregroundHex,
-        icon: isDark ? "#BAE6FD" : primaryHex,
+        icon: primaryHex,
+        elevated: false,
+        borderColor: borderHex,
+        useGradient: false,
       },
       ghost: {
-        container: "bg-transparent",
-        text: "text-foreground",
+        bg: "transparent",
+        text: foregroundHex,
         spinner: foregroundHex,
-        icon: isDark ? "#BAE6FD" : primaryHex,
+        icon: primaryHex,
+        elevated: false,
+        useGradient: false,
       },
       card: {
-        // map / floating controls
-        container: "bg-card/90 border border-border",
-        text: "text-foreground",
-        spinner: isDark ? "#BAE6FD" : primaryHex,
-        icon: isDark ? "#BAE6FD" : primaryHex,
-      },
-      link: {
-        container: "bg-transparent",
-        text: "text-primary",
+        bg: cardBg,
+        text: foregroundHex,
         spinner: primaryHex,
         icon: primaryHex,
+        elevated: false,
+        borderColor: borderHex,
+        useGradient: false,
+      },
+      link: {
+        bg: "transparent",
+        text: primaryHex,
+        spinner: primaryHex,
+        icon: primaryHex,
+        elevated: false,
+        useGradient: false,
       },
     };
-  }, [colors?.primary, colors?.foreground, isDark]);
+  }, [colors, isDark, primaryHex]);
 
   const config = variants[variant] || variants.primary;
   const sizeConfig = SIZES[size] || SIZES.md;
   const isDisabled = disabled || loading;
   const isIconOnly = !!icon && children == null;
+  const isLink = variant === "link" || size === "link";
 
-  // JSX like `View Cart ({count})` compiles to an array of
-  // strings/numbers, not a single string — typeof children === "string"
-  // misses that case and lets raw text leak outside <Text>. Catch both.
+  const borderRadius =
+    pill || variant === "gradient" || variant === "dark"
+      ? 999
+      : size === "xs" || size === "sm"
+        ? 12
+        : 16;
+
   const isPlainText =
     typeof children === "string" ||
     typeof children === "number" ||
@@ -197,46 +221,96 @@ export default function Button({
     return nameOrNode;
   };
 
+  const elevationStyle =
+    config.elevated && !isDisabled
+      ? Platform.select({
+        ios: {
+          shadowColor: config.shadowColor || primaryHex,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: isDark ? 0.4 : 0.3,
+          shadowRadius: 16,
+        },
+        android: { elevation: 8 },
+      })
+      : undefined;
+
+  const content = loading ? (
+    <ActivityIndicator color={spinnerColor ?? config.spinner} />
+  ) : isIconOnly ? (
+    renderIcon(icon, sizeConfig.icon)
+  ) : (
+    <View className="flex-row items-center gap-2">
+      {renderIcon(leftIcon, sizeConfig.icon - 2)}
+      {isPlainText ? (
+        <Text
+          className={`${sizeConfig.text} font-inter-bold tracking-[0.3px] ${textClassName}`}
+          style={{ color: config.text }}
+        >
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
+      {renderIcon(rightIcon, sizeConfig.icon - 2)}
+    </View>
+  );
+
+  const baseSizeStyle = {
+    height: isIconOnly ? sizeConfig.iconBox : sizeConfig.height,
+    width: isIconOnly
+      ? sizeConfig.iconBox
+      : fullWidth && !isLink
+        ? "100%"
+        : undefined,
+    paddingHorizontal: isIconOnly || isLink ? 0 : sizeConfig.px,
+    borderRadius,
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: isDisabled ? 0.55 : 1,
+    alignSelf:
+      fullWidth && !isLink && !isIconOnly ? "stretch" : "flex-start",
+    borderWidth: config.borderColor ? 1.5 : 0,
+    borderColor: config.borderColor || "transparent",
+    backgroundColor: config.useGradient ? "transparent" : config.bg,
+    overflow: "hidden",
+  };
+
+  if (config.useGradient) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={isDisabled}
+        activeOpacity={activeOpacity}
+        className={className}
+        style={[elevationStyle, { borderRadius }, style]}
+        {...props}
+      >
+        <LinearGradient
+          colors={
+            gradientColors.length >= 2
+              ? gradientColors
+              : [primaryHex, primaryHex]
+          }
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={[baseSizeStyle, { backgroundColor: undefined }]}
+        >
+          {content}
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={isDisabled}
       activeOpacity={activeOpacity}
-      className={`
-        items-center justify-center
-        ${isIconOnly ? sizeConfig.iconBox : `${sizeConfig.height} ${sizeConfig.px} flex-row`}
-        ${sizeConfig.rounded}
-        ${config.container}
-        ${!isIconOnly && fullWidth ? "w-full" : "self-start"}
-        ${isDisabled ? "opacity-60" : ""}
-        ${className}
-      `}
+      className={className}
+      style={[baseSizeStyle, elevationStyle, style]}
       {...props}
     >
-      {loading ? (
-        <ActivityIndicator color={spinnerColor ?? config.spinner} />
-      ) : isIconOnly ? (
-        renderIcon(icon, sizeConfig.icon)
-      ) : (
-        <View className="flex-row items-center gap-2">
-          {renderIcon(leftIcon, sizeConfig.icon - 2)}
-          {isPlainText ? (
-            <Text
-              className={`
-                ${sizeConfig.text}
-                font-inter-bold tracking-[0.3px]
-                ${config.text}
-                ${textClassName}
-              `}
-            >
-              {children}
-            </Text>
-          ) : (
-            children
-          )}
-          {renderIcon(rightIcon, sizeConfig.icon - 2)}
-        </View>
-      )}
+      {content}
     </TouchableOpacity>
   );
 }

@@ -78,6 +78,16 @@ import MarketplaceTrackingScreen from "@/screens/main/marketplace/MarketplaceTra
 import MarketplaceCompletedScreen from "@/screens/main/marketplace/MarketplaceCompletedScreen";
 import MarketplaceRateScreen from "@/screens/main/marketplace/MarketplaceRateScreen";
 
+import CarInsuranceLandingScreen from "@/screens/main/insurance/CarInsuranceLandingScreen";
+import VehicleDetailsScreen from "@/screens/main/insurance/VehicleDetailsScreen";
+import PersonalDetailsScreen from "@/screens/main/insurance/PersonalDetailsScreen";
+import CoverageSelectionScreen from "@/screens/main/insurance/CoverageSelectionScreen";
+import QuoteSummaryScreen from "@/screens/main/insurance/QuoteSummaryScreen";
+import PolicyReviewScreen from "@/screens/main/insurance/PolicyReviewScreen";
+import InsurancePaymentScreen from "@/screens/main/insurance/InsurancePaymentScreen";
+import PolicySuccessScreen from "@/screens/main/insurance/PolicySuccessScreen";
+import MyPoliciesScreen from "@/screens/main/insurance/MyPoliciesScreen";
+import ClaimTypeScreen from "@/screens/main/insurance/ClaimTypeScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -327,6 +337,18 @@ export default function MainNavigator() {
       <Stack.Screen name="MarketplaceTracking" component={MarketplaceTrackingScreen} />
       <Stack.Screen name="MarketplaceCompleted" component={MarketplaceCompletedScreen} />
       <Stack.Screen name="MarketplaceRate" component={MarketplaceRateScreen} />
+
+      {/* Car Insurance flow */}
+      <Stack.Screen name="CarInsuranceLanding" component={CarInsuranceLandingScreen} />
+      <Stack.Screen name="VehicleDetails" component={VehicleDetailsScreen} />
+      <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
+      <Stack.Screen name="CoverageSelection" component={CoverageSelectionScreen} />
+      <Stack.Screen name="QuoteSummary" component={QuoteSummaryScreen} />
+      <Stack.Screen name="PolicyReview" component={PolicyReviewScreen} />
+      <Stack.Screen name="InsurancePayment" component={InsurancePaymentScreen} />
+      <Stack.Screen name="PolicySuccess" component={PolicySuccessScreen} />
+      <Stack.Screen name="MyPolicies" component={MyPoliciesScreen} />
+      <Stack.Screen name="ClaimType" component={ClaimTypeScreen} />
     </Stack.Navigator>
   );
 }

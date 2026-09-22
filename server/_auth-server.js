@@ -224,7 +224,7 @@ const FAKE_DRIVERS = [
     name: "Karim Hassan",
     phone: "01710000001",
     rating: 4.9,
-    vehicle: { model: "Toyota Corolla", color: "White", plate: "AUSTRALIA-12-AB-1234" },
+    vehicle: { model: "Toyota Corolla", color: "White", plate: "DHAKA-METRO-GA-12-3456" },
     photo: null,
   },
   {
@@ -232,7 +232,7 @@ const FAKE_DRIVERS = [
     name: "Rahim Uddin",
     phone: "01710000002",
     rating: 4.7,
-    vehicle: { model: "Honda Civic", color: "Black", plate: "AUSTRALIA-12-AC-1234" },
+    vehicle: { model: "Honda Civic", color: "Black", plate: "DHAKA-METRO-GA-65-4321" },
     photo: null,
   },
   {
@@ -240,7 +240,7 @@ const FAKE_DRIVERS = [
     name: "Salma Akter",
     phone: "01710000003",
     rating: 4.8,
-    vehicle: { model: "Hyundai Accent", color: "Silver", plate: "AUSTRALIA-12-AD-1234" },
+    vehicle: { model: "Hyundai Accent", color: "Silver", plate: "DHAKA-METRO-CHA-11-2222" },
     photo: null,
   },
 ];
@@ -1218,136 +1218,6 @@ app.post("/shop/orders/:id/rate", (req, res) => {
 
   order.rating = { rating, tags: tags || [], comment: comment || "" };
   return res.status(201).json(order.rating);
-});
-
-// ========== CAR INSURANCE ==========
-let insurancePolicies = [];
-let insuranceClaims = [];
-let insurancePolicyIdCounter = 1;
-let insuranceClaimIdCounter = 1;
-
-// Mock vehicle lookup by registration
-app.get("/insurance/vehicle/:reg", (req, res) => {
-  const reg = decodeURIComponent(req.params.reg || "").toUpperCase();
-  // Simple deterministic mock based on registration string
-  const brands = ["Toyota", "Honda", "Hyundai", "Suzuki", "Nissan"];
-  const models = ["Corolla", "Civic", "Tucson", "Swift", "X-Trail"];
-  const idx = reg.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % brands.length;
-  return res.json({
-    registrationNumber: reg,
-    brand: brands[idx],
-    model: models[idx],
-    variant: "Standard",
-    year: "2022",
-    fuelType: "Petrol",
-    registrationCity: "Rokeby",
-  });
-});
-
-// Quote calculation (server-side mirror of client logic)
-app.post("/insurance/quote", (req, res) => {
-  const { coverage } = req.body || {};
-  const idv = Number(coverage?.idv) || 1250000;
-  const policyType = coverage?.policyType || "Comprehensive";
-  const addOns = coverage?.addOns || {};
-
-  const ADDON_PRICES = {
-    zeroDepreciation: 1800,
-    engineProtect: 950,
-    roadsideAssistance: 450,
-    consumables: 350,
-    ncbProtection: 600,
-    keyReplacement: 250,
-  };
-
-  const base =
-    policyType === "Comprehensive"
-      ? Math.max(8000, Math.round(idv * 0.011))
-      : 3200;
-
-  let addOnPremium = 0;
-  Object.entries(addOns).forEach(([key, enabled]) => {
-    if (enabled && ADDON_PRICES[key]) addOnPremium += ADDON_PRICES[key];
-  });
-
-  const subtotal = base + addOnPremium;
-  const gst = Math.round(subtotal * 0.18);
-  const totalPremium = subtotal + gst;
-
-  return res.json({
-    basePremium: base,
-    addOnPremium,
-    gst,
-    totalPremium,
-  });
-});
-
-// Purchase / create policy
-app.post("/insurance/policies", (req, res) => {
-  const { vehicle, personal, coverage, quote, paymentMethod } = req.body || {};
-  if (!vehicle || !personal) {
-    return res.status(400).json({ message: "vehicle and personal details are required" });
-  }
-
-  const policy = {
-    id: `pol_${insurancePolicyIdCounter++}`,
-    policyNumber: `POL-2026-${100000 + insurancePolicyIdCounter}`,
-    vehicle,
-    personal,
-    coverage,
-    quote,
-    paymentMethod: paymentMethod || "upi",
-    status: "active",
-    issuedAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-  };
-
-  insurancePolicies.unshift(policy);
-  return res.status(201).json(policy);
-});
-
-// List policies
-app.get("/insurance/policies", (req, res) => {
-  return res.json(insurancePolicies);
-});
-
-// Single policy
-app.get("/insurance/policies/:id", (req, res) => {
-  const policy = insurancePolicies.find((p) => p.id === req.params.id);
-  if (!policy) return res.status(404).json({ message: "Policy not found" });
-  return res.json(policy);
-});
-
-// Submit claim
-app.post("/insurance/claims", (req, res) => {
-  const { policyId, policyNumber, claimType, incidentDate, description } = req.body || {};
-  if (!claimType) {
-    return res.status(400).json({ message: "claimType is required" });
-  }
-
-  const claim = {
-    id: `clm_${insuranceClaimIdCounter++}`,
-    claimNumber: `CLM-${100000 + insuranceClaimIdCounter}`,
-    policyId: policyId || null,
-    policyNumber: policyNumber || null,
-    claimType,
-    incidentDate: incidentDate || null,
-    description: description || "",
-    status: "submitted",
-    createdAt: new Date().toISOString(),
-  };
-
-  insuranceClaims.unshift(claim);
-  return res.status(201).json(claim);
-});
-
-// List claims
-app.get("/insurance/claims", (req, res) => {
-  const policyId = req.query.policyId;
-  if (policyId) {
-    return res.json(insuranceClaims.filter((c) => c.policyId === policyId));
-  }
-  return res.json(insuranceClaims);
 });
 
 server.listen(3000, "0.0.0.0", () => {

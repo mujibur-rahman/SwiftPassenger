@@ -34,6 +34,10 @@
   --color-info: #60a5fa;
   --color-accent: #d4af6a;
 
+  --color-gradient-from: #0ea5e9;
+  --color-gradient-via: #38bdf8;
+  --color-gradient-to: #818cf8;
+
   --font-inter: "Inter_400Regular";
   --font-inter-light: "Inter_300Light";
   --font-inter-medium: "Inter_500Medium";
@@ -74,6 +78,10 @@
   --color-error: #f87171;
   --color-info: #60a5fa;
   --color-accent: #d4af6a;
+
+  --color-gradient-from: #0ea5e9;
+  --color-gradient-via: #38bdf8;
+  --color-gradient-to: #818cf8;
 }
 
 @layer components {
