@@ -1284,10 +1284,22 @@ app.post("/insurance/quote", (req, res) => {
 
 // Purchase / create policy
 app.post("/insurance/policies", (req, res) => {
-  const { vehicle, personal, coverage, quote, paymentMethod } = req.body || {};
+  const { vehicle, personal, coverage, quote, paymentMethod, billingCycle, instalmentAmount } = req.body || {};
   if (!vehicle || !personal) {
     return res.status(400).json({ message: "vehicle and personal details are required" });
   }
+
+  // Derive instalment amount server-side as a safety net, in case the client
+  // didn't send it (e.g. older app version).
+  const CYCLE_DIVISORS = { monthly: 12, quarterly: 4, yearly: 1 };
+  const resolvedCycle = ["monthly", "quarterly", "yearly"].includes(billingCycle)
+    ? billingCycle
+    : "yearly";
+  const divisor = CYCLE_DIVISORS[resolvedCycle];
+  const resolvedInstalment =
+    instalmentAmount != null
+      ? instalmentAmount
+      : Math.ceil((quote?.totalPremium ?? 0) / divisor);
 
   const policy = {
     id: `pol_${insurancePolicyIdCounter++}`,
@@ -1297,6 +1309,8 @@ app.post("/insurance/policies", (req, res) => {
     coverage,
     quote,
     paymentMethod: paymentMethod || "upi",
+    billingCycle: resolvedCycle,
+    instalmentAmount: resolvedInstalment,
     status: "active",
     issuedAt: new Date().toISOString(),
     expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
