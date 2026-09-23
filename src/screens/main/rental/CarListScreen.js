@@ -1,9 +1,9 @@
+// @/screens/main/rental/CarListScreen.js
 import React, { useMemo } from "react";
 import {
   View,
   Text,
   FlatList,
-  Image,
   TouchableOpacity,
   StatusBar,
   ActivityIndicator,
@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
+import CarCard from "@/components/rental/CarCard";
 import {
   useGetRentalCarsQuery,
 } from "@/features/rental/rentalApi";
@@ -23,51 +24,6 @@ import {
   selectRentalSearch,
 } from "@/features/rental/rentalSlice";
 import { RENTAL_CATEGORIES, RENTAL_CARS } from "@/constants/rentalCars";
-
-function CarCard({ car, onPress, primary }) {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.9}
-      onPress={onPress}
-      className="mb-4 flex-row overflow-hidden rounded-2xl border border-border bg-card"
-    >
-      <Image
-        source={{ uri: car.image }}
-        className="h-27.5 w-30"
-        resizeMode="cover"
-      />
-      <View className="flex-1 justify-between p-3">
-        <View>
-          <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
-            {car.name}
-          </Text>
-          <Text className="mt-1 text-xs text-foreground-muted">
-            ★ {car.rating}  ·  {car.seats} seats  ·  {car.transmission}
-          </Text>
-          <Text className="mt-0.5 text-xs text-foreground-muted">
-            {car.fuel}  ·  {car.category}
-          </Text>
-        </View>
-        <View className="mt-2 flex-row items-center justify-between">
-          <Text className="text-base font-inter-bold" style={{ color: primary }}>
-            $ {car.pricePerDay.toLocaleString()}
-            <Text className="text-xs font-inter-regular text-foreground-muted">
-              {" "}/day
-            </Text>
-          </Text>
-          <View
-            className="rounded-lg px-3 py-1.5"
-            style={{ backgroundColor: primary }}
-          >
-            <Text className="text-xs font-inter-semibold text-primary-foreground">
-              Book
-            </Text>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-}
 
 export default function CarListScreen() {
   const navigation = useNavigation();
