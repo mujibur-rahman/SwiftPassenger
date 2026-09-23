@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="1280" viewBox="0 0 920 1280">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="100%" stop-color="#060E1A"/>
+    </linearGradient>
+    <linearGradient id="card3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0D1E32"/>
+      <stop offset="100%" stop-color="#12263F"/>
+    </linearGradient>
+    <marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#38BDF8"/>
+    </marker>
+  </defs>
+  <rect width="920" height="1280" fill="url(#bg3)"/>
+  <text x="460" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#38BDF8">Gig Jobs · Lawn Mowing — Step-by-Step Flow</text>
+  <text x="460" y="78" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#7DD3FC">Post a mowing job, compare provider quotes, book &amp; track</text>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <g transform="translate(260,110)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#38BDF8" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">1</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Select Gig category → Lawn Mowing</text>
+    </g>
+    <line x1="460" y1="166" x2="460" y2="196" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,196)">
+      <rect width="400" height="72" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="26" text-anchor="middle" font-size="12" fill="#7DD3FC">2 — Guided questions</text>
+      <text x="200" y="48" text-anchor="middle" font-size="13" font-weight="600" fill="#F0F9FF">Lawn size → Frequency → Clippings → Timing</text>
+    </g>
+    <line x1="460" y1="268" x2="460" y2="298" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,298)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">3</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Job summary</text>
+    </g>
+    <line x1="460" y1="354" x2="460" y2="384" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,384)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">4</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Contact details + optional lawn photos</text>
+    </g>
+    <line x1="460" y1="440" x2="460" y2="470" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,470)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">5</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Review job → Post job</text>
+    </g>
+    <line x1="460" y1="526" x2="460" y2="556" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,556)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#FBBF24" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">6</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Waiting for quotes</text>
+    </g>
+    <line x1="460" y1="612" x2="460" y2="642" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,642)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">7</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Quotes received → Compare quotes</text>
+    </g>
+    <line x1="460" y1="698" x2="460" y2="728" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,728)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">8</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Provider profile</text>
+    </g>
+    <line x1="460" y1="784" x2="460" y2="814" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,814)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">9</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Confirm booking</text>
+    </g>
+    <line x1="460" y1="870" x2="460" y2="900" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,900)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">10</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Booking scheduled</text>
+    </g>
+    <line x1="460" y1="956" x2="460" y2="986" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,986)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#34D399" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">11</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Job tracking → Job completed</text>
+    </g>
+    <line x1="460" y1="1042" x2="460" y2="1072" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow3)"/>
+
+    <g transform="translate(260,1072)">
+      <rect width="400" height="56" rx="14" fill="url(#card3)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">12</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Rate &amp; review provider</text>
+    </g>
+  </g>
+
+  <text x="460" y="1240" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" fill="#64748B">SwiftRide Passenger · Gig Jobs · Lawn Mowing flow</text>
+</svg>

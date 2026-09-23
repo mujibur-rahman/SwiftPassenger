@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="1180" viewBox="0 0 920 1180">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0B1220"/>
+      <stop offset="100%" stop-color="#060E1A"/>
+    </linearGradient>
+    <linearGradient id="card2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0D1E32"/>
+      <stop offset="100%" stop-color="#12263F"/>
+    </linearGradient>
+    <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#38BDF8"/>
+    </marker>
+  </defs>
+  <rect width="920" height="1180" fill="url(#bg2)"/>
+  <text x="460" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700" fill="#38BDF8">Marketplace Pickup — Step-by-Step Flow</text>
+  <text x="460" y="78" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#7DD3FC">Driver collects an item from a seller and delivers it to you</text>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <g transform="translate(260,110)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#38BDF8" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">1</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Start Marketplace Pickup</text>
+    </g>
+    <line x1="460" y1="166" x2="460" y2="196" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,196)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">2</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Seller / pickup location</text>
+    </g>
+    <line x1="460" y1="252" x2="460" y2="282" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,282)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">3</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Seller info (name, phone, source, order #)</text>
+    </g>
+    <line x1="460" y1="338" x2="460" y2="368" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,368)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">4</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Item details + optional photo</text>
+    </g>
+    <line x1="460" y1="424" x2="460" y2="454" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,454)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">5</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Delivery location</text>
+    </g>
+    <line x1="460" y1="510" x2="460" y2="540" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,540)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">6</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Fare estimate</text>
+    </g>
+    <line x1="460" y1="596" x2="460" y2="626" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,626)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">7</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Confirm request</text>
+    </g>
+    <line x1="460" y1="682" x2="460" y2="712" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,712)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#FBBF24" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">8</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Searching for driver</text>
+    </g>
+    <line x1="460" y1="768" x2="460" y2="798" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,798)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#34D399" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">9</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Live tracking (pickup → deliver)</text>
+    </g>
+    <line x1="460" y1="854" x2="460" y2="884" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,884)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">10</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Completed</text>
+    </g>
+    <line x1="460" y1="940" x2="460" y2="970" stroke="#38BDF8" stroke-width="2" marker-end="url(#arrow2)"/>
+
+    <g transform="translate(260,970)">
+      <rect width="400" height="56" rx="14" fill="url(#card2)" stroke="#1E3A5F" stroke-width="1.5"/>
+      <text x="200" y="24" text-anchor="middle" font-size="12" fill="#7DD3FC">11</text>
+      <text x="200" y="42" text-anchor="middle" font-size="15" font-weight="600" fill="#F0F9FF">Rate the pickup</text>
+    </g>
+  </g>
+
+  <text x="460" y="1140" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" fill="#64748B">SwiftRide Passenger · Marketplace Pickup flow</text>
+</svg>

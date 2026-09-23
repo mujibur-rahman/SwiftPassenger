@@ -1,14 +1,56 @@
 
 <!-- 
-Car Rental
+1. Order Food
+English: 
+A restaurant food-delivery service inside the passenger app. Users search or browse nearby restaurants by category, open a menu, add items to a cart, set delivery address and delivery options, apply offers/coupons, choose payment, review and place the order, then track it from preparation through delivery and rate the order when done.
 
+বাংলা: 
+যাত্রী অ্যাপের ভেতরের রেস্তোরাঁ ফুড-ডেলিভারি সার্ভিস। ব্যবহারকারী কাছের রেস্তোরাঁ খুঁজে বা ক্যাটাগরি অনুযায়ী ব্রাউজ করেন, মেনু থেকে আইটেম কার্টে যোগ করেন, ডেলিভারি ঠিকানা ও অপশন ঠিক করেন, অফার/কুপন প্রয়োগ করেন, পেমেন্ট বেছে অর্ডার রিভিউ ও প্লেস করেন। তারপর প্রস্তুতি থেকে ডেলিভারি পর্যন্ত ট্র্যাক করেন এবং শেষে রেট দেন।
+
+2. Gig jobs — Lawn Mowing
+English: 
+On-demand lawn care via quotes. You choose Lawn Mowing, answer guided questions (yard size, one-off/regular frequency, clippings, timing), add contact details and optional photos, post the job, wait for provider quotes, compare and pick a pro, confirm booking, then track the job through completion and leave a review.
+
+বাংলা: 
+লন কাটার গিগ সার্ভিস (কোট ভিত্তিক)। লন মোয়িং বেছে নিয়ে প্রশ্নগুলোর উত্তর দেন (আকার, একবার/নিয়মিত, ঘাসের অবশিষ্টাংশ, সময়), যোগাযোগ ও ঐচ্ছিক ছবি দিয়ে জব পোস্ট করেন। প্রোভাইডারদের কোট তুলনা করে বুকিং কনফার্ম, তারপর জব ট্র্যাক ও রিভিউ।
+
+3. Parcel Delivery
+English: 
+SwiftPassenger's Parcel Delivery lets any customer send a package across the city without owning a vehicle or hiring a courier company. The customer describes what's being sent — category, size, weight, approximate value, whether it's fragile — picks a pickup and drop-off address, and chooses a delivery speed (Standard, Express, or Priority). The app shows an upfront fare before anything is booked. Once confirmed, a nearby driver is matched automatically, picks up the parcel from the sender, and carries it to the receiver while the customer watches the whole trip live on a map. The moment it's delivered, the customer gets an itemized receipt and can rate the driver — all inside the same app they already use for rides, food, and other errands.
+
+বাংলা অনুবাদ: 
+SwiftPassenger-এর Parcel Delivery ফিচারটা যেকোনো কাস্টমারকে নিজের গাড়ি বা আলাদা কুরিয়ার কোম্পানি ছাড়াই শহরের এক জায়গা থেকে আরেক জায়গায় পার্সেল পাঠানোর সুযোগ দেয়। কাস্টমার পার্সেলের বিবরণ দেয় — ক্যাটাগরি, সাইজ, ওজন, আনুমানিক মূল্য, ভঙ্গুর কিনা — পিকআপ ও ডেলিভারি ঠিকানা বেছে নেয়, আর ডেলিভারির গতি বেছে নেয় (Standard, Express, বা Priority)। বুকিং কনফার্ম করার আগেই অ্যাপ সম্ভাব্য ভাড়া দেখিয়ে দেয়। কনফার্ম করার পর কাছাকাছি একজন ড্রাইভার স্বয়ংক্রিয়ভাবে অ্যাসাইন হয়, প্রেরকের কাছ থেকে পার্সেল সংগ্রহ করে, আর প্রাপকের কাছে পৌঁছে দেয় — পুরো সময়টা কাস্টমার লাইভ ম্যাপে দেখতে পারে। ডেলিভারি হয়ে গেলেই কাস্টমার একটা itemized রিসিট পায় আর ড্রাইভারকে রেটিং দিতে পারে — সবকিছুই একই অ্যাপের ভেতরে, যেটা তারা রাইড, খাবার অর্ডার করার জন্য আগে থেকেই ব্যবহার করে।
+
+4. Shop for me
+English: 
+A personal-shopper service. You pick a nearby store (or “any suitable store”), build a shopping list with quantities and notes, set a budget and substitution rules, choose delivery address and payment, then a shopper buys the items in-store and delivers them. You can track shopping → purchased → on the way → delivered, then view the receipt and rate the order.
+
+বাংলা: 
+একটি পার্সোনাল শপার সার্ভিস। আপনি কাছের দোকান বেছে নেন (বা “যেকোনো উপযুক্ত দোকান”), কেনাকাটার তালিকা বানান, বাজেট ও বিকল্প পণ্যের নিয়ম ঠিক করেন, ডেলিভারি ঠিকানা ও পেমেন্ট দেন। একজন শপার দোকান থেকে জিনিস কিনে আপনার কাছে পৌঁছে দেন। ট্র্যাকিং: শপিং → কেনা হয়েছে → পথে আছে → ডেলিভার্ড; এরপর রসিদ ও রেটিং।
+
+5. Marketplace Pickup
+English: 
+Courier-style pickup for marketplace purchases (Daraz, Facebook Marketplace, eBay, local shops, etc.). You enter the seller’s pickup location and details, describe the item (optional photo), set the delivery address, see a fare estimate, confirm, then a driver is matched to collect from the seller and deliver to you. Live tracking ends with completion and rating.
+
+বাংলা: 
+মার্কেটপ্লেস কেনা জিনিস তুলে আনার সার্ভিস (দারাজ, ফেসবুক মার্কেটপ্লেস, eBay, লোকাল শপ ইত্যাদি)। বিক্রেতার পিকআপ লোকেশন ও তথ্য, পণ্যের বিবরণ (ঐচ্ছিক ছবি), ডেলিভারি ঠিকানা দিয়ে ভাড়া দেখে কনফার্ম করেন। ড্রাইভার বিক্রেতার কাছ থেকে নিয়ে আপনার কাছে পৌঁছান; লাইভ ট্র্যাকিং, শেষে রেটিং।
+
+6. Car Insurance
+English
+Car Insurance in the SwiftPassenger app is a fully digital service that lets customers buy, manage, and claim car insurance in a few simple steps. Users enter vehicle and personal details, choose coverage and add-ons, get an instant premium quote, pay online, and receive a policy immediately. They can also view active policies, renew cover, and file claims—all from the same app, without paperwork or branch visits.
+
+বাংলা
+SwiftPassenger অ্যাপে কার ইন্স্যুরেন্স একটি সম্পূর্ণ ডিজিটাল সেবা, যার মাধ্যমে গ্রাহকরা কয়েকটি সহজ ধাপে গাড়ির বীমা কিনতে, ম্যানেজ করতে এবং ক্লেইম করতে পারেন। ব্যবহারকারী গাড়ি ও ব্যক্তিগত তথ্য দেন, কভারেজ ও অ্যাড-অন বেছে নেন, তাৎক্ষণিক প্রিমিয়াম কোট পান, অনলাইনে পেমেন্ট করেন এবং সঙ্গে সঙ্গে পলিসি পান। একই অ্যাপ থেকে সক্রিয় পলিসি দেখা, রিনিউ করা এবং ক্লেইম করাও যায়—কাগজপত্র বা শাখায় যাওয়ার প্রয়োজন নেই।
+
+7. Car Rental
 English
 SwiftRide Car Rental is an on-demand self-serve car hire service inside the SwiftRide Passenger super-app. Customers choose a pickup location and trip dates, browse a curated fleet (Economy, SUV, Luxury, Electric), add optional extras (extra driver, child seat, GPS, full insurance, Wi-Fi), pay with local methods (bKash, Nagad, card, or cash on pickup), and get an instant booking code. They can later view or cancel bookings from “My Rentals.”
 The product focuses on transparent daily pricing, flexible duration, and Bangladesh-friendly payments—reducing friction compared with traditional counter-based rental desks.
 
 বাংলা
 SwiftRide Car Rental হলো SwiftRide Passenger সুপার-অ্যাপের ভিতরে একটি অন-ডিমান্ড সেল্ফ-সার্ভ গাড়ি ভাড়া সেবা। গ্রাহক পিকআপ লোকেশন ও ভ্রমণের তারিখ বেছে নেন, ক্যাটাগরি অনুযায়ী গাড়ি দেখেন (Economy, SUV, Luxury, Electric), প্রয়োজনমতো অ্যাড-অন নেন (অতিরিক্ত ড্রাইভার, চাইল্ড সিট, GPS, ফুল ইন্স্যুরেন্স, Wi-Fi), স্থানীয় পেমেন্ট মেথডে (bKash, Nagad, কার্ড, বা পিকআপে ক্যাশ) পেমেন্ট করেন এবং তাৎক্ষণিক বুকিং কোড পান। পরে “My Rentals” থেকে বুকিং দেখা বা বাতিল করা যায়।
-এই সেবার মূল ফোকাস হলো স্বচ্ছ দৈনিক মূল্য, নমনীয় ভাড়ার সময় এবং বাংলাদেশ-উপযোগী পেমেন্ট—যাতে ঐতিহ্যবাহী কাউন্টার-ভিত্তিক রেন্টাল ডেস্কের তুলনায় ঝামেলা কমে। -->
+এই সেবার মূল ফোকাস হলো স্বচ্ছ দৈনিক মূল্য, নমনীয় ভাড়ার সময় এবং বাংলাদেশ-উপযোগী পেমেন্ট—যাতে ঐতিহ্যবাহী কাউন্টার-ভিত্তিক রেন্টাল ডেস্কের তুলনায় ঝামেলা কমে।
+ -->
 
 
 <!-- export const loginDriver = createAsyncThunk('auth/login', async ({ phone, password }, { rejectWithValue }) => {
