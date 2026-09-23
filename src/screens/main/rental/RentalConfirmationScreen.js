@@ -11,7 +11,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/theme";
+import { formatDate } from "@/utils/helpers";
 import Button from "@/components/ui/Button";
+import Row from "@/components/rental/Row";
 import {
   selectCurrentBooking,
   clearRentalDraft,
@@ -83,7 +85,7 @@ export default function RentalConfirmationScreen() {
             <Row label="Pickup" value={booking?.pickupLocation} />
             <Row
               label="Dates"
-              value={`${formatShort(booking?.pickupDate)} → ${formatShort(booking?.returnDate)}`}
+              value={`${formatDate(booking?.pickupDate)} → ${formatDate(booking?.returnDate)}`}
             />
             <Row
               label="Total paid"
@@ -108,23 +110,4 @@ export default function RentalConfirmationScreen() {
       </ScrollView>
     </View>
   );
-}
-
-function Row({ label, value }) {
-  return (
-    <View className="mb-2 flex-row justify-between">
-      <Text className="text-sm text-foreground-muted">{label}</Text>
-      <Text className="text-sm font-inter-semibold text-foreground max-w-[60%] text-right">
-        {value || "—"}
-      </Text>
-    </View>
-  );
-}
-
-function formatShort(iso) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-  });
 }
