@@ -58,7 +58,7 @@ export default function RentalPaymentScreen() {
     const body = {
       carId: car.id,
       carName: car.name,
-      carImage: car.image,
+      carImage: typeof car.image === "string" ? car.image : (car.remoteImage || null),
       pricePerDay: car.pricePerDay,
       pickupLocation: search.pickupLocation,
       dropoffLocation: search.dropoffLocation || search.pickupLocation,
@@ -104,7 +104,7 @@ export default function RentalPaymentScreen() {
         <View className="mb-6 items-center rounded-2xl border border-border bg-card p-6">
           <Text className="text-sm text-foreground-muted">Amount to pay</Text>
           <Text className="mt-1 text-3xl font-inter-bold" style={{ color: primary }}>
-            $ {pricing.grandTotal.toLocaleString()}
+            A$ {pricing.grandTotal.toLocaleString()}
           </Text>
           <Text className="mt-1 text-xs text-foreground-muted">
             {car?.name} · {pricing.days} day{pricing.days > 1 ? "s" : ""}
@@ -118,7 +118,7 @@ export default function RentalPaymentScreen() {
         <View className="mb-5 flex-row items-center gap-2">
           <TextInput
             className="flex-1 rounded-xl border border-border bg-card px-4 py-3 text-base text-foreground"
-            placeholder="SWIFT10 or RENT500"
+            placeholder="SWIFT10 or RENT20"
             placeholderTextColor={muted}
             autoCapitalize="characters"
             value={promoInput}

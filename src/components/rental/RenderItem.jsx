@@ -1,12 +1,18 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
-import { formatDate } from '@/utils/helpers'
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import { formatDate } from "@/utils/helpers";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { useTheme } from '@/theme';
-import { useCancelRentalBookingMutation, useGetMyRentalBookingsQuery } from '@/features/rental/rentalApi';
+import { useTheme } from "@/theme";
+import {
+    useCancelRentalBookingMutation,
+    useGetMyRentalBookingsQuery,
+} from "@/features/rental/rentalApi";
+import { RENTAL_LOCAL_IMAGES } from "@/constants/rentalCars";
+import { resolveCarImageSource } from "@/components/rental/CarCard";
+
+const CURRENCY = "A$";
 
 const RenderItem = ({ item }) => {
-    const { refetch } =
-        useGetMyRentalBookingsQuery();
+    const { refetch } = useGetMyRentalBookingsQuery();
     const [cancelBooking] = useCancelRentalBookingMutation();
 
     const { colors } = useTheme();
@@ -21,13 +27,20 @@ const RenderItem = ({ item }) => {
         }
     };
 
+    // Prefer local asset by carId, else remote carImage string
+    const local = item.carId ? RENTAL_LOCAL_IMAGES[item.carId] : null;
+    const imageSource =
+        resolveCarImageSource(local?.image) ||
+        resolveCarImageSource(item.carImage);
+
     return (
         <View className="mb-4 overflow-hidden rounded-2xl border border-border bg-card">
             <View className="flex-row p-3">
-                {item.carImage ? (
+                {imageSource ? (
                     <Image
-                        source={{ uri: item.carImage }}
+                        source={imageSource}
                         className="h-20 w-24 rounded-xl"
+                        style={{ width: 96, height: 80, borderRadius: 12 }}
                         resizeMode="cover"
                     />
                 ) : (
@@ -47,9 +60,7 @@ const RenderItem = ({ item }) => {
                     </Text>
                     <View className="mt-1 flex-row items-center">
                         <View
-                            className={`rounded-full px-2 py-0.5 ${item.status === "cancelled"
-                                ? "bg-error/20"
-                                : "bg-success/20"
+                            className={`rounded-full px-2 py-0.5 ${item.status === "cancelled" ? "bg-error/20" : "bg-success/20"
                                 }`}
                         >
                             <Text
@@ -64,8 +75,12 @@ const RenderItem = ({ item }) => {
                                 {item.status || "confirmed"}
                             </Text>
                         </View>
-                        <Text className="ml-2 text-sm font-inter-bold" style={{ color: primary }}>
-                            $ {(item.pricing?.grandTotal || 0).toLocaleString()}
+                        <Text
+                            className="ml-2 text-sm font-inter-bold"
+                            style={{ color: primary }}
+                        >
+                            {CURRENCY}{" "}
+                            {(item.pricing?.grandTotal || 0).toLocaleString()}
                         </Text>
                     </View>
                 </View>
@@ -79,7 +94,7 @@ const RenderItem = ({ item }) => {
                 </TouchableOpacity>
             )}
         </View>
-    )
-}
+    );
+};
 
-export default RenderItem
+export default RenderItem;

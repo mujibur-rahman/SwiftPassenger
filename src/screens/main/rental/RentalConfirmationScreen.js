@@ -89,7 +89,7 @@ export default function RentalConfirmationScreen() {
             />
             <Row
               label="Total paid"
-              value={`$ ${(booking?.pricing?.grandTotal || 0).toLocaleString()}`}
+              value={`A$ ${(booking?.pricing?.grandTotal || 0).toLocaleString()}`}
             />
             <Row label="Payment" value={booking?.paymentMethod?.toUpperCase()} />
           </View>

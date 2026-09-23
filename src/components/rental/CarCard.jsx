@@ -1,15 +1,26 @@
 // @/components/rental/CarCard.jsx
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
-// Inline fallback colour shown while the remote image loads / if it errors.
-const FALLBACK_BG = '#e5e7eb';
+const FALLBACK_BG = "#e5e7eb";
 
-const CarCard = ({ car, onPress, primary }) => {
-    // Guard: only pass a valid http(s) URI to <Image uri>. Local @assets paths
-    // (which the server used to send) are not valid network URIs and will cause
-    // a blank render without throwing, so we strip them here as a safety net.
-    const imageUri =
-        car.image && car.image.startsWith('http') ? car.image : null;
+/**
+ * Resolves Image source for:
+ * - require() result (number)
+ * - { uri: "https://..." }
+ * - plain "https://..." string
+ */
+export function resolveCarImageSource(image) {
+    if (image == null) return null;
+    if (typeof image === "number") return image; // require()
+    if (typeof image === "object" && image.uri) return image;
+    if (typeof image === "string" && image.startsWith("http")) {
+        return { uri: image };
+    }
+    return null;
+}
+
+const CarCard = ({ car, onPress, primary, currency = "A$" }) => {
+    const source = resolveCarImageSource(car?.image);
 
     return (
         <TouchableOpacity
@@ -18,27 +29,34 @@ const CarCard = ({ car, onPress, primary }) => {
             className="mb-4 flex-row overflow-hidden rounded-2xl border border-border bg-card"
         >
             <Image
-                source={imageUri ? { uri: imageUri } : null}
+                source={source}
                 style={styles.carImage}
                 resizeMode="cover"
             />
             <View className="flex-1 justify-between p-3">
                 <View>
-                    <Text className="text-base font-inter-bold text-foreground" numberOfLines={1}>
+                    <Text
+                        className="text-base font-inter-bold text-foreground"
+                        numberOfLines={1}
+                    >
                         {car.name}
                     </Text>
                     <Text className="mt-1 text-xs text-foreground-muted">
-                        ★ {car.rating}  ·  {car.seats} seats  ·  {car.transmission}
+                        ★ {car.rating} · {car.seats} seats · {car.transmission}
                     </Text>
                     <Text className="mt-0.5 text-xs text-foreground-muted">
-                        {car.fuel}  ·  {car.category}
+                        {car.fuel} · {car.category}
                     </Text>
                 </View>
                 <View className="mt-2 flex-row items-center justify-between">
-                    <Text className="text-base font-inter-bold" style={{ color: primary }}>
-                        $ {car.pricePerDay.toLocaleString()}
+                    <Text
+                        className="text-base font-inter-bold"
+                        style={{ color: primary }}
+                    >
+                        {currency} {Number(car.pricePerDay || 0).toLocaleString()}
                         <Text className="text-xs font-inter-regular text-foreground-muted">
-                            {" "}/day
+                            {" "}
+                            /day
                         </Text>
                     </Text>
                     <View
@@ -52,8 +70,8 @@ const CarCard = ({ car, onPress, primary }) => {
                 </View>
             </View>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     carImage: {
@@ -63,4 +81,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CarCard
+export default CarCard;

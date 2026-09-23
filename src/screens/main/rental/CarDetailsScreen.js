@@ -19,10 +19,12 @@ import {
   selectRentalPricing,
   selectRentalSearch,
 } from "@/features/rental/rentalSlice";
-import { RENTAL_CARS } from "@/constants/rentalCars";
+import { RENTAL_CARS, withLocalImages } from "@/constants/rentalCars";
 import { useGetRentalCarByIdQuery } from "@/features/rental/rentalApi";
+import { resolveCarImageSource } from "@/components/rental/CarCard";
 
 const { width } = Dimensions.get("window");
+const CURRENCY = "A$";
 
 export default function CarDetailsScreen() {
   const navigation = useNavigation();
@@ -39,15 +41,19 @@ export default function CarDetailsScreen() {
   });
 
   const car = useMemo(() => {
-    return (
+    const raw =
       apiCar ||
       selected ||
       RENTAL_CARS.find((c) => c.id === carId) ||
-      RENTAL_CARS[0]
-    );
+      RENTAL_CARS[0];
+    return withLocalImages(raw);
   }, [apiCar, selected, carId]);
 
   const primary = colors?.primary ?? "#38BDF8";
+  // Prefer large local image for details hero
+  const heroSource =
+    resolveCarImageSource(car?.images?.[0]) ||
+    resolveCarImageSource(car?.image);
 
   return (
     <View className="flex-1 bg-background">
@@ -56,8 +62,8 @@ export default function CarDetailsScreen() {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <Image
-          source={{ uri: car.image }}
-          style={{ width, height: 240 }}
+          source={heroSource}
+          style={{ width, height: 240, backgroundColor: "#e5e7eb" }}
           resizeMode="cover"
         />
 
@@ -66,7 +72,7 @@ export default function CarDetailsScreen() {
             {car.name}
           </Text>
           <Text className="mt-1 text-sm text-foreground-muted">
-            ★ {car.rating} ({car.reviewCount} reviews)  ·  {car.year}  · {" "}
+            ★ {car.rating} ({car.reviewCount} reviews) · {car.year} ·{" "}
             {car.category}
           </Text>
 
@@ -74,7 +80,11 @@ export default function CarDetailsScreen() {
           <View className="mt-5 flex-row rounded-2xl border border-border bg-card p-4">
             {[
               { label: "Seats", value: car.seats, icon: "account-group" },
-              { label: "Gear", value: car.transmission, icon: "car-shift-pattern" },
+              {
+                label: "Gear",
+                value: car.transmission,
+                icon: "car-shift-pattern",
+              },
               { label: "Fuel", value: car.fuel, icon: "gas-station" },
             ].map((s) => (
               <View key={s.label} className="flex-1 items-center">
@@ -112,14 +122,14 @@ export default function CarDetailsScreen() {
               Pickup: {search.pickupLocation || "—"}
             </Text>
             <Text className="mt-1 text-sm text-foreground-muted">
-              {pricing.days} day{pricing.days > 1 ? "s" : ""}  ·  $
-              {car.pricePerDay.toLocaleString()}/day
+              {pricing.days} day{pricing.days > 1 ? "s" : ""} · {CURRENCY}
+              {Number(car.pricePerDay || 0).toLocaleString()}/day
             </Text>
             <Text
               className="mt-2 text-lg font-inter-bold"
               style={{ color: primary }}
             >
-              $ {pricing.baseTotal.toLocaleString()} base
+              {CURRENCY} {Number(pricing.baseTotal || 0).toLocaleString()} base
             </Text>
           </View>
         </View>
@@ -127,20 +137,18 @@ export default function CarDetailsScreen() {
 
       {/* Sticky bottom */}
       <View
-        className="flex-row items-center border-t border-border bg-card px-4 py-3"
+        className="flex-row items-center justify-center border-t border-border bg-card px-4 py-3"
         style={{ paddingBottom: Math.max(insets.bottom, 12) }}
       >
         <View className="mr-4">
           <Text className="text-xs text-foreground-muted">Total (base)</Text>
           <Text className="text-xl font-inter-bold" style={{ color: primary }}>
-            $ {pricing.baseTotal.toLocaleString()}
+            {CURRENCY} {Number(pricing.baseTotal || 0).toLocaleString()}
           </Text>
         </View>
-        <View className="flex-1">
-          <Button onPress={() => navigation.navigate("RentalBookingSummary")}>
-            Continue
-          </Button>
-        </View>
+        <Button fullWidth={false} onPress={() => navigation.navigate("RentalBookingSummary")}>
+          Continue
+        </Button>
       </View>
     </View>
   );

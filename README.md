@@ -1,78 +1,14 @@
-src/
-│
-├── app/
-│   ├── store.js              # Redux store configuration
-│   ├── rootReducer.js        # Combine slices if needed
-│   └── api.js                # Optional: Base API config for RTK Query
-│
-├── features/
-│   ├── auth/
-│   │   ├── api/
-│   │   │   └── authApi.js    # RTK Query endpoints for auth
-│   │   ├── components/
-│   │   │   ├── LoginForm.jsx
-│   │   │   └── SignupForm.jsx
-│   │   ├── slices/
-│   │   │   └── authSlice.js  # Redux slice for auth state
-│   │   ├── hooks/
-│   │   │   └── useAuth.js    # Custom hooks
-│   │   └── index.js
-│   │
-│   ├── users/
-│   │   ├── api/
-│   │   │   └── usersApi.js   # RTK Query endpoints for users
-│   │   ├── components/
-│   │   │   ├── UserList.jsx
-│   │   │   └── UserProfile.jsx
-│   │   ├── slices/
-│   │   │   └── usersSlice.js
-│   │   ├── hooks/
-│   │   │   └── useUsers.js
-│   │   └── index.js
-│   │
-│   └── posts/
-│       ├── api/
-│       │   └── postsApi.js
-│       ├── components/
-│       │   ├── PostList.jsx
-│       │   └── PostDetail.jsx
-│       ├── slices/
-│       │   └── postsSlice.js
-│       ├── hooks/
-│       │   └── usePosts.js
-│       └── index.js
-│
-├── components/               # Shared UI components
-│   ├── Layout.jsx
-│   ├── Navbar.jsx
-│   └── Loader.jsx
-│
-├── utils/                     # Helper functions
-│   └── formatDate.js
-│
-├── styles/                    # Global styles
-│   └── global.css
-│
-└── index.js                   # App entry point
 
+<!-- 
+Car Rental
 
-src/
-│
-├── app/
-│   ├── store.js              # Redux store configuration
-│
-├── features/
-│   ├── api/
-│   │   └── apiSlice.js
-│   │  
-│   ├── auth/
-│   │   └── authApi.js    
-│   │   └── authSlice.js  
-│   │  
-│   ├── driver/
-│   │   └── driverApi.js    
-│   │   └── driverSlice.js  
+English
+SwiftRide Car Rental is an on-demand self-serve car hire service inside the SwiftRide Passenger super-app. Customers choose a pickup location and trip dates, browse a curated fleet (Economy, SUV, Luxury, Electric), add optional extras (extra driver, child seat, GPS, full insurance, Wi-Fi), pay with local methods (bKash, Nagad, card, or cash on pickup), and get an instant booking code. They can later view or cancel bookings from “My Rentals.”
+The product focuses on transparent daily pricing, flexible duration, and Bangladesh-friendly payments—reducing friction compared with traditional counter-based rental desks.
 
+বাংলা
+SwiftRide Car Rental হলো SwiftRide Passenger সুপার-অ্যাপের ভিতরে একটি অন-ডিমান্ড সেল্ফ-সার্ভ গাড়ি ভাড়া সেবা। গ্রাহক পিকআপ লোকেশন ও ভ্রমণের তারিখ বেছে নেন, ক্যাটাগরি অনুযায়ী গাড়ি দেখেন (Economy, SUV, Luxury, Electric), প্রয়োজনমতো অ্যাড-অন নেন (অতিরিক্ত ড্রাইভার, চাইল্ড সিট, GPS, ফুল ইন্স্যুরেন্স, Wi-Fi), স্থানীয় পেমেন্ট মেথডে (bKash, Nagad, কার্ড, বা পিকআপে ক্যাশ) পেমেন্ট করেন এবং তাৎক্ষণিক বুকিং কোড পান। পরে “My Rentals” থেকে বুকিং দেখা বা বাতিল করা যায়।
+এই সেবার মূল ফোকাস হলো স্বচ্ছ দৈনিক মূল্য, নমনীয় ভাড়ার সময় এবং বাংলাদেশ-উপযোগী পেমেন্ট—যাতে ঐতিহ্যবাহী কাউন্টার-ভিত্তিক রেন্টাল ডেস্কের তুলনায় ঝামেলা কমে। -->
 
 
 <!-- export const loginDriver = createAsyncThunk('auth/login', async ({ phone, password }, { rejectWithValue }) => {

@@ -16,7 +16,7 @@ const initialState = {
   filters: {
     category: "all",
     minPrice: 0,
-    maxPrice: 50000,
+    maxPrice: 500,
     transmission: "all", // all | Automatic | Manual
     seats: 0, // 0 = any
   },
@@ -33,7 +33,7 @@ const initialState = {
     grandTotal: 0,
   },
   // Payment
-  paymentMethod: "bkash",
+  paymentMethod: "card",
   promoCode: "",
   promoDiscount: 0,
   // Current booking (after confirm)
@@ -70,17 +70,17 @@ function recalculatePricing(state) {
     if (!enabled) return;
     // prices come from constant; we store only ids here
     const prices = {
-      extra_driver: 500,
-      child_seat: 300,
-      gps: 200,
-      full_insurance: 800,
-      wifi: 250,
+      extra_driver: 15,
+      child_seat: 12,
+      gps: 8,
+      full_insurance: 35,
+      wifi: 10,
     };
     addonsTotal += (prices[id] || 0) * days;
   });
 
   const subtotal = baseTotal + addonsTotal - (state.promoDiscount || 0);
-  const tax = Math.round(subtotal * 0.05); // 5% service tax
+  const tax = Math.round(subtotal * 0.10); // GST 10%
   const grandTotal = Math.max(0, subtotal + tax);
 
   state.pricing = { days, baseTotal, addonsTotal, tax, grandTotal };
@@ -121,8 +121,8 @@ const rentalSlice = createSlice({
       // Simple promo rules
       if (code === "SWIFT10") {
         state.promoDiscount = Math.round(state.pricing.baseTotal * 0.1);
-      } else if (code === "RENT500") {
-        state.promoDiscount = 500;
+      } else if (code === "RENT20") {
+        state.promoDiscount = 20;
       } else {
         state.promoDiscount = 0;
       }
@@ -146,7 +146,7 @@ const rentalSlice = createSlice({
       state.selectedCar = null;
       state.selectedAddons = {};
       state.pricing = initialState.pricing;
-      state.paymentMethod = "bkash";
+      state.paymentMethod = "card";
       state.promoCode = "";
       state.promoDiscount = 0;
       state.currentBooking = null;

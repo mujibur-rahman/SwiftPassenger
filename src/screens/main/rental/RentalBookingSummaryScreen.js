@@ -64,7 +64,7 @@ export default function RentalBookingSummaryScreen() {
             {search.pickupLocation}
           </Text>
           <Text className="mt-1 text-sm text-foreground-muted">
-            {pricing.days} day{pricing.days > 1 ? "s" : ""} · $
+            {pricing.days} day{pricing.days > 1 ? "s" : ""} · A$
             {car.pricePerDay.toLocaleString()}/day
           </Text>
         </View>
@@ -99,7 +99,7 @@ export default function RentalBookingSummaryScreen() {
                 </Text>
               </View>
               <Text className="text-sm font-inter-bold" style={{ color: primary }}>
-                ${addon.price}/day
+                A${addon.price}/day
               </Text>
             </TouchableOpacity>
           );
@@ -115,21 +115,21 @@ export default function RentalBookingSummaryScreen() {
               Base ({pricing.days} days)
             </Text>
             <Text className="text-sm text-foreground">
-              $ {pricing.baseTotal.toLocaleString()}
+              A$ {pricing.baseTotal.toLocaleString()}
             </Text>
           </View>
           {pricing.addonsTotal > 0 && (
             <View className="flex-row justify-between mb-2">
               <Text className="text-sm text-foreground-muted">Add-ons</Text>
               <Text className="text-sm text-foreground">
-                $ {pricing.addonsTotal.toLocaleString()}
+                A$ {pricing.addonsTotal.toLocaleString()}
               </Text>
             </View>
           )}
           <View className="flex-row justify-between mb-2">
-            <Text className="text-sm text-foreground-muted">Service tax (5%)</Text>
+            <Text className="text-sm text-foreground-muted">GST (10%)</Text>
             <Text className="text-sm text-foreground">
-              $ {pricing.tax.toLocaleString()}
+              A$ {pricing.tax.toLocaleString()}
             </Text>
           </View>
           <View className="mt-2 border-t border-border pt-3 flex-row justify-between">
@@ -137,7 +137,7 @@ export default function RentalBookingSummaryScreen() {
               Total
             </Text>
             <Text className="text-lg font-inter-bold" style={{ color: primary }}>
-              $ {pricing.grandTotal.toLocaleString()}
+              A$ {pricing.grandTotal.toLocaleString()}
             </Text>
           </View>
         </View>

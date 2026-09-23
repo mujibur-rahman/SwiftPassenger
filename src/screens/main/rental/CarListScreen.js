@@ -14,16 +14,18 @@ import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import CarCard from "@/components/rental/CarCard";
-import {
-  useGetRentalCarsQuery,
-} from "@/features/rental/rentalApi";
+import { useGetRentalCarsQuery } from "@/features/rental/rentalApi";
 import {
   setSelectedCar,
   setFilters,
   selectRentalFilters,
   selectRentalSearch,
 } from "@/features/rental/rentalSlice";
-import { RENTAL_CATEGORIES, RENTAL_CARS } from "@/constants/rentalCars";
+import {
+  RENTAL_CATEGORIES,
+  RENTAL_CARS,
+  withLocalImages,
+} from "@/constants/rentalCars";
 
 export default function CarListScreen() {
   const navigation = useNavigation();
@@ -42,12 +44,12 @@ export default function CarListScreen() {
     returnDate: search.returnDate,
   };
 
-  const { data: apiCars, isLoading, isError, refetch } =
+  const { data: apiCars, isLoading, refetch } =
     useGetRentalCarsQuery(queryArgs);
 
-  // Fallback to local dummy if API fails / empty
+  // Prefer API list, fallback to local dummy; always attach local images by id
   const cars = useMemo(() => {
-    const list = apiCars?.length ? apiCars : RENTAL_CARS;
+    const list = (apiCars?.length ? apiCars : RENTAL_CARS).map(withLocalImages);
     return list.filter((c) => {
       if (filters.category !== "all" && c.category !== filters.category)
         return false;
@@ -62,7 +64,7 @@ export default function CarListScreen() {
   }, [apiCars, filters]);
 
   const onSelect = (car) => {
-    dispatch(setSelectedCar(car));
+    dispatch(setSelectedCar(withLocalImages(car)));
     navigation.navigate("CarDetails", { carId: car.id });
   };
 
@@ -82,12 +84,10 @@ export default function CarListScreen() {
             const active = filters.category === item.id;
             return (
               <TouchableOpacity
-                onPress={() =>
-                  dispatch(setFilters({ category: item.id }))
-                }
+                onPress={() => dispatch(setFilters({ category: item.id }))}
                 className={`mr-2 flex-row items-center rounded-full border px-3 py-1.5 ${active
-                  ? "border-primary bg-primary"
-                  : "border-border bg-background"
+                    ? "border-primary bg-primary"
+                    : "border-border bg-background"
                   }`}
               >
                 <Icon
@@ -119,9 +119,7 @@ export default function CarListScreen() {
           ListHeaderComponent={
             <Text className="mb-3 text-sm text-foreground-muted">
               {cars.length} car{cars.length !== 1 ? "s" : ""} found
-              {search.pickupLocation
-                ? ` · ${search.pickupLocation}`
-                : ""}
+              {search.pickupLocation ? ` · ${search.pickupLocation}` : ""}
             </Text>
           }
           ListEmptyComponent={
@@ -139,6 +137,7 @@ export default function CarListScreen() {
             <CarCard
               car={item}
               primary={primary}
+              currency="$"
               onPress={() => onSelect(item)}
             />
           )}
