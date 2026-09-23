@@ -53,32 +53,6 @@ export default function CoverageSelectionScreen({ navigation }) {
       >
         <StepProgress current={3} total={4} />
 
-        {/* Policy type */}
-        <Text className="mb-2 text-sm font-inter-semibold text-foreground-secondary">
-          Policy type
-        </Text>
-        <View className="mb-5 flex-row gap-3">
-          {["Comprehensive", "ThirdParty"].map((type) => {
-            const selected = coverage.policyType === type;
-            return (
-              <TouchableOpacity
-                key={type}
-                activeOpacity={0.85}
-                onPress={() => dispatch(setPolicyType(type))}
-                className={`flex-1 items-center rounded-2xl border py-3.5 ${selected ? "border-primary bg-primary/10" : "border-border bg-card"
-                  }`}
-              >
-                <Text
-                  className={`text-sm font-inter-semibold ${selected ? "text-primary" : "text-foreground"
-                    }`}
-                >
-                  {type === "ThirdParty" ? "Third Party" : type}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
         {/* IDV */}
         <Text className="mb-2 text-sm font-inter-semibold text-foreground-secondary">
           IDV (Insured Declared Value)

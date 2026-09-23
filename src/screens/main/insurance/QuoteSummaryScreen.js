@@ -6,6 +6,7 @@ import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
 import StepProgress from "@/components/marketplace/StepProgress";
+import { getInsuranceType } from "@/config/insurance/insuranceTypes";
 import {
   selectInsuranceVehicle,
   selectInsuranceCoverage,
@@ -18,6 +19,7 @@ export default function QuoteSummaryScreen({ navigation }) {
   const vehicle = useSelector(selectInsuranceVehicle);
   const coverage = useSelector(selectInsuranceCoverage);
   const quote = useSelector(selectInsuranceQuote);
+  const insuranceType = getInsuranceType(coverage.policyType);
 
   const formatMoney = (n) => `$ ${Number(n || 0).toLocaleString("en-BD")}`;
 
@@ -63,7 +65,7 @@ export default function QuoteSummaryScreen({ navigation }) {
             Coverage
           </Text>
           <Text className="text-[15px] font-inter-semibold text-foreground">
-            {coverage.policyType === "ThirdParty" ? "Third Party" : "Comprehensive"}
+            {insuranceType.title}
           </Text>
           <Text className="mt-0.5 text-xs font-inter text-foreground-muted">
             IDV: {formatMoney(coverage.idv)}

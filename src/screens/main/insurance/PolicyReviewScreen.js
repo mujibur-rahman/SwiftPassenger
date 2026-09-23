@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useTheme } from "@/theme";
 import ScreenHeader from "@/components/ui/ScreenHeader";
 import Button from "@/components/ui/Button";
+import { getInsuranceType } from "@/config/insurance/insuranceTypes";
 import {
   selectInsuranceVehicle,
   selectInsurancePersonal,
@@ -23,6 +24,7 @@ export default function PolicyReviewScreen({ navigation }) {
   const personal = useSelector(selectInsurancePersonal);
   const coverage = useSelector(selectInsuranceCoverage);
   const quote = useSelector(selectInsuranceQuote);
+  const insuranceType = getInsuranceType(coverage.policyType);
 
   const [accepted, setAccepted] = useState(false);
 
@@ -67,7 +69,7 @@ export default function PolicyReviewScreen({ navigation }) {
             Coverage & Premium
           </Text>
           <Text className="text-[15px] font-inter-semibold text-foreground">
-            {coverage.policyType === "ThirdParty" ? "Third Party" : "Comprehensive"}
+            {insuranceType.title}
           </Text>
           <Text className="mt-1 text-xs font-inter text-foreground-muted">
             IDV {formatMoney(coverage.idv)}

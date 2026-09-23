@@ -78,7 +78,8 @@ import MarketplaceTrackingScreen from "@/screens/main/marketplace/MarketplaceTra
 import MarketplaceCompletedScreen from "@/screens/main/marketplace/MarketplaceCompletedScreen";
 import MarketplaceRateScreen from "@/screens/main/marketplace/MarketplaceRateScreen";
 
-import CarInsuranceLandingScreen from "@/screens/main/insurance/CarInsuranceLandingScreen";
+import InsuranceTypesScreen from "@/screens/main/insurance/InsuranceTypesScreen";
+import InsuranceTypeDetailsScreen from "@/screens/main/insurance/InsuranceTypeDetailsScreen";
 import VehicleDetailsScreen from "@/screens/main/insurance/VehicleDetailsScreen";
 import PersonalDetailsScreen from "@/screens/main/insurance/PersonalDetailsScreen";
 import CoverageSelectionScreen from "@/screens/main/insurance/CoverageSelectionScreen";
@@ -367,7 +368,8 @@ export default function MainNavigator() {
       <Stack.Screen name="MarketplaceRate" component={MarketplaceRateScreen} />
 
       {/* Car Insurance flow */}
-      <Stack.Screen name="CarInsuranceLanding" component={CarInsuranceLandingScreen} />
+      <Stack.Screen name="InsuranceTypes" component={InsuranceTypesScreen} />
+      <Stack.Screen name="InsuranceTypeDetails" component={InsuranceTypeDetailsScreen} />
       <Stack.Screen name="VehicleDetails" component={VehicleDetailsScreen} />
       <Stack.Screen name="PersonalDetails" component={PersonalDetailsScreen} />
       <Stack.Screen name="CoverageSelection" component={CoverageSelectionScreen} />

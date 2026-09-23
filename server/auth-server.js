@@ -1248,7 +1248,7 @@ app.get("/insurance/vehicle/:reg", (req, res) => {
 app.post("/insurance/quote", (req, res) => {
   const { coverage } = req.body || {};
   const idv = Number(coverage?.idv) || 1250000;
-  const policyType = coverage?.policyType || "Comprehensive";
+  const policyType = coverage?.policyType || "comprehensive";
   const addOns = coverage?.addOns || {};
 
   const ADDON_PRICES = {
@@ -1260,10 +1260,15 @@ app.post("/insurance/quote", (req, res) => {
     keyReplacement: 250,
   };
 
+  const baseByType = {
+    ctp: 2200,
+    third_party_property: 3200,
+    third_party_fire_theft: 5000,
+  };
   const base =
-    policyType === "Comprehensive"
+    policyType === "comprehensive"
       ? Math.max(8000, Math.round(idv * 0.011))
-      : 3200;
+      : baseByType[policyType] || 3200;
 
   let addOnPremium = 0;
   Object.entries(addOns).forEach(([key, enabled]) => {

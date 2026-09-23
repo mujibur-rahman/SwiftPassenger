@@ -22,7 +22,7 @@ const initialState = {
     nomineeRelation: "",
   },
   coverage: {
-    policyType: "Comprehensive", // Comprehensive | ThirdParty
+    policyType: "comprehensive", // ctp | third_party_property | third_party_fire_theft | comprehensive
     idv: 1250000,
     addOns: {
       zeroDepreciation: true,
@@ -55,10 +55,15 @@ const ADDON_PRICES = {
 };
 
 function calculateQuote(coverage) {
+  const baseByType = {
+    ctp: 2200,
+    third_party_property: 3200,
+    third_party_fire_theft: 5000,
+  };
   const base =
-    coverage.policyType === "Comprehensive"
+    coverage.policyType === "comprehensive"
       ? Math.max(8000, Math.round(coverage.idv * 0.011))
-      : 3200;
+      : baseByType[coverage.policyType] || 3200;
 
   let addOnPremium = 0;
   Object.entries(coverage.addOns || {}).forEach(([key, enabled]) => {
